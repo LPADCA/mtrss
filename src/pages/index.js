@@ -84,12 +84,12 @@ class RootIndex extends React.Component {
             </div>
           </div>
           <div id="mtrss-contacts" className="footer">
-            <p>
-              <a href="https://www.facebook.com/mtrss.art"><img className="contact-icon" src="/images/contact-icon-01.svg" width="30" height="30" alt="facebook"/></a>
-              <a href="https://www.instagram.com/mtrss.art"><img className="contact-icon" src="/images/contact-icon-02.svg" width="30" height="30" alt="instagram"/></a>
-              <a href="#"><img className="contact-icon" src="/images/contact-icon-03.svg" width="30" height="30" alt="bandcamp"/></a>
-              <a href="mailto:mtrss.art@gmail.com"><img className="contact-icon" src="/images/contact-icon-04.svg" width="30" height="30" alt="email"/></a>
-            </p>
+            <div>
+              <a className="contact-icon facebook" href="https://www.facebook.com/mtrss.art"></a>
+              <a className="contact-icon instagram" href="https://www.instagram.com/mtrss.art"></a>
+              <a className="contact-icon bandcamp" href="#"></a>
+              <a className="contact-icon email" href="mailto:mtrss.art@gmail.com"></a>
+            </div>
             <p>&copy; 2020 MTRSS Arts. All Rights Reserved</p>
           </div>
 

@@ -371,15 +371,35 @@ div, p, h1, h2, h3, h4, h5, h6, a {
     background-color: black;
     .contact-icon {
         display: inline-block;
-        width: 40px;
-        height: 40px;
-        background-color: white;
-        img {
-            width: 40px;
-            height: 40px;
+        width: 32px;
+        height: 32px;
+        margin: 5px;
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+        &.facebook {
+            background-image: url('/images/icon-facebook.png');
+            &:hover {
+                background-image: url('/images/icon-facebook-hover.png');
+            }
         }
-        &:hover {
-            background: linear-gradient(309deg, rgba(38,143,255,1) 0%, rgba(245,0,0,1) 100%);
+        &.instagram {
+            background-image: url('/images/icon-instagram.png');
+            &:hover {
+                background-image: url('/images/icon-instagram-hover.png');
+            }
+        }
+        &.bandcamp {
+            background-image: url('/images/icon-bandcamp.png');
+            &:hover {
+                background-image: url('/images/icon-bandcamp-hover.png');
+            }
+        }
+        &.email {
+            background-image: url('/images/icon-email.png');
+            &:hover {
+                background-image: url('/images/icon-email-hover.png');
+            }
         }
     }
 }
