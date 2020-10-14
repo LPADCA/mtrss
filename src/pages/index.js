@@ -85,10 +85,10 @@ class RootIndex extends React.Component {
           </div>
           <div id="mtrss-contacts" className="footer">
             <p>
-              <a href="#"><div className="contact-icon"><img src="/images/contact-icon-01.svg" width="30" height="30" alt="facebook"/></div></a>
-              <a href="#"><div className="contact-icon"><img src="/images/contact-icon-02.svg" width="30" height="30" alt="instagram"/></div></a>
-              <a href="#"><div className="contact-icon"><img src="/images/contact-icon-03.svg" width="30" height="30" alt="bandcamp"/></div></a>
-              <a href="#"><div className="contact-icon"><img src="/images/contact-icon-04.svg" width="30" height="30" alt="email"/></div></a>
+              <a href="https://www.facebook.com/mtrss.art"><img className="contact-icon" src="/images/contact-icon-01.svg" width="30" height="30" alt="facebook"/></a>
+              <a href="https://www.instagram.com/mtrss.art"><img className="contact-icon" src="/images/contact-icon-02.svg" width="30" height="30" alt="instagram"/></a>
+              <a href="#"><img className="contact-icon" src="/images/contact-icon-03.svg" width="30" height="30" alt="bandcamp"/></a>
+              <a href="mailto:mtrss.art@gmail.com"><img className="contact-icon" src="/images/contact-icon-04.svg" width="30" height="30" alt="email"/></a>
             </p>
             <p>&copy; 2020 MTRSS Arts. All Rights Reserved</p>
           </div>
