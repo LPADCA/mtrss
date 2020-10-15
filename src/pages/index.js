@@ -83,6 +83,9 @@ class RootIndex extends React.Component {
               {!this.state.showDescription && <a href="#" onClick={this.triggerShowDescription} className="button">View more</a>}
             </div>
           </div>
+          <div id="spotify">
+            <iframe src="https://open.spotify.com/embed/artist/6k4nRFSKe2EQuzMHAtY1gp" width="300" height="380" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+          </div>
           <div id="mtrss-contacts" className="footer">
             <div>
               <a className="contact-icon facebook" href="https://www.facebook.com/mtrss.art"></a>
