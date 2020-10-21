@@ -15,6 +15,7 @@ const RichText = ({jsonRichText}) => {
     )
 }
 
+
 class RootIndex extends React.Component {
   constructor(props) {
     super();
