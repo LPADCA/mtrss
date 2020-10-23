@@ -3,13 +3,13 @@ import Img from 'gatsby-image'
 
 import styles from './hero.module.css'
 
-export default ({ data, buttonText, buttonUrl }) => (
+export default ({ data, buttonText, buttonURL }) => (
   <>
     <div className="hero">
       <div id="keep-ratio-01"></div>
       <div className="overlay1-shadow hide-aspect">
         <div className="overlay1">
-          <a href={buttonUrl} className="button">{buttonText}</a>
+          <a href={buttonURL} className="button">{buttonText}</a>
         </div>
       </div>
       <div className="overlay2-shadow">
@@ -18,7 +18,7 @@ export default ({ data, buttonText, buttonUrl }) => (
       </div>
     </div>
     <div className="show-aspect aspect-insert">
-      <a href="#" className="button">Listen now</a>
+      <a href={buttonURL} className="button">{buttonText}</a>
     </div>
   </>
 )
