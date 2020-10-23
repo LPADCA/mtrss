@@ -37,7 +37,7 @@ class Navigation extends React.Component {
             <li><AnchorLink href="#mtrss-video">Videos</AnchorLink></li>
             <li><AnchorLink href="#mtrss-text">About us</AnchorLink></li>
             <li><AnchorLink href="#mtrss-contacts">Get in touch</AnchorLink></li>
-            <li><a href="#">Merch</a></li>
+            {/*<li><a href="#">Merch</a></li>*/}
           </ul>
           <div id="sandwich" onClick={this.toggleMenu} className={this.state.menuOpen ? `open` : ``}>
             <span></span>
@@ -54,7 +54,7 @@ class Navigation extends React.Component {
             <li><AnchorLink href="#mtrss-video" onClick={this.triggerMenu}>Videos</AnchorLink></li>
             <li><AnchorLink href="#mtrss-text" onClick={this.triggerMenu}>About us</AnchorLink></li>
             <li><AnchorLink href="#mtrss-contacts" onClick={this.triggerMenu}>Get in touch</AnchorLink></li>
-            <li><a href="#" onClick={this.triggerMenu}>Merch</a></li>
+            {/*<li><a href="#" onClick={this.triggerMenu}>Merch</a></li>*/}
           </ul>
           <div id="sandwich-m" onClick={this.toggleMenu} className={this.state.menuOpen ? `open` : ``}>
             <span></span>
