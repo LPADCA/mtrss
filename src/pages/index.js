@@ -52,21 +52,27 @@ class RootIndex extends React.Component {
     const buttonUrl = this.props.data.contentfulHomepage.buttonUrl;
     const parse_string = this.props.data.contentfulHomepage.youtubeVideoUrl.split('/').pop();
     const youtubeUrl = parse_string.includes('watch?v=') ? parse_string.substr(parse_string.indexOf('=')+1) : parse_string;
+    const audioTrack = this.props.data.contentfulHomepage.audioTrack;
+    console.log(audioTrack);
 
     return (
-      <Layout location={this.props.location}>
+      <Layout location={this.props.location} data={this.props.data}>
           <Helmet title={siteTitle} />
           <Hero buttonText={buttonText} buttonURL={buttonUrl}/>
 
 
           <div id="mtrss-audio" className="audio">
             <img src="/images/audio.png" alt="MTRSS:Listen"/><br/>
-            <audio id="audioTrack"
-                src="/files/demo.mp3">
-                    Your browser does not support the <code>audio</code> element.
-            </audio>
-            <a href="#" id="audioControl" onClick={this.playPause}>{!this.state.isPlaying ? <img src="/images/play.svg" width="32" height="32" alt="Play"/> : <img src="/images/pause.svg" width="32" height="32" alt="Pause"/>} </a>
-          </div>
+            { audioTrack &&
+              <>
+                <audio id="audioTrack"
+                    src={audioTrack.localFile.publicURL}>
+                        Your browser does not support the <code>audio</code> element.
+                </audio>
+                <a href="#" id="audioControl" onClick={this.playPause}>{!this.state.isPlaying ? <img src="/images/play.svg" width="32" height="32" alt="Play"/> : <img src="/images/pause.svg" width="32" height="32" alt="Pause"/>} </a>
+              </>
+            }
+            </div>
           <div id="mtrss-video" className="video">
             <div className="video-wrapper">
               <div className="iframe-wrapper">
@@ -109,6 +115,11 @@ export const pageQuery = graphql`
     contentfulHomepage {
       buttonText
       buttonUrl
+      audioTrack {
+        localFile {
+          publicURL
+        }
+      }
       merchShopUrl
       youtubeVideoUrl
       aboutTextExtra {
