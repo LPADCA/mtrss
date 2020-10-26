@@ -30,6 +30,18 @@ module.exports = {
   },
   pathPrefix: "/gatsby-contentful-starter",
   plugins: [
+    {
+      resolve: `gatsby-plugin-manifest`,
+      options: {
+        name: `MTRSS`,
+        short_name: `MTRSS`,
+        start_url: `/`,
+        background_color: `#0d0c0c`,
+        theme_color: `#fff`,
+        display: `standalone`,
+        icon: `favicon.png`, // This path is relative to the root of the site.
+      },
+    },
     "gatsby-transformer-remark",
     "gatsby-transformer-sharp",
     "gatsby-plugin-react-helmet",
