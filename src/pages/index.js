@@ -58,20 +58,14 @@ class RootIndex extends React.Component {
     return (
       <Layout location={this.props.location} data={this.props.data}>
           <Helmet title={siteTitle} />
-          {/*
-          <Hero buttonText={buttonText} buttonURL={buttonUrl}/>
-          */}
-
-        <div id="mtrss-video-hero" className="video-hero">
-          <div className="video-wrapper">
-            <div className="iframe-wrapper">
-              <iframe id="ytplayer" width="100%" height="100%" src="https://www.youtube.com/embed/ZLSMMfBei18" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <div id="mtrss-video-hero" className="video-hero">
+            <div className="video-wrapper">
+              <div className="iframe-wrapper">
+                <iframe id="ytplayer" width="100%" height="100%" src="https://www.youtube.com/embed/ZLSMMfBei18" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              </div>
             </div>
-          </div>
-          <h2>MTRSS - Cali High (the Woman Who Fell to Earth version) ft. Jasmine Albuquerque</h2>
-       </div>
- 
-
+        </div>
+        <Hero buttonText={buttonText} buttonURL={buttonUrl}/>
           <div id="mtrss-audio" className="audio">
             <img src="/images/audio.png" alt="MTRSS:Listen"/><br/>
             { audioTrack &&
