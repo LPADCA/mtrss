@@ -2,6 +2,7 @@ import React from 'react'
 import { graphql } from 'gatsby'
 import get from 'lodash/get'
 import { Helmet } from 'react-helmet'
+import Scroller from '../components/scroller'
 import Hero from '../components/hero'
 import Layout from '../components/layout'
 import Collapse from "@kunukn/react-collapse"
@@ -65,6 +66,7 @@ class RootIndex extends React.Component {
               </div>
             </div>
         </div>
+        <Scroller/>
         <Hero buttonText={buttonText} buttonURL={buttonUrl}/>
           <div id="mtrss-audio" className="audio">
             <img src="/images/audio.png" alt="MTRSS:Listen"/><br/>
