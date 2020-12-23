@@ -80,13 +80,14 @@ class RootIndex extends React.Component {
               </>
             }
             </div>
+          {/*
           <div id="mtrss-video" className="video">
             <div className="video-wrapper">
               <div className="iframe-wrapper">
                 <iframe id="ytplayer" type="text/html" width="100%" height="100%" src={`https://www.youtube.com/embed/`+youtubeUrl} frameBorder="0" allowFullScreen></iframe>
               </div>
             </div>
-          </div>
+          </div>*/}
           <div id="mtrss-text" className="context">
             <div className="content">
               <img src="/images/mtrss-content.jpg" width="500" height="115" alt="MTRSS"/><br/>
