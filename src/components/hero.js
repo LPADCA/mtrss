@@ -3,22 +3,35 @@ import Img from 'gatsby-image'
 
 import styles from './hero.module.css'
 
+const buttonURL2 = "https://https://ffm.to/yeqvjb1"
+const buttonText2 = "Listen Now"
+
+
 export default ({ data, buttonText, buttonURL }) => (
   <>
-    <div className="hero">
-      <div id="keep-ratio-01"></div>
-      <div className="overlay1-shadow hide-aspect">
+    <div className="hero desktop">
+      <div className="overlay1-shadow">
         <div className="overlay1">
           <a href={buttonURL} className="button">{buttonText}</a>
         </div>
       </div>
       <div className="overlay2-shadow">
         <div className="overlay2">
+          <a href={buttonURL2} className="button">{buttonText2}</a>
         </div>
       </div>
     </div>
-    <div className="show-aspect aspect-insert">
-      <a href={buttonURL} className="button">{buttonText}</a>
+    <div className="hero mobile">
+      <div className="cover1">
+        <div className="overlay1">
+          <a href={buttonURL} className="button">{buttonText}</a>
+        </div>
+      </div>
+      <div className="cover2">
+        <div className="overlay2">
+          <a href={buttonURL2} className="button">{buttonText2}</a>
+        </div>
+      </div>
     </div>
   </>
 )

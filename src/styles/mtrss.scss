@@ -208,20 +208,19 @@ div, p, h1, h2, h3, h4, h5, h6, a {
   
 
 
-.hero {
+.hero.desktop {
     margin-top: 70px;
-    background-image: url("/images/hero-bg.jpg");
-    background-position: top center;
+    background-image: url("/images/hero-bg-3.jpg");
+    background-position: center center;
     background-repeat: no-repeat;
-    background-size: 100% auto;
+    background-size: cover;
     position: relative;
-    #keep-ratio-01 {
-        padding-bottom: 75%;
-    }
+    height: 100vh;
+    max-height: 800px;
     .overlay1-shadow {
         display: block;
         width: 50%;
-        height: 100%;
+        height: 75%;
         z-index: 8;
         position: absolute;
         top: 0;
@@ -243,22 +242,71 @@ div, p, h1, h2, h3, h4, h5, h6, a {
     }
     .overlay2-shadow {
         filter: drop-shadow(-1px -3px 3px rgba(0,0,0, 0.5));
-        width: 100%;
-        height: 40%;
+        width: 50%;
+        height: 75%;
         z-index: 7;
         position: absolute;
-        top: 61%;
-        right: 0;
+        bottom: -1px;
+        left: 0;
         display: block;
         .overlay2 {
+            clip-path: polygon(100% 100%, 0% 100%, 0% 0%);
+            background-image: url("/images/hero-overlay-1-t.jpg");
+            background-size: cover;
+            background-position: center center;
             width: 100%;
             height: 100%;
-            clip-path: polygon(100% 0%, 100% 100%, 0% 100%);
-            background: rgb(12,13,13);
-            background: linear-gradient(0deg, rgba(12,13,13,1) 0%, rgba(0,0,0,1) 100%);
+            a.button {
+                position: absolute;
+                top: 55%;
+                right: 51%;
+            }
         }
     }
 }
+
+.hero.mobile {
+    .cover1 {
+        background-image: url("/images/hero-bg.jpg");
+        background-size: cover;
+        background-position: center center;
+        height: 700px;
+        position: relative;
+        margin-bottom: 100px;
+        .overlay1 {
+            background-color: #0d0c0c;
+            height: 250px;
+            text-align: center;
+            position: absolute;
+            bottom: -1px;
+            width: 100%;
+            clip-path: polygon(0% 100px, 100% 0%, 100% 100%, 0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+    .cover2 {
+        background-image: url("/images/hero-bg-2-a.jpg");
+        background-size: cover;
+        background-position: center center;
+        height: 700px;
+        position: relative;
+        .overlay2 {
+            background-color: #0d0c0c;
+            height: 250px;
+            text-align: center;
+            position: absolute;
+            bottom: -1px;
+            width: 100%;
+            clip-path: polygon(0% 100px, 100% 0%, 100% 100%, 0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}
+
 
 .aspect-insert {
     background-image: url("/images/aspect-insert-50.png");
@@ -476,10 +524,12 @@ div, p, h1, h2, h3, h4, h5, h6, a {
     .hide-aspect {
         display: none !important;
     }
+    /*
     .overlay2-shadow {
         height: 35% !important;
         top: 66% !important;
     }
+    */
 }
 @media (min-aspect-ratio: 4/3) {
     .show-aspect {
