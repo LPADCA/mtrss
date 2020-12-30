@@ -3,7 +3,7 @@ import Img from 'gatsby-image'
 
 import styles from './hero.module.css'
 
-const buttonURL2 = "https://https://ffm.to/yeqvjb1"
+const buttonURL2 = "https://ffm.to/yeqvjb1"
 const buttonText2 = "Listen Now"
 
 
