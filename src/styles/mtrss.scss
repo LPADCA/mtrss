@@ -220,7 +220,7 @@ div, p, h1, h2, h3, h4, h5, h6, a {
     .overlay1-shadow {
         display: block;
         width: 50%;
-        height: 75%;
+        height: 35%;
         z-index: 8;
         position: absolute;
         top: 0;
@@ -235,15 +235,15 @@ div, p, h1, h2, h3, h4, h5, h6, a {
             height: 100%;
             a.button {
                 position: absolute;
-                top: 45%;
-                left: 55%;
+                top: 25%;
+                right: 15%;
             }
         }
     }
     .overlay2-shadow {
         filter: drop-shadow(-1px -3px 3px rgba(0,0,0, 0.5));
         width: 50%;
-        height: 75%;
+        height: 35%;
         z-index: 7;
         position: absolute;
         bottom: -1px;
@@ -258,8 +258,8 @@ div, p, h1, h2, h3, h4, h5, h6, a {
             height: 100%;
             a.button {
                 position: absolute;
-                top: 55%;
-                right: 51%;
+                bottom: 25%;
+                left: 15%;
             }
         }
     }
