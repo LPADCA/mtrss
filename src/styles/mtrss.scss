@@ -210,56 +210,92 @@ div, p, h1, h2, h3, h4, h5, h6, a {
 
 .hero.desktop {
     margin-top: 70px;
-    background-image: url("/images/hero-bg-3.jpg");
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
     position: relative;
-    height: 100vh;
-    max-height: 800px;
+    height: 90vh;
+    max-height: 700px;
+    .insert-left {
+        background-image: url("/images/hero-bg.jpg");
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: absolute;
+        width: 80%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        z-index: 1;
+    }
+    .insert-right {
+        background-image: url("/images/hero-bg-2-a.jpg");
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: absolute;
+        width: 80%;
+        height: 100%;
+        right: 0;
+        bottom: 0;
+        z-index: 2;
+        clip-path: polygon(75% 0%, 100% 0%, 100% 100%, 0% 100%);
+    }
     .overlay1-shadow {
         display: block;
-        width: 50%;
-        height: 35%;
+        width: 30%;
+        height: 50%;
         z-index: 8;
         position: absolute;
         top: 0;
-        right: 0;
+        left: 0;
         filter: drop-shadow(-1px 6px 6px rgba(0,0,0, 0.5));
         .overlay1 {
-            clip-path: polygon(0% 0%, 100% 0%, 100% 100%);
-            background-image: url("/images/hero-overlay-1-t.jpg");
-            background-size: cover;
-            background-position: center center;
             width: 100%;
             height: 100%;
+            &:after {
+                content: "";
+                display: block;
+                width: 100%;
+                height: 100%;
+                clip-path: polygon(0% 0%, 100% 0%, 0% 100%);
+                background-image: url("/images/hero-overlay-1-t.jpg");
+                background-size: cover;
+                background-position: center center;
+            }
             a.button {
                 position: absolute;
-                top: 25%;
-                right: 15%;
+                top: 30%;
+                left: 10%;
+                z-index: 10;
             }
         }
     }
     .overlay2-shadow {
         filter: drop-shadow(-1px -3px 3px rgba(0,0,0, 0.5));
-        width: 50%;
-        height: 35%;
+        width: 30%;
+        height: 50%;
         z-index: 7;
         position: absolute;
         bottom: -1px;
-        left: 0;
+        right: 0;
         display: block;
         .overlay2 {
-            clip-path: polygon(100% 100%, 0% 100%, 0% 0%);
-            background-image: url("/images/hero-overlay-1-t.jpg");
-            background-size: cover;
-            background-position: center center;
             width: 100%;
             height: 100%;
+            &:after {
+                content: "";
+                display: block;
+                clip-path: polygon(100% 100%, 0% 100%, 100% 0%);
+                background-image: url("/images/hero-overlay-1-t.jpg");
+                background-size: cover;
+                background-position: center center;
+                width: 100%;
+                height: 100%;
+                z-index: 8;
+            }
             a.button {
                 position: absolute;
-                bottom: 25%;
-                left: 15%;
+                bottom: 30%;
+                right: 15%;
+                z-index: 10;
             }
         }
     }
