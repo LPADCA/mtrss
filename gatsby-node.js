@@ -28,6 +28,21 @@ exports.createSchemaCustomization = ({ actions }) => {
   createTypes(typeDefs);
 };
 
+{/*
+module.exports.onPreInit = () => {
+  const carouselSrcFile =
+    'node_modules/3d-react-carousal/dist/index.js';
+
+  if (!fs.existsSync(carouselSrcFile)) return;
+
+  fs.writeFileSync(
+    carouselSrcFile,
+    fs
+      .readFileSync(carouselSrcFile, 'utf8')
+      .replace('(window,', `(typeof window==='undefined'?{}:window,`)
+  );
+}; */}
+
   {/*
 
     audioTrack: AudioTrack 

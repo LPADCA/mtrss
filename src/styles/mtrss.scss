@@ -2,7 +2,7 @@ body, html {
     margin: 0;
     padding: 0;
     background-color:#0d0c0c;
-    font-family: 'DIN-2014', Arial, Helvetica, sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 div, p, h1, h2, h3, h4, h5, h6, a {
@@ -359,7 +359,7 @@ div, p, h1, h2, h3, h4, h5, h6, a {
 
 .audio {
     padding-top: 0; 
-    padding-bottom: 150px;
+    padding-bottom: 100px;
     width: 100%;
     text-align: center;
     img {
@@ -488,11 +488,15 @@ div, p, h1, h2, h3, h4, h5, h6, a {
     text-align: center;
     padding-top: 150px !important;
     .content {
+        border: 8px solid white;
+        font-weight: 300;
+        font-size: 14px;
         display: block;
         margin: 0 auto;
         max-width: 600px;
-        background: linear-gradient(180deg, #000, #1c1d1d);
-        padding: 20px;
+        background-image: url("/images/bio-bg.jpg");
+        background-size: cover;
+        padding: 100px;
         box-shadow: 5px 5px 15px rgba(0,0,0, 0.5);
         img {
             width: 100%;
@@ -500,6 +504,14 @@ div, p, h1, h2, h3, h4, h5, h6, a {
             object-fit: contain;
             object-position: center center;
             background-color: black;
+        }
+    }
+}
+
+@media (max-width: 500px) {
+    .context {
+        .content {
+            padding: 40px;
         }
     }
 }
@@ -676,6 +688,172 @@ div, p, h1, h2, h3, h4, h5, h6, a {
                 height: 500px !important;
                 &>div {
                     width: 100% !important;
+                }
+            }
+        }
+    }
+}
+
+
+.react-3d-carousel {
+    min-height: 600px;
+    margin-top: 30px;
+    .AlbumSlide {
+        width: 100%;
+        max-width: 550px;
+        height: 550px;
+        background-size: cover;
+        background-position: center center;
+        display: block;
+        position: relative;
+        //justify-content: center;
+        //align-items: center;
+        a {
+            position: absolute;
+            top: 80%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: inline-block;
+            white-space: nowrap;
+        }
+        &.slide1 {
+            background-image: url('/images/cover1.jpg');
+        }
+        &.slide2 {
+            background-image: url('/images/cover2.jpg');
+        }
+        &.slide3 {
+            background-image: url('/images/cover3.jpg');
+        }
+        .desc {
+            display: none;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -20px;
+            font-size: 13px;
+            color: #222;
+            background-color: white;
+            background-size: cover;
+            padding: 12px;
+            border-radius: 4px;
+            width: 70%;
+            text-align: center;
+        }
+    }
+    .slider-right, .slider-left {
+        &:before {
+            content: "";
+            display: block;
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            margin-top: -34px;
+            top: 50%;
+            left: 0;
+            background: linear-gradient(to top, red, purple, blue);
+            border-radius: 50%;
+            z-index: 999;
+        }
+        &>div {
+            border-top: none !important;
+            border-bottom: none !important;
+            border-left: none !important;
+            border-right: none !important;
+            border: none !important;
+            left: 2px !important;
+            width: 36px;
+            margin-top: -14px !important;
+            padding: 0 !important;
+            height: 36px;
+            background-color: black;
+            border-radius: 50%;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        } 
+    }
+    .slider-right > div > i:before {
+        content: "\E825" !important;
+        font-family: 'revicons' !important;
+    }
+    .slider-left > div > i:before {
+        content: "\E824" !important;
+        font-family: 'revicons' !important;
+    }
+}
+
+@media (max-width: 888px) and (min-width: 501px){
+    .react-3d-carousel {
+        min-height: 500px;
+        .AlbumSlide {
+            height: 450px;
+            width: 450px;
+        }
+    }
+}
+
+@media (max-width: 500px) {
+    .react-3d-carousel {
+        min-height: 600px;
+        .AlbumSlide {
+            width: 100%;
+            height: 500px;
+            a {
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-20%);
+            }
+            .desc {
+                display: block;
+            }
+            &.slide1 {
+                background-image: url('/images/cover1-mobile.jpg');
+            }
+            &.slide2 {
+                background-image: url('/images/cover2-mobile.jpg');
+            }
+            &.slide3 {
+                background-image: url('/images/cover3-mobile.jpg');
+            }
+        }
+    }
+ }
+
+.press {
+    padding: 30px;
+    h2 {
+        text-align: center;
+    }
+    .row {
+        text-align:center;
+        padding: 30px;
+        &>div {
+            display: inline-block;
+            width: 30%;
+            text-align: center;
+            height: 100%;
+            vertical-align: middle;
+            img {
+                max-width: 80%;
+            }
+        }
+    }
+}
+
+@media (max-width: 500px) {
+    .press {
+        padding: 0;
+        .row {
+            padding: 0;
+            &>div {
+                display: block;
+                width: 100%;
+                padding-top: 20px;
+                padding-bottom: 20px;
+                img {
+                    max-width: 50%;
                 }
             }
         }

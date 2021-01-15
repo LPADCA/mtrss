@@ -3,10 +3,11 @@ import { graphql } from 'gatsby'
 import get from 'lodash/get'
 import { Helmet } from 'react-helmet'
 import Scroller from '../components/scroller'
-import Hero from '../components/hero'
+//import Hero from '../components/hero'
 import Layout from '../components/layout'
 import Collapse from "@kunukn/react-collapse"
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
+//import {Carousel} from '3d-react-carousal';
 
 const RichText = ({jsonRichText}) => {
     return (
@@ -49,25 +50,60 @@ class RootIndex extends React.Component {
 
   render() {
     const siteTitle = get(this, 'props.data.site.siteMetadata.title');
-    const buttonText = this.props.data.contentfulHomepage.buttonText;
-    const buttonUrl = this.props.data.contentfulHomepage.buttonUrl;
     const parse_string = this.props.data.contentfulHomepage.youtubeVideoUrl.split('/').pop();
     const youtubeUrl = parse_string.includes('watch?v=') ? parse_string.substr(parse_string.indexOf('=')+1) : parse_string;
     const audioTrack = this.props.data.contentfulHomepage.audioTrack;
     console.log(audioTrack);
 
+
+    const buttonURL = this.props.data.contentfulHomepage.buttonUrl;
+    const buttonText = this.props.data.contentfulHomepage.buttonText;
+    const buttonURL2 = "https://ffm.to/yeqvjb1";
+    const buttonText2 = "Listen Now";
+    const buttonURL3 = "https://ffm.to/qmyoqj7";
+    const buttonText3 = "Listen Now";
+  
+    let slidesDiv = [
+      <div className="AlbumSlide slide1">
+        <a href={buttonURL} className="button">{buttonText}</a>
+        <div className="desc">
+          MTRSS - Cali High (feat. Graham Candy, Ilya Lagutenko, Jesse Siebenberg)
+        </div>
+      </div>,
+      <div className="AlbumSlide slide2">
+        <a href={buttonURL2} className="button">{buttonText2}</a>
+        <div className="desc">
+        MTRSS - Cali High (Alle Farben Remix)
+        </div>
+      </div>,
+      <div className="AlbumSlide slide3">
+        <a href={buttonURL3} className="button">{buttonText3}</a>
+        <div className="desc">
+          MTRSS, Fede Montero - Cali High (Versión en Español)
+        </div>
+      </div>
+
+    ]
+
+
     return (
       <Layout location={this.props.location} data={this.props.data}>
-          <Helmet title={siteTitle} />
+          <Helmet title={siteTitle}>
+            <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"/>
+            <link rel="preconnect" href="https://fonts.gstatic.com"/>
+            <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"/>
+          </Helmet>
+          {/*<Carousel slides={slidesDiv} autoplay={false} interval={1000}/>*/}
           <div id="mtrss-video-hero" className="video-hero">
             <div className="video-wrapper">
               <div className="iframe-wrapper">
                 <iframe id="ytplayer" width="100%" height="100%" src="https://www.youtube.com/embed/ZLSMMfBei18" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
               </div>
             </div>
-        </div>
+          </div>
         <Scroller/>
-        <Hero buttonText={buttonText} buttonURL={buttonUrl}/>
+        
+
           <div id="mtrss-audio" className="audio">
             <img src="/images/audio.png" alt="MTRSS:Listen"/><br/>
             { audioTrack &&
@@ -90,17 +126,45 @@ class RootIndex extends React.Component {
           </div>*/}
           <div id="mtrss-text" className="context">
             <div className="content">
-              <img src="/images/mtrss-content.jpg" width="500" height="115" alt="MTRSS"/><br/>
                 <RichText jsonRichText={this.props.data.contentfulHomepage.aboutTextPreview.json}/>
-              <Collapse isOpen={this.state.showDescription}>
                 <RichText jsonRichText={this.props.data.contentfulHomepage.aboutTextExtra.json}/>
-              </Collapse>
-              {!this.state.showDescription && <a href="#" onClick={this.triggerShowDescription} className="button">View more</a>}
             </div>
           </div>
-          <div id="spotify">
-            <iframe src="https://open.spotify.com/embed/artist/6k4nRFSKe2EQuzMHAtY1gp" width="300" height="380" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+
+          <div class="press">
+            <h2>Press about MTRSS</h2>
+            <div class="row">
+              <div>
+                <a target="_blank" href="https://chloerobinson-32546.medium.com/mtrss-new-lyric-video-displays-scenic-tranquility-4ab5b6af12a3"><img src="/images/logos/medium.svg"/></a>
+              </div>
+              <div>
+                <a target="_blank" href="https://www.ladygunn.com/music/interviews-music/the-alchemists-behind-mtrss/"><img src="/images/logos/ladygunn.svg"/></a>
+              </div>
+              <div>
+                <a target="_blank" href="https://gigsoupmusic.com/pr/mtrss-release-new-single-cali-high/"><img src="/images/logos/gigsoup.svg"/></a>
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <a target="_blank" href="https://www.xsnoize.com/premiere-mtrss-cali-high/"><img src="/images/logos/xs.svg"/></a>
+              </div>
+              <div>
+                <a target="_blank" href="https://www.music-news.com/news/Underground/135389/MTRSS-video-premiere-of-Cali-High"><img src="/images/logos/mn.svg"/></a>
+              </div>
+              <div>
+                <a target="_blank" href="https://v13.net/2021/01/art-collective-mtrss-push-musical-boundaries-with-new-single-cali-high-premiere/"><img src="/images/logos/vi3.svg"/></a>
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <a target="_blank" href="https://newnoisemagazine.com/video-premiere-mtrss-cali-high/"><img src="/images/logos/newnoise.svg"/></a>
+              </div>
+            </div>
           </div>
+
+          {/*<div id="spotify">
+            <iframe src="https://open.spotify.com/embed/artist/6k4nRFSKe2EQuzMHAtY1gp" width="300" height="380" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+          </div>*/}
           <div id="mtrss-contacts" className="footer">
             <div>
               <a className="contact-icon facebook" target="_blank" href="https://www.facebook.com/mtrss.art"></a>
