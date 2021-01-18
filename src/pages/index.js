@@ -91,14 +91,13 @@ class RootIndex extends React.Component {
             <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"/>
           </Helmet>
           <Carousel slides={slidesDiv} autoplay={false} interval={1000}/>
-          <div id="mtrss-video-hero" className="video-hero">
+          {/*<div id="mtrss-video-hero" className="video-hero">
             <div className="video-wrapper">
               <div className="iframe-wrapper">
                 <iframe id="ytplayer" width="100%" height="100%" src="https://www.youtube.com/embed/ZLSMMfBei18" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
               </div>
             </div>
-          </div>
-        <Scroller/>
+          </div>*/}
         
 
           <div id="mtrss-audio" className="audio">
@@ -112,7 +111,8 @@ class RootIndex extends React.Component {
                 <a href="#" id="audioControl" onClick={this.playPause}>{!this.state.isPlaying ? <img src="/images/play.svg" width="32" height="32" alt="Play"/> : <img src="/images/pause.svg" width="32" height="32" alt="Pause"/>} </a>
               </>
             }
-            </div>
+          </div>
+            <Scroller/>
           {/*
           <div id="mtrss-video" className="video">
             <div className="video-wrapper">

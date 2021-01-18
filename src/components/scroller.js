@@ -34,12 +34,12 @@ const Scroller = () => {
 
   return (
     <>
-      <h4 
+      <h3 
         style={{
           textAlign: 'center',
           marginBottom: 0,
           marginTop: '50px'
-        }}>More videos</h4>
+        }}>Videos</h3>
       <Carousel
         draggable={true}
         showDots={false}
@@ -51,6 +51,7 @@ const Scroller = () => {
         dotListClass="custom-dot-list-style"
         itemClass="carousel-item-padding-40-px"
       >
+        <YoutubeSlide key="youtube-1" url="https://www.youtube.com/embed/ZLSMMfBei18" />
         <YoutubeSlide key="youtube-2" url="https://www.youtube.com/embed/bClwEwAdfMM" />
         <YoutubeSlide key="youtube-3" url="https://www.youtube.com/embed/-hxCYIFnCYU" />
         <YoutubeSlide key="youtube-4" url="https://www.youtube.com/embed/dGJ-GD7M9lA" />
