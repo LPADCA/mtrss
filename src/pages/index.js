@@ -7,7 +7,7 @@ import Scroller from '../components/scroller'
 import Layout from '../components/layout'
 import Collapse from "@kunukn/react-collapse"
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
-//import {Carousel} from '3d-react-carousal';
+import {Carousel} from '../components/3rdparty/Carousel';
 
 const RichText = ({jsonRichText}) => {
     return (
@@ -42,8 +42,6 @@ class RootIndex extends React.Component {
     }));
     var audioTrack = document.getElementById('audioTrack');
     var method = this.state.isPlaying ? 'pause' : 'play';
-    console.log(method);
-    console.log(audioTrack);
     audioTrack[method]();
     //this.setState({showDescription:true});
   }
@@ -53,7 +51,6 @@ class RootIndex extends React.Component {
     const parse_string = this.props.data.contentfulHomepage.youtubeVideoUrl.split('/').pop();
     const youtubeUrl = parse_string.includes('watch?v=') ? parse_string.substr(parse_string.indexOf('=')+1) : parse_string;
     const audioTrack = this.props.data.contentfulHomepage.audioTrack;
-    console.log(audioTrack);
 
 
     const buttonURL = this.props.data.contentfulHomepage.buttonUrl;
@@ -93,7 +90,7 @@ class RootIndex extends React.Component {
             <link rel="preconnect" href="https://fonts.gstatic.com"/>
             <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet"/>
           </Helmet>
-          {/*<Carousel slides={slidesDiv} autoplay={false} interval={1000}/>*/}
+          <Carousel slides={slidesDiv} autoplay={false} interval={1000}/>
           <div id="mtrss-video-hero" className="video-hero">
             <div className="video-wrapper">
               <div className="iframe-wrapper">
