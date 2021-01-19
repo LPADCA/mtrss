@@ -62,19 +62,19 @@ class RootIndex extends React.Component {
   
     let slidesDiv = [
       <div className="AlbumSlide slide1">
-        <a href={buttonURL} className="button">{buttonText}</a>
+        <a target="_blank" href={buttonURL} className="button">{buttonText}</a>
         <div className="desc">
           MTRSS - Cali High (feat. Graham Candy, Ilya Lagutenko, Jesse Siebenberg)
         </div>
       </div>,
       <div className="AlbumSlide slide2">
-        <a href={buttonURL2} className="button">{buttonText2}</a>
+        <a target="_blank" href={buttonURL2} className="button">{buttonText2}</a>
         <div className="desc">
         MTRSS - Cali High (Alle Farben Remix)
         </div>
       </div>,
       <div className="AlbumSlide slide3">
-        <a href={buttonURL3} className="button">{buttonText3}</a>
+        <a target="_blank" href={buttonURL3} className="button">{buttonText3}</a>
         <div className="desc">
           MTRSS, Fede Montero - Cali High (Versión en Español)
         </div>
