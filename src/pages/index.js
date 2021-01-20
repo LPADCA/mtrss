@@ -60,9 +60,15 @@ class RootIndex extends React.Component {
     const buttonURL3 = "https://ffm.to/qmyoqj7";
     const buttonText3 = "Listen Now";
     const buttonURL4 = "https://ffm.to/9webja4";
-    const buttonText4 = "Listen Now";
+    const buttonText4 = "Pre-save Now";
 
     let slidesDiv = [
+      <div className="AlbumSlide slide4">
+        <a target="_blank" href={buttonURL4} className="button">{buttonText4}</a>
+        <div className="desc">
+          Cali High (DZA Reflip)
+        </div>
+      </div>,
       <div className="AlbumSlide slide1">
         <a target="_blank" href={buttonURL} className="button">{buttonText}</a>
         <div className="desc">
@@ -81,13 +87,6 @@ class RootIndex extends React.Component {
           MTRSS, Fede Montero - Cali High (Versión en Español)
         </div>
       </div>,
-    <div className="AlbumSlide slide4">
-      <a target="_blank" href={buttonURL4} className="button">{buttonText4}</a>
-      <div className="desc">
-        Cali High (DZA Reflip)
-      </div>
-    </div>,
-
     ]
 
 
