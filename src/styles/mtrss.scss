@@ -725,6 +725,9 @@ div, p, h1, h2, h3, h4, h5, h6, a {
         &.slide3 {
             background-image: url('/images/cover3.jpg');
         }
+        &.slide4 {
+            background-image: url('/images/cover4.jpg');
+        }
         .desc {
             display: none;
             position: absolute;
@@ -816,6 +819,9 @@ div, p, h1, h2, h3, h4, h5, h6, a {
             }
             &.slide3 {
                 background-image: url('/images/cover3-mobile.jpg');
+            }
+            &.slide4 {
+                background-image: url('/images/cover4-mobile.jpg');
             }
         }
     }
