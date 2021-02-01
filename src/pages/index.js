@@ -60,7 +60,7 @@ class RootIndex extends React.Component {
     const buttonURL3 = "https://ffm.to/qmyoqj7";
     const buttonText3 = "Listen Now";
     const buttonURL4 = "https://ffm.to/9webja4";
-    const buttonText4 = "Pre-save Now";
+    const buttonText4 = "Listen Now";
 
     let slidesDiv = [
       <div className="AlbumSlide slide4">
