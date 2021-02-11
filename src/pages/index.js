@@ -61,8 +61,16 @@ class RootIndex extends React.Component {
     const buttonText3 = "Listen Now";
     const buttonURL4 = "https://ffm.to/9webja4";
     const buttonText4 = "Listen Now";
+    const buttonURL5 = "https://ffm.to/kdwjob8";
+    const buttonText5 = "Listen Now";
 
     let slidesDiv = [
+      <div className="AlbumSlide slide5">
+        <a target="_blank" href={buttonURL5} className="button">{buttonText5}</a>
+        <div className="desc">
+          MaKenzie Thomas - Cali High (Official Cover)
+        </div>
+      </div>,
       <div className="AlbumSlide slide4">
         <a target="_blank" href={buttonURL4} className="button">{buttonText4}</a>
         <div className="desc">
