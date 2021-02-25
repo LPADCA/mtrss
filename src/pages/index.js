@@ -63,8 +63,16 @@ class RootIndex extends React.Component {
     const buttonText4 = "Listen Now";
     const buttonURL5 = "https://ffm.to/kdwjob8";
     const buttonText5 = "Listen Now";
+    const buttonURL6 = "https://ffm.to/l19dpoe";
+    const buttonText6 = "Listen Now";
 
     let slidesDiv = [
+      <div className="AlbumSlide slide6">
+        <a target="_blank" href={buttonURL6} className="button">{buttonText6}</a>
+        <div className="desc">
+          Cali High (Lee K Remix)
+        </div>
+      </div>,
       <div className="AlbumSlide slide5">
         <a target="_blank" href={buttonURL5} className="button">{buttonText5}</a>
         <div className="desc">
@@ -143,9 +151,9 @@ class RootIndex extends React.Component {
             </div>
           </div>
 
-          <div class="press">
+          <div className="press">
             <h2>Press about MTRSS</h2>
-            <div class="row">
+            <div className="row">
               <div>
                 <a target="_blank" href="https://chloerobinson-32546.medium.com/mtrss-new-lyric-video-displays-scenic-tranquility-4ab5b6af12a3"><img src="/images/logos/medium.svg"/></a>
               </div>
@@ -156,7 +164,7 @@ class RootIndex extends React.Component {
                 <a target="_blank" href="https://gigsoupmusic.com/pr/mtrss-release-new-single-cali-high/"><img src="/images/logos/gigsoup.svg"/></a>
               </div>
             </div>
-            <div class="row">
+            <div className="row">
               <div>
                 <a target="_blank" href="https://www.xsnoize.com/premiere-mtrss-cali-high/"><img src="/images/logos/xs.svg"/></a>
               </div>
@@ -167,7 +175,7 @@ class RootIndex extends React.Component {
                 <a target="_blank" href="https://v13.net/2021/01/art-collective-mtrss-push-musical-boundaries-with-new-single-cali-high-premiere/"><img src="/images/logos/vi3.svg"/></a>
               </div>
             </div>
-            <div class="row">
+            <div className="row">
               <div>
                 <a target="_blank" href="https://newnoisemagazine.com/video-premiere-mtrss-cali-high/"><img src="/images/logos/newnoise.svg"/></a>
               </div>

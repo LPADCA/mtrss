@@ -10,8 +10,8 @@ const buttonText2 = "Listen Now"
 export default ({ data, buttonText, buttonURL }) => (
   <>
     <div className="hero desktop">
-      <div class="insert-left"></div>
-      <div class="insert-right"></div>
+      <div className="insert-left"></div>
+      <div className="insert-right"></div>
       <div className="overlay1-shadow">
         <div className="overlay1">
           <a href={buttonURL} className="button">{buttonText}</a>

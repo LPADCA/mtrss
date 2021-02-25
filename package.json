@@ -31,7 +31,8 @@
     "react-helmet": "^6.1.0",
     "react-mailchimp-subscribe": "^2.1.0",
     "react-multi-carousel": "^2.6.1",
-    "react-player": "^2.7.2"
+    "react-player": "^2.7.2",
+    "sharp": "^0.25.4"
   },
   "devDependencies": {
     "contentful-import": "^7.9.12",
