@@ -55,8 +55,6 @@ const Scroller = () => {
         <YoutubeSlide key="youtube-2" url="https://www.youtube.com/embed/ZLSMMfBei18" />
         <YoutubeSlide key="youtube-3" url="https://www.youtube.com/embed/bClwEwAdfMM" />
         <YoutubeSlide key="youtube-4" url="https://www.youtube.com/embed/-hxCYIFnCYU" />
-        <YoutubeSlide key="youtube-5" url="https://www.youtube.com/embed/dGJ-GD7M9lA" />
-        <YoutubeSlide key="youtube-6" url="https://www.youtube.com/embed/ZLSMMfBei18" />
       </Carousel>
     </>
   )
