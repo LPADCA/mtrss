@@ -47,7 +47,17 @@ module.exports = {
     "gatsby-transformer-sharp",
     "gatsby-plugin-react-helmet",
     "gatsby-plugin-sharp",
-    "gatsby-plugin-sass",
+    {
+      resolve: `gatsby-plugin-sass`,
+      options: {
+       cssLoaderOptions: {
+         esModule: false,
+         modules: {
+           namedExport: false,
+         },
+       },
+     },
+    },
     {
       resolve: "gatsby-source-contentful",
       options: contentfulConfig,
