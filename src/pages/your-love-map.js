@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useRef, createRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import * as d3 from "d3";
 import * as topojson from "topojson-client";
 import * as geo from "d3-geo";
-import * as geoProjection from "d3-geo-projection";
 import { createGlobalStyle } from "styled-components";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import styled from "styled-components";
@@ -48,8 +47,8 @@ const AnimatedSvg = styled.svg`
 
   
   path {
-    stroke: black;
-    stroke-width: 2px;
+    /* stroke: black;
+    stroke-width: 2px; */
   }
 
   path:hover {
@@ -75,7 +74,7 @@ const SvgPath = ({ d, onClick, ...props }) => {
     d3.select(pathRef.current).on("click", onClick).transition().duration(100).attr("d", d);
   }, [d]);
 
-  return <path ref={pathRef} />;
+  return <path ref={pathRef} {...props} />;
 };
 
 const SvgPathsFromFeature = ({ topoJSON, projection, onPathClick }) => {
@@ -126,14 +125,13 @@ const BG_IMAGE_RATIO = BG_IMAGE_WIDTH / BG_IMAGE_HEIGHT;
 const SvgMap = (props) => {
   const svgRef = useRef();
   const featureRef = useRef();
-  const svg = d3.select(svgRef.current);
+
   const { width } = useWindowDimensions({ width: 0, height: 0 });
   const height = width / BG_IMAGE_RATIO
   const [centroid, setCentroid] = useState([width / 2, height / 2]);
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
-    console.log('effect selectedFeature', featureRef)
     if (!featureRef.current) setCentroid([width / 2, height / 2]);
   }, [width, height]);
 
@@ -141,9 +139,7 @@ const SvgMap = (props) => {
 
   const onFeatureClick = (feature) => {
     const isSame = feature === featureRef.current;
-    if (isSame) {
-      feature = TOPO_COUNTRIES
-    }
+    if (isSame) feature = TOPO_COUNTRIES
     const centroid = pathGenerator.centroid(feature);
     const bounds = pathGenerator.bounds(feature);
     const fullX = originalBounds[0][0] - originalBounds[1][0];
@@ -151,12 +147,8 @@ const SvgMap = (props) => {
     const scaleX = fullX / featX / 2;
 
     featureRef.current = feature;
-    console.log('scaleX', scaleX);
-    if (isSame) {
-      setScale(1)
-    } else {
-      setScale(scaleX / 2 > 1 ? scaleX / 2 : 2);
-    }
+    if (isSame) setScale(1)
+    else setScale(scaleX / 2 > 1 ? scaleX : 2);
     setCentroid(centroid);
   };
 
@@ -171,6 +163,9 @@ const SvgMap = (props) => {
         x={centroid[0]}
         y={centroid[1]}
         scale={scale}
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlnsXlink="http://www.w3.org/1999/xlink"
         {...props}
       >
         <SvgPathsFromFeature
@@ -178,68 +173,16 @@ const SvgMap = (props) => {
           onPathClick={onFeatureClick}
           topoJSON={TOPO_COUNTRIES}
         />
-        <SvgTopoCities
+        {/* <SvgTopoCities
           projection={projection}
           topoJSON={TOPO_PLACES}
-        />
+        /> */}
       </AnimatedSvg>
     </SvgWrapper>
   );
 };
 
 const YourLoveMapPage = () => {
-  const ref = useRef(null);
-  const [paths, setPaths] = useState([]);
-  const { height, width } = useWindowDimensions();
-
-  const projection = geo.geoConicConformal();
-
-  useEffect(() => {
-    // selection.append("path")
-    //   .datum(topojson.feature(COUNTRIES, COUNTRIES.objects.countries))
-    //   .attr("d", geo.geoPath().projection(projection))
-    //   .attr("fill", "transparent")
-    //   .attr("stroke", "white")
-  }, [height, width]);
-
-  // const onClick = () => {
-  //   const selection = d3.select(ref.current);
-
-  //   const child = selection.selectChild("path")
-  //   child.remove()
-  //   console.log('child', child)
-  //   const projection = geo.geoAlbers()
-  //     .center([0, 55.4])
-  //     .rotate([4.4, 0])
-  //     .parallels([50, 60])
-  //     .scale(6000)
-  //     .translate([width / 2, height / 2]);
-  //   selection.append("path")
-  //     .datum(topojson.feature(UK, UK.objects.subunits))
-  //     .attr("d", geo.geoPath().projection(projection))
-  //     .attr("fill", "transparent")
-  //     .attr("stroke", "white")
-  // }
-
-  const onPathClick = (feature, path) => {
-    console.log(feature);
-    console.log("path", path);
-    const pathFn = geo.geoPath().projection(
-      projection.fitExtent(
-        [
-          [100, 100],
-          [width, height],
-        ],
-        feature
-      )
-    );
-
-    setPaths(
-      paths.map(({ feature: f, path }) => {
-        return { path: pathFn(f), feature: f, stroke: feature.id === f.id ? "white" : undefined };
-      })
-    );
-  };
 
   return (
     <div>
