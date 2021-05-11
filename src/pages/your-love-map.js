@@ -9,6 +9,10 @@ import oceanBG from "../assets/images/Flowers_White.jpg";
 import earthBG from "../assets/images/Flowers_Red.png";
 import WORLD_TOPO_JSON from "../assets/geoJsons/world.topo.json";
 
+const BG_IMAGE_WIDTH = 1920;
+const BG_IMAGE_HEIGHT = 919;
+const BG_IMAGE_RATIO = BG_IMAGE_WIDTH / BG_IMAGE_HEIGHT;
+
 const GlobalStyle = createGlobalStyle`
   html {
     box-sizing: border-box;
@@ -34,8 +38,10 @@ const AnimatedSvg = styled.svg`
   background-color: transparent;
   background-image: url(${earthBG});
   background-size: contain;
-  background-position: top center;
+  background-position: top 30% left 38%;
   background-repeat: no-repeat;
+  /* background-size: ${({ width }) => width}px ${({ width }) => width / BG_IMAGE_RATIO }px; */
+  background-size: 95%;
 
   fill: transparent;
   will-change: transform, stroke-width;
@@ -47,12 +53,11 @@ const AnimatedSvg = styled.svg`
 
   
   path {
-    /* stroke: black;
-    stroke-width: 2px; */
+    stroke: black;
+    stroke-width: 2px; 
   }
 
   path:hover {
-    
     will-change: stroke-width;
     transition: all 0.5s ease-in;
     fill: white;
@@ -118,9 +123,7 @@ const pathGenerator = geo.geoPath().projection(projection);
 
 const originalBounds = pathGenerator.bounds(TOPO_COUNTRIES);
 
-const BG_IMAGE_WIDTH = 2100;
-const BG_IMAGE_HEIGHT = 960;
-const BG_IMAGE_RATIO = BG_IMAGE_WIDTH / BG_IMAGE_HEIGHT;
+
 
 const SvgMap = (props) => {
   const svgRef = useRef();
@@ -135,7 +138,7 @@ const SvgMap = (props) => {
     if (!featureRef.current) setCentroid([width / 2, height / 2]);
   }, [width, height]);
 
-  projection.fitExtent([[0, 30], [width, height + 30]], TOPO_COUNTRIES);
+  projection.fitExtent([[0, 0], [width, height]], TOPO_COUNTRIES);
 
   const onFeatureClick = (feature) => {
     const isSame = feature === featureRef.current;
