@@ -5,7 +5,7 @@ import * as geo from "d3-geo";
 import { createGlobalStyle } from "styled-components";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import styled from "styled-components";
-import oceanBG from "../assets/images/Flowers_white.jpg";
+import oceanBG from "../assets/images/Flowers_White.jpg";
 import earthBG from "../assets/images/Flowers_Red.png";
 import WORLD_TOPO_JSON from "../assets/geoJsons/world.topo.json";
 
@@ -173,10 +173,10 @@ const SvgMap = (props) => {
           onPathClick={onFeatureClick}
           topoJSON={TOPO_COUNTRIES}
         />
-        {/* <SvgTopoCities
+        <SvgTopoCities
           projection={projection}
           topoJSON={TOPO_PLACES}
-        /> */}
+        />
       </AnimatedSvg>
     </SvgWrapper>
   );
