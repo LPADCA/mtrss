@@ -6,8 +6,8 @@ import * as geoProjection from "d3-geo-projection";
 import { createGlobalStyle } from "styled-components";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import styled from "styled-components";
-import oceanBG from "../assets/images/ocean.jpg";
-import earthBG from "../assets/images/earth.jpg";
+import oceanBG from "../assets/images/Flowers_white.jpg";
+import earthBG from "../assets/images/Flowers_Red.png";
 import WORLD_TOPO_JSON from "../assets/geoJsons/world.topo.json";
 
 const GlobalStyle = createGlobalStyle`
@@ -21,21 +21,24 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: inherit;
   }
 
-  body {
-    overflow: hidden;
-  }
 `;
 
 const SvgWrapper = styled.div`
   background-image: url(${oceanBG});
   background-size: cover;
+  padding: 100px 0;
+  overflow-x: hidden;
 `;
 
 const AnimatedSvg = styled.svg`
-  stroke: white;
+  stroke: transparent;
   background-color: transparent;
-  fill: url(#img1);
+  background-image: url(${earthBG});
+  background-size: contain;
+  background-position: top center;
+  background-repeat: no-repeat;
 
+  fill: transparent;
   will-change: transform, stroke-width;
   transition: transform 0.5s ease-in;
   transform: 
@@ -43,8 +46,17 @@ const AnimatedSvg = styled.svg`
     translate(${({ x, y, scale }) => `-${x * scale}px, -${y * scale}px`})
     scale(${({ scale }) => scale});
 
-  path:hover {
+  
+  path {
+    stroke: black;
     stroke-width: 2px;
+  }
+
+  path:hover {
+    
+    will-change: stroke-width;
+    transition: all 0.5s ease-in;
+    fill: white;
   }
 `;
 
@@ -67,63 +79,88 @@ const SvgPath = ({ d, onClick, ...props }) => {
 };
 
 const SvgPathsFromFeature = ({ topoJSON, projection, onPathClick }) => {
-  const { height, width } = useWindowDimensions({ width: 1920, height: 1080 });
   const pathGenerator = geo.geoPath().projection(projection);
 
   return topoJSON.features.map((feature) => {
+    const path = pathGenerator(feature)
     return (
       <SvgPath
-        key={feature.properties.NE_ID}
+        key={path}
         onClick={() => onPathClick(feature)}
-        d={pathGenerator(feature)}
+        d={path}
       />
     );
   });
 };
 
-const topoJSON = topojson.feature(WORLD_TOPO_JSON, WORLD_TOPO_JSON.objects.world);
+const SvgTopoCities = ({ topoJSON, projection, onPathClick }) => {
+  const pathGenerator = geo.geoPath().projection(projection);
+
+  return topoJSON.features.map((feature, i) => {
+    const [x, y] = pathGenerator.centroid(feature);
+
+    return (
+      <circle
+        key={i}
+        onClick={() => onPathClick(feature)}
+        r={1}
+        cx={x}
+        cy={y}
+        fill="black"
+      />
+    );
+  });
+};
+
+const TOPO_COUNTRIES = topojson.feature(WORLD_TOPO_JSON, WORLD_TOPO_JSON.objects.countries);
+const TOPO_PLACES = topojson.feature(WORLD_TOPO_JSON, WORLD_TOPO_JSON.objects.places);
 const projection = geo.geoEqualEarth();
 const pathGenerator = geo.geoPath().projection(projection);
 
-const originalBounds = pathGenerator.bounds(topoJSON);
+const originalBounds = pathGenerator.bounds(TOPO_COUNTRIES);
+
+const BG_IMAGE_WIDTH = 2100;
+const BG_IMAGE_HEIGHT = 960;
+const BG_IMAGE_RATIO = BG_IMAGE_WIDTH / BG_IMAGE_HEIGHT;
 
 const SvgMap = (props) => {
   const svgRef = useRef();
+  const featureRef = useRef();
   const svg = d3.select(svgRef.current);
-  const { height, width } = useWindowDimensions({ width: 0, height: 0 });
+  const { width } = useWindowDimensions({ width: 0, height: 0 });
+  const height = width / BG_IMAGE_RATIO
   const [centroid, setCentroid] = useState([width / 2, height / 2]);
   const [scale, setScale] = useState(1);
 
-  const [selectedFeature, setSelectedFeature] = useState();
-  console.log("selectedFeature render", selectedFeature);
-
   useEffect(() => {
-    if (!selectedFeature) setCentroid([width / 2, height / 2]);
-  }, [selectedFeature, width, height]);
+    console.log('effect selectedFeature', featureRef)
+    if (!featureRef.current) setCentroid([width / 2, height / 2]);
+  }, [width, height]);
 
-  projection.fitSize([width, height], topoJSON);
-
-  // console.log("centroid", centroid);
+  projection.fitExtent([[0, 30], [width, height + 30]], TOPO_COUNTRIES);
 
   const onFeatureClick = (feature) => {
-    console.log('feature', feature)
-    console.log('selectedFeature', selectedFeature)
-    console.log('feature === selectedFeature', feature === selectedFeature)
-    if (feature === selectedFeature) {
-      feature = topoJSON
+    const isSame = feature === featureRef.current;
+    if (isSame) {
+      feature = TOPO_COUNTRIES
     }
     const centroid = pathGenerator.centroid(feature);
-    // console.log('centroid', centroid)
     const bounds = pathGenerator.bounds(feature);
-    // console.log('bounds', bounds)
     const fullX = originalBounds[0][0] - originalBounds[1][0];
     const featX = bounds[0][0] - bounds[1][0];
-    const scaleX = fullX / featX;
-    // console.log('scaleX', scaleX)
-    // console.log('originalBounds', originalBounds)
-    setScale(scaleX / 2 > 1 ? scaleX / 2 : 2);
+    const scaleX = fullX / featX / 2;
+
+    featureRef.current = feature;
+    console.log('scaleX', scaleX);
+    if (isSame) {
+      setScale(1)
+    } else {
+      setScale(scaleX / 2 > 1 ? scaleX / 2 : 2);
+    }
     setCentroid(centroid);
   };
+
+  if (width === 0 && height === 0) return null;
 
   return (
     <SvgWrapper>
@@ -136,13 +173,14 @@ const SvgMap = (props) => {
         scale={scale}
         {...props}
       >
-        <pattern id="img1" patternUnits="userSpaceOnUse" width={width} height={width}>
-          <image href={earthBG} x="0" y="0" width={width} height={width} />
-        </pattern>
         <SvgPathsFromFeature
           projection={projection}
           onPathClick={onFeatureClick}
-          topoJSON={topoJSON}
+          topoJSON={TOPO_COUNTRIES}
+        />
+        <SvgTopoCities
+          projection={projection}
+          topoJSON={TOPO_PLACES}
         />
       </AnimatedSvg>
     </SvgWrapper>
