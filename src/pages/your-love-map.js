@@ -53,8 +53,8 @@ const AnimatedSvg = styled.svg`
 
   
   path {
-    stroke: black;
-    stroke-width: 2px; 
+    /* stroke: black;
+    stroke-width: 2px;  */
   }
 
   path:hover {
