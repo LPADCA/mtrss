@@ -69,7 +69,7 @@ const heartbeat = keyframes`
     box-shadow: 0px 0px 122px #ff0000;
   }
   60% {
-    box-shadow: 0px 0px 88px #ff0000;
+    box-shadow: 0px 0px 66px #ff0000;
   }
   70% {
     box-shadow: 0px 0px 99px #ff0000;
