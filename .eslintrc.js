@@ -4,16 +4,12 @@ module.exports = {
     es6: true,
     node: true,
   },
-  extends: [
-    "plugin:react/recommended",
-    "standard",
-    "prettier",
-    "plugin:prettier/recommended",
-  ],
+  extends: ["plugin:react/recommended", "standard", "prettier", "plugin:prettier/recommended"],
   globals: {
     Atomics: "readonly",
     SharedArrayBuffer: "readonly",
   },
+  parser: "@babel/eslint-parser",
   parserOptions: {
     ecmaFeatures: {
       jsx: true,

@@ -26,21 +26,18 @@ const AnimatedSvg = styled.svg`
   background-size: contain;
   background-position: top 30% left 38%;
   background-repeat: no-repeat;
-  /* background-size: ${({ width }) => width}px ${({ width }) => width / BG_IMAGE_RATIO }px; */
+  /* background-size: ${({ width }) => width}px ${({ width }) => width / BG_IMAGE_RATIO}px; */
   background-size: 95%;
 
   fill: transparent;
   will-change: transform, stroke-width;
   transition: transform 0.5s ease-in;
-  transform: 
-    translate(${({ width, height, scale }) => `${(width * scale) / 2}px, ${(height * scale) / 2}px`})
-    translate(${({ x, y, scale }) => `-${x * scale}px, -${y * scale}px`})
-    scale(${({ scale }) => scale});
+  transform: translate(${({ width, height, scale }) => `${(width * scale) / 2}px, ${(height * scale) / 2}px`})
+    translate(${({ x, y, scale }) => `-${x * scale}px, -${y * scale}px`}) scale(${({ scale }) => scale});
 
-  
   path {
     stroke: black;
-    stroke-width: ${({ scale }) => 2 / scale }px; 
+    stroke-width: ${({ scale }) => 2 / scale}px;
   }
 
   path:hover {
@@ -49,14 +46,6 @@ const AnimatedSvg = styled.svg`
     fill: white;
   }
 `;
-
-function usePrevious(value) {
-  const ref = useRef();
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-}
 
 const SvgPath = ({ d, onClick, ...props }) => {
   const pathRef = useRef();
@@ -71,15 +60,9 @@ const SvgPath = ({ d, onClick, ...props }) => {
 const SvgPathsFromFeature = ({ topoJSON, projection, onPathClick }) => {
   const pathGenerator = geo.geoPath().projection(projection);
 
-  return topoJSON.features.map((feature) => {
-    const path = pathGenerator(feature)
-    return (
-      <SvgPath
-        key={path}
-        onClick={() => onPathClick(feature)}
-        d={path}
-      />
-    );
+  return topoJSON.features.map(feature => {
+    const path = pathGenerator(feature);
+    return <SvgPath key={path} onClick={() => onPathClick(feature)} d={path} />;
   });
 };
 
@@ -89,16 +72,7 @@ const SvgTopoCities = ({ topoJSON, projection, onPathClick }) => {
   return topoJSON.features.map((feature, i) => {
     const [x, y] = pathGenerator.centroid(feature);
 
-    return (
-      <circle
-        key={i}
-        onClick={() => onPathClick(feature)}
-        r={1}
-        cx={x}
-        cy={y}
-        fill="black"
-      />
-    );
+    return <circle key={i} onClick={() => onPathClick(feature)} r={1} cx={x} cy={y} fill="black" />;
   });
 };
 
@@ -109,14 +83,12 @@ const pathGenerator = geo.geoPath().projection(projection);
 
 const originalBounds = pathGenerator.bounds(TOPO_COUNTRIES);
 
-
-
-const SvgMap = (props) => {
+const SvgMap = props => {
   const svgRef = useRef();
   const featureRef = useRef();
 
   const { width } = useWindowDimensions({ width: 0, height: 0 });
-  const height = width / BG_IMAGE_RATIO
+  const height = width / BG_IMAGE_RATIO;
   const [centroid, setCentroid] = useState([width / 2, height / 2]);
   const [scale, setScale] = useState(1);
 
@@ -124,11 +96,17 @@ const SvgMap = (props) => {
     if (!featureRef.current) setCentroid([width / 2, height / 2]);
   }, [width, height]);
 
-  projection.fitExtent([[0, 0], [width, height]], TOPO_COUNTRIES);
+  projection.fitExtent(
+    [
+      [0, 0],
+      [width, height],
+    ],
+    TOPO_COUNTRIES
+  );
 
-  const onFeatureClick = (feature) => {
+  const onFeatureClick = feature => {
     const isSame = feature === featureRef.current;
-    if (isSame) feature = TOPO_COUNTRIES
+    if (isSame) feature = TOPO_COUNTRIES;
     const centroid = pathGenerator.centroid(feature);
     const bounds = pathGenerator.bounds(feature);
     const fullX = originalBounds[0][0] - originalBounds[1][0];
@@ -136,7 +114,7 @@ const SvgMap = (props) => {
     const scaleX = fullX / featX / 2;
 
     featureRef.current = feature;
-    if (isSame) setScale(1)
+    if (isSame) setScale(1);
     else setScale(scaleX / 2 > 1 ? scaleX : 2);
     setCentroid(centroid);
   };
@@ -157,15 +135,8 @@ const SvgMap = (props) => {
         xmlnsXlink="http://www.w3.org/1999/xlink"
         {...props}
       >
-        <SvgPathsFromFeature
-          projection={projection}
-          onPathClick={onFeatureClick}
-          topoJSON={TOPO_COUNTRIES}
-        />
-        <SvgTopoCities
-          projection={projection}
-          topoJSON={TOPO_PLACES}
-        />
+        <SvgPathsFromFeature projection={projection} onPathClick={onFeatureClick} topoJSON={TOPO_COUNTRIES} />
+        <SvgTopoCities projection={projection} topoJSON={TOPO_PLACES} />
       </AnimatedSvg>
     </SvgWrapper>
   );
