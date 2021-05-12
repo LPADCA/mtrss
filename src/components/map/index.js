@@ -62,6 +62,7 @@ const SvgPathsFromFeature = ({ topoJSON, projection, onPathClick }) => {
 
   return topoJSON.features.map(feature => {
     const path = pathGenerator(feature);
+    if (!path) return null;
     return <SvgPath key={path} onClick={() => onPathClick(feature)} d={path} />;
   });
 };

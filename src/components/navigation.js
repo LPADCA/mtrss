@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {  useStaticQuery, graphql } from "gatsby";
+import { useStaticQuery, graphql } from "gatsby";
 import AnchorLink from "react-anchor-link-smooth-scroll";
 
 const Navigation = () => {

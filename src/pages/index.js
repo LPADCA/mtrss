@@ -7,6 +7,7 @@ import Scroller from "../components/scroller";
 import Layout from "../components/layout";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { Carousel } from "../components/3rdparty/Carousel";
+import Footer from "../components/footer";
 
 const RichText = ({ jsonRichText }) => {
   return <>{documentToReactComponents(jsonRichText)}</>;
@@ -41,7 +42,6 @@ class RootIndex extends React.Component {
   };
 
   render() {
-    const siteTitle = get(this, "props.data.site.siteMetadata.title");
     const audioTrack = this.props.data.contentfulHomepage.audioTrack;
 
     const buttonURL = this.props.data.contentfulHomepage.buttonUrl;
@@ -114,18 +114,14 @@ class RootIndex extends React.Component {
 
     return (
       <Layout location={this.props.location} data={this.props.data}>
-        <Helmet title={siteTitle}>
+        <Helmet>
           <link
             href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
             rel="stylesheet"
             integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
             crossOrigin="anonymous"
           />
-          <link rel="preconnect" href="https://fonts.gstatic.com" />
-          <link
-            href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-            rel="stylesheet"
-          />
+
         </Helmet>
         <Carousel slides={slidesDiv} autoplay={false} interval={1000} />
         {/* <div id="mtrss-video-hero" className="video-hero">
@@ -230,28 +226,7 @@ class RootIndex extends React.Component {
         {/* <div id="spotify">
             <iframe src="https://open.spotify.com/embed/artist/6k4nRFSKe2EQuzMHAtY1gp" width="300" height="380" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
           </div> */}
-        <div id="mtrss-contacts" className="footer">
-          <div>
-            <a
-              className="contact-icon facebook"
-              target="_blank"
-              href="https://www.facebook.com/mtrss.art"
-            ></a>
-            <a
-              className="contact-icon instagram"
-              target="_blank"
-              href="https://www.instagram.com/mtrss.art"
-            ></a>
-            <a
-              className="contact-icon spotify"
-              target="_blank"
-              href="https://open.spotify.com/artist/6k4nRFSKe2EQuzMHAtY1gp?si=05TzF1roQUqSdPnhDWxWBA"
-            ></a>
-            <a className="contact-icon bandcamp" target="_blank" href="https://mtrss.bandcamp.com/"></a>
-            <a className="contact-icon email" target="_blank" href="mailto:mtrss.art@gmail.com"></a>
-          </div>
-          <p>&copy; 2020 MTRSS Arts. All Rights Reserved</p>
-        </div>
+        <Footer />
       </Layout>
     );
   }

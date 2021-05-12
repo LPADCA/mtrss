@@ -1,8 +1,8 @@
 {
-  "name": "contentful-starter-gatsby-blog",
-  "description": "Contentful Gatsby Starter Blog",
+  "name": "mtrss-website",
+  "description": "MTRSS Website",
   "private": true,
-  "version": "0.0.1",
+  "version": "1.0.0",
   "author": "Contentful <opensource@contentful.com>",
   "bugs": {
     "url": "https://github.com/contentful/starter-gatsby-blog/issues"
@@ -10,6 +10,8 @@
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^14.1.1",
     "@kunukn/react-collapse": "^2.2.9",
+    "@svgr/webpack": "^5.5.0",
+    "babel-plugin-styled-components": "^1.12.0",
     "d3": "^6.7.0",
     "d3-fetch": "^2.0.0",
     "d3-geo": "^2.0.1",
@@ -21,6 +23,8 @@
     "gatsby-plugin-react-helmet": "^3.3.5",
     "gatsby-plugin-sass": "^4.3.0",
     "gatsby-plugin-sharp": "^3.3.1",
+    "gatsby-plugin-styled-components": "^4.5.0",
+    "gatsby-plugin-svgr": "*",
     "gatsby-source-contentful": "^2.3.51",
     "gatsby-source-filesystem": "^2.3.35",
     "gatsby-transformer-remark": "^2.8.18",
@@ -59,7 +63,6 @@
     "netlify-cli": "^2.54.0",
     "prettier": "^2.1.2"
   },
-  "homepage": "https://github.com/contentful/starter-gatsby-blog#readme",
   "keywords": [
     "gatsby",
     "contentful",
@@ -67,10 +70,6 @@
   ],
   "license": "MIT",
   "main": "n/a",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/contentful/starter-gatsby-blog.git"
-  },
   "scripts": {
     "start": "gatsby develop -H 0.0.0.0",
     "build": "gatsby build",

@@ -1,3 +1,5 @@
+/* eslint-disable node/no-path-concat */
+
 require("dotenv").config({
   path: `.env.production`,
 });
@@ -18,11 +20,8 @@ if (process.env.CONTENTFUL_HOST) {
 
 const { spaceId, accessToken } = contentfulConfig;
 
-
 if (!spaceId || !accessToken) {
-  throw new Error(
-    "Contentful spaceId and the access token need to be provided."
-  );
+  throw new Error("Contentful spaceId and the access token need to be provided.");
 }
 
 module.exports = {
@@ -47,16 +46,26 @@ module.exports = {
     "gatsby-transformer-sharp",
     "gatsby-plugin-react-helmet",
     "gatsby-plugin-sharp",
+    "gatsby-plugin-styled-components",
     {
       resolve: `gatsby-plugin-sass`,
       options: {
-       cssLoaderOptions: {
-         esModule: false,
-         modules: {
-           namedExport: false,
-         },
-       },
-     },
+        cssLoaderOptions: {
+          esModule: false,
+          modules: {
+            namedExport: false,
+          },
+        },
+      },
+    },
+    {
+      resolve: "gatsby-plugin-svgr",
+      options: {
+        svgo: true,
+        svgoConfig: {
+          removeViewBox: false, // remove viewBox when possible (default)
+        },
+      },
     },
     {
       resolve: "gatsby-source-contentful",

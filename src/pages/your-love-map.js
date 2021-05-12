@@ -1,7 +1,11 @@
 import React from "react";
-import { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle } from "styled-components";
 import SvgMap from "../components/map";
 import Layout from "../components/layout";
+import { ReactComponent as LoveFrameSvg } from "../assets/images/love-frames.svg";
+import heartUrl from "../assets/images/heart.png";
+import heart2xUrl from "../assets/images/heart@2x.png";
+import Footer from "../components/footer";
 
 const GlobalStyle = createGlobalStyle`
   html {
@@ -14,13 +18,96 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: inherit;
   }
 
+  body {
+    background-color: black;
+  }
+
+`;
+
+const Hero = styled.div`
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 50px;
+
+  p {
+    max-width: 560px;
+    text-align: center;
+    font-size: 16px;
+  }
+`;
+
+const Heading = styled.h1`
+  font-size: 34px;
+  font-weight: 300;
+  color: #ff3636;
+`;
+
+const RedLink = styled.a`
+  color: #ff3636;
+`;
+
+const AlbumArtContainer = styled.div`
+  display: flex;
+  padding: 200px 0;
+  justify-content: center;
+`;
+
+const AlbumCircle = styled.div`
+  width: 584px;
+  height: 584px;
+  border-radius: 100%;
+  box-shadow: 0px 0px 99px #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  transition: all 0.5s;
+  flex: 0 0 auto;
+
+  &:hover {
+    background-color: black;
+    box-shadow: 0px 0px 99px #ff0000;
+  }
+`;
+
+const HeartImg = styled.img``;
+
+const BottomLogo = styled.div`
+  width: 100%;
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const YourLoveMapPage = () => {
   return (
     <Layout>
       <GlobalStyle />
+      <Hero>
+        <LoveFrameSvg />
+        <Heading>#YourLoveMap</Heading>
+        <p>
+          All we need is love. Listen to the song and tag the person you love the most and give them{" "}
+          <RedLink>#YourLoveNote.</RedLink>
+        </p>
+      </Hero>
       <SvgMap />
+      <AlbumArtContainer>
+        <AlbumCircle>
+          <HeartImg src={heartUrl} width="506" height="506" srcSet={heart2xUrl} />
+        </AlbumCircle>
+      </AlbumArtContainer>
+      <Footer>
+        <BottomLogo>
+          <a href="/">
+            <img src="/images/mtrss-logo.svg" alt="MTRSS logo" width="170" />
+          </a>
+        </BottomLogo>
+      </Footer>
     </Layout>
   );
 };
