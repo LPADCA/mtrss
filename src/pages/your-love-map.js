@@ -1,6 +1,6 @@
 import React from "react";
 import { createGlobalStyle } from "styled-components";
-import SvgMap from "../components/map"
+import SvgMap from "../components/map";
 
 const GlobalStyle = createGlobalStyle`
   html {
@@ -16,7 +16,6 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 const YourLoveMapPage = () => {
-
   return (
     <div>
       <GlobalStyle />
