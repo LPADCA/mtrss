@@ -1,5 +1,5 @@
 import React from "react";
-import styled, { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle, keyframes } from "styled-components";
 import SvgMap from "../components/map";
 import Layout from "../components/layout";
 import { ReactComponent as LoveFrameSvg } from "../assets/images/love-frames.svg";
@@ -55,6 +55,30 @@ const AlbumArtContainer = styled.div`
   justify-content: center;
 `;
 
+const heartbeat = keyframes`
+  0% {
+    box-shadow: 0px 0px 99px #ff0000;
+  }
+  30% {
+    box-shadow: 0px 0px 99px #ff0000;
+  }
+  40% {
+    box-shadow: 0px 0px 77px #ff0000;
+  }
+  50% {
+    box-shadow: 0px 0px 122px #ff0000;
+  }
+  60% {
+    box-shadow: 0px 0px 88px #ff0000;
+  }
+  70% {
+    box-shadow: 0px 0px 99px #ff0000;
+  }
+  100% {
+    box-shadow: 0px 0px 99px #ff0000;
+  }
+`;
+
 const AlbumCircle = styled.div`
   width: 584px;
   height: 584px;
@@ -70,6 +94,7 @@ const AlbumCircle = styled.div`
   &:hover {
     background-color: black;
     box-shadow: 0px 0px 99px #ff0000;
+    animation: ${heartbeat} 1s infinite;
   }
 `;
 
