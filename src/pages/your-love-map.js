@@ -6,6 +6,7 @@ import { ReactComponent as LoveFrameSvg } from "../assets/images/love-frames.svg
 import heartUrl from "../assets/images/heart.png";
 import heart2xUrl from "../assets/images/heart@2x.png";
 import Footer from "../components/footer";
+import { mediaQueries } from "../screenSizes";
 
 const GlobalStyle = createGlobalStyle`
   html {
@@ -53,6 +54,7 @@ const AlbumArtContainer = styled.div`
   display: flex;
   padding: 200px 0;
   justify-content: center;
+  overflow: hidden;
 `;
 
 const heartbeat = keyframes`
@@ -80,8 +82,6 @@ const heartbeat = keyframes`
 `;
 
 const AlbumCircle = styled.div`
-  width: 584px;
-  height: 584px;
   border-radius: 100%;
   box-shadow: 0px 0px 99px #ffffff;
   display: flex;
@@ -90,6 +90,11 @@ const AlbumCircle = styled.div`
   background-color: white;
   transition: all 0.5s;
   flex: 0 0 auto;
+
+  @media ${mediaQueries.sm} {
+    width: 584px;
+    height: 584px;
+  }
 
   &:hover {
     background-color: black;

@@ -7,16 +7,19 @@ import styled from "styled-components";
 import oceanBG from "../../assets/images/Flowers_White.jpg";
 import earthBG from "../../assets/images/Flowers_Red.png";
 import WORLD_TOPO_JSON from "../../assets/geoJsons/world.topo.json";
+import { mediaQueries } from "../../screenSizes";
 
 const BG_IMAGE_WIDTH = 1920;
 const BG_IMAGE_HEIGHT = 919;
 const BG_IMAGE_RATIO = BG_IMAGE_WIDTH / BG_IMAGE_HEIGHT;
+const MIN_WIDTH = 1100;
 
 const SvgWrapper = styled.div`
   background-image: url(${oceanBG});
   background-size: cover;
-  padding: 100px 0;
-  overflow-x: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  min-height: 100vh;
 `;
 
 const AnimatedSvg = styled.svg`
@@ -32,12 +35,20 @@ const AnimatedSvg = styled.svg`
   fill: transparent;
   will-change: transform, stroke-width;
   transition: transform 0.5s ease-in;
-  transform: translate(${({ width, height, scale }) => `${(width * scale) / 2}px, ${(height * scale) / 2}px`})
-    translate(${({ x, y, scale }) => `-${x * scale}px, -${y * scale}px`}) scale(${({ scale }) => scale});
+  transform: translate(
+      ${({ width, height, scale, offsetY }) =>
+        `${(width * scale) / 2}px, ${(height * scale) / 2 + offsetY}px`}
+    )
+    translate(${({ x, y, scale, offsetY }) => `-${x * scale}px, -${y * scale}px`})
+    scale(${({ scale }) => scale});
 
   path {
     stroke: black;
-    stroke-width: ${({ scale }) => 2 / scale}px;
+    stroke-width: 1px;
+
+    @media ${mediaQueries.sm} {
+      stroke-width: 2px;
+    }
   }
 
   path:hover {
@@ -88,9 +99,12 @@ const SvgMap = props => {
   const svgRef = useRef();
   const featureRef = useRef();
 
-  const { width } = useWindowDimensions({ width: 0, height: 0 });
+  const { width: screenWidth, height: screenHeight } = useWindowDimensions({ width: 0, height: 0 });
+  const width = Math.max(screenWidth - 50, MIN_WIDTH);
   const height = width / BG_IMAGE_RATIO;
   const [centroid, setCentroid] = useState([width / 2, height / 2]);
+  const offsetY = (screenHeight - height) / 2;
+
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
@@ -115,9 +129,13 @@ const SvgMap = props => {
     const scaleX = fullX / featX / 2;
 
     featureRef.current = feature;
-    if (isSame) setScale(1);
-    else setScale(scaleX / 2 > 1 ? scaleX : 2);
-    setCentroid(centroid);
+    if (isSame) {
+      setScale(1);
+      setCentroid([width / 2, height / 2])
+    } else {
+      setScale(scaleX / 2 > 1 ? scaleX : 2);
+      setCentroid([centroid[0], centroid[1]]);
+    }
   };
 
   if (width === 0 && height === 0) return null;
@@ -128,6 +146,7 @@ const SvgMap = props => {
         ref={svgRef}
         width={width}
         height={height}
+        offsetY={offsetY}
         x={centroid[0]}
         y={centroid[1]}
         scale={scale}
