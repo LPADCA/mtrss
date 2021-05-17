@@ -187,6 +187,10 @@ const SvgMap = props => {
     if (!featureRef.current) setCentroid([width / 2, height / 2]);
   }, [width, height]);
 
+  useEffect(() => {
+    if (svgRef.current) setTimeout(() => svgRef.current.scrollTo(centroid[0], 0), 1000);
+  }, [centroid]);
+
   projection.fitExtent(
     [
       [0, 0],
