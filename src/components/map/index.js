@@ -7,7 +7,6 @@ import styled from "styled-components";
 import oceanBG from "../../assets/images/Flowers_White.jpg";
 import earthBG from "../../assets/images/Flowers_Red.png";
 import WORLD_TOPO_JSON from "../../assets/geoJsons/world.topo.json";
-import { mediaQueries } from "../../screenSizes";
 
 const BG_IMAGE_WIDTH = 1920;
 const BG_IMAGE_HEIGHT = 919;
@@ -20,6 +19,7 @@ const SvgWrapper = styled.div`
   overflow-x: auto;
   overflow-y: hidden;
   min-height: 100vh;
+  position: relative;
 `;
 
 const AnimatedSvg = styled.svg`
@@ -39,23 +39,22 @@ const AnimatedSvg = styled.svg`
       ${({ width, height, scale, offsetY }) =>
         `${(width * scale) / 2}px, ${(height * scale) / 2 + offsetY}px`}
     )
-    translate(${({ x, y, scale, offsetY }) => `-${x * scale}px, -${y * scale}px`})
-    scale(${({ scale }) => scale});
-
-  path {
-    stroke: black;
-    stroke-width: 1px;
-
-    @media ${mediaQueries.sm} {
-      stroke-width: 2px;
-    }
-  }
+    translate(${({ x, y, scale }) => `-${x * scale}px, -${y * scale}px`}) scale(${({ scale }) => scale});
 
   path:hover {
     will-change: stroke-width;
-    transition: all 0.5s ease-in;
+    transition: all 0.2s ease-in;
     fill: white;
   }
+`;
+
+const CountryTooltipContainer = styled.div`
+  background-color: white;
+  border: 1px solid black;
+  position: absolute;
+  top: ${({ top }) => top}px;
+  left: ${({ left }) => left}px;
+  color: black;
 `;
 
 const SvgPath = ({ d, onClick, ...props }) => {
@@ -68,13 +67,23 @@ const SvgPath = ({ d, onClick, ...props }) => {
   return <path ref={pathRef} {...props} />;
 };
 
-const SvgPathsFromFeature = ({ topoJSON, projection, onPathClick }) => {
+const SvgPathsFromFeature = ({ topoJSON, projection, onPathClick, onMouseOver }) => {
   const pathGenerator = geo.geoPath().projection(projection);
-
+  const handleMouseOver = feature => {
+    if (onMouseOver) onMouseOver(feature);
+  };
   return topoJSON.features.map(feature => {
     const path = pathGenerator(feature);
+
     if (!path) return null;
-    return <SvgPath key={path} onClick={() => onPathClick(feature)} d={path} />;
+    return (
+      <SvgPath
+        key={path}
+        onClick={() => onPathClick(feature)}
+        onMouseOver={() => handleMouseOver(feature)}
+        d={path}
+      />
+    );
   });
 };
 
@@ -92,8 +101,16 @@ const TOPO_COUNTRIES = topojson.feature(WORLD_TOPO_JSON, WORLD_TOPO_JSON.objects
 const TOPO_PLACES = topojson.feature(WORLD_TOPO_JSON, WORLD_TOPO_JSON.objects.places);
 const projection = geo.geoEqualEarth();
 const pathGenerator = geo.geoPath().projection(projection);
-
 const originalBounds = pathGenerator.bounds(TOPO_COUNTRIES);
+
+const ContryTooltip = ({ feature }) => {
+  const centroid = pathGenerator.centroid(feature);
+  return (
+    <CountryTooltipContainer top={centroid[1]} left={centroid[0]}>
+      {feature.properties.ADMIN}
+    </CountryTooltipContainer>
+  );
+};
 
 const SvgMap = props => {
   const svgRef = useRef();
@@ -103,6 +120,7 @@ const SvgMap = props => {
   const width = Math.max(screenWidth - 50, MIN_WIDTH);
   const height = width / BG_IMAGE_RATIO;
   const [centroid, setCentroid] = useState([width / 2, height / 2]);
+  const [overFeature, setOverFeature] = useState(null);
   const offsetY = (screenHeight - height) / 2;
 
   const [scale, setScale] = useState(1);
@@ -129,11 +147,12 @@ const SvgMap = props => {
     const scaleX = fullX / featX / 2;
 
     featureRef.current = feature;
+
     if (isSame) {
       setScale(1);
-      setCentroid([width / 2, height / 2])
+      setCentroid([width / 2, height / 2]);
     } else {
-      setScale(scaleX / 2 > 1 ? scaleX : 2);
+      setScale(scaleX / 2 > 1 ? scaleX / 2 : 2);
       setCentroid([centroid[0], centroid[1]]);
     }
   };
@@ -155,9 +174,14 @@ const SvgMap = props => {
         xmlnsXlink="http://www.w3.org/1999/xlink"
         {...props}
       >
-        <SvgPathsFromFeature projection={projection} onPathClick={onFeatureClick} topoJSON={TOPO_COUNTRIES} />
-        <SvgTopoCities projection={projection} topoJSON={TOPO_PLACES} />
+        <SvgPathsFromFeature
+          projection={projection}
+          onPathClick={onFeatureClick}
+          onMouseOver={setOverFeature}
+          topoJSON={TOPO_COUNTRIES}
+        />
       </AnimatedSvg>
+      {overFeature && <ContryTooltip feature={overFeature} />}
     </SvgWrapper>
   );
 };
