@@ -38,7 +38,7 @@ const AnimatedSvg = styled.svg`
 
   fill: transparent;
   will-change: transform, stroke-width;
-  transition: transform 0.5s ease-in;
+  transition: transform 1s ease-in;
   transform: translate(${({ width, height, scale }) => `${(width * scale) / 2}px, ${(height * scale) / 2}px`})
     translate(${({ x, y, scale }) => `-${x * scale}px, -${y * scale}px`}) scale(${({ scale }) => scale});
 `;
@@ -66,7 +66,7 @@ const ContinentGroup = styled.g`
 
   path {
     will-change: stroke-width, stroke;
-    transition: stroke 0.3s ease-in 0.5s;
+    transition: stroke 0.3s ease-in 1s;
   }
 
   ${({ isSelected }) => isSelected && HighlightedPath}
