@@ -31,7 +31,7 @@ const AnimatedSvg = styled.svg`
   background-color: transparent;
   background-image: url(${earthBG});
   background-size: contain;
-  background-position: top 30% left 75%;
+  background-position: top 45% left 75%;
   background-repeat: no-repeat;
   /* background-size: ${({ width }) => width}px ${({ width }) => width / BG_IMAGE_RATIO}px; */
   background-size: 90%;
@@ -39,12 +39,8 @@ const AnimatedSvg = styled.svg`
   fill: transparent;
   will-change: transform, stroke-width;
   transition: transform 0.5s ease-in;
-  transform: translate(
-      ${({ width, height, scale, offsetY }) =>
-        `${(width * scale) / 2}px, ${(height * scale) / 2 + offsetY}px`}
-    )
-    translate(${({ x, y, scale, offsetY }) => `-${x * scale}px, -${y * scale}px`})
-    scale(${({ scale }) => scale});
+  transform: translate(${({ width, height, scale }) => `${(width * scale) / 2}px, ${(height * scale) / 2}px`})
+    translate(${({ x, y, scale }) => `-${x * scale}px, -${y * scale}px`}) scale(${({ scale }) => scale});
 `;
 
 const HighlightedPath = css`
@@ -65,8 +61,14 @@ const HighlightedCountry = css`
 `;
 
 const ContinentGroup = styled.g`
-  will-change: stroke-width;
-  transition: all 0.2s ease-in;
+  will-change: fill;
+  transition: fill 0.3s ease-in 0s;
+
+  path {
+    will-change: stroke-width, stroke;
+    transition: stroke 0.3s ease-in 0.5s;
+  }
+
   ${({ isSelected }) => isSelected && HighlightedPath}
   ${({ isSelected }) => !isSelected && HighlightedCountry}
 `;
@@ -174,7 +176,7 @@ const SvgMap = props => {
 
   const { width: screenWidth, height: screenHeight } = useWindowDimensions({ width: 0, height: 0 });
   const width = Math.max(screenWidth - 50, MIN_WIDTH);
-  const height = width / BG_IMAGE_RATIO;
+  const height = screenHeight;
   const [centroid, setCentroid] = useState([width / 2, height / 2]);
   const [overFeature, setOverFeature] = useState(null);
   const offsetY = (screenHeight - height) / 2;
