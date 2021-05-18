@@ -20,10 +20,10 @@ const originalBounds = pathGenerator.bounds(TOPO_COUNTRIES);
 const SvgWrapper = styled.div`
   background-image: url(${oceanBG});
   background-size: cover;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: hidden;
   min-height: 100vh;
   position: relative;
+  min-width: 100%;
 `;
 
 const AnimatedSvg = styled.svg`
@@ -39,12 +39,19 @@ const AnimatedSvg = styled.svg`
   fill: transparent;
   will-change: transform, stroke-width;
   transition: transform 1s ease-in;
-  transform: translate(${({ width, height, scale }) => `${(width * scale) / 2}px, ${(height * scale) / 2}px`})
-    translate(${({ x, y, scale }) => `-${x * scale}px, -${y * scale}px`}) scale(${({ scale }) => scale});
+  /* transform: translate(${({ width, height, scale }) =>
+    `${(width / 2) * scale}px, ${(height / 2) * scale}px`})
+    translate(${({ x, y, scale }) => `-${x * scale}px, -${y * scale}px`}) scale(${({ scale }) => scale}); */
+  transform: 
+    translate(${({ width, height, scale }) => `${(width / 2) * scale}px, ${(height / 2) * scale}px`})
+    translate(${({ x, y, scale }) => `-${x * scale}px, -${y * scale}px`})
+    scale(${({ scale }) => scale})
+    translate(${({ offsetX, offsetY, scale }) => `-${offsetX / scale}px, -${offsetY}px`})
 `;
 
 const HighlightedPath = css`
   path {
+    vector-effect: non-scaling-stroke;
     stroke: white;
     stroke-width: 1px;
   }
@@ -95,7 +102,7 @@ const SvgPath = ({ d, onClick, ...props }) => {
     d3.select(pathRef.current).on("click", onClick).transition().duration(100).attr("d", d);
   }, [d]);
 
-  return <path ref={pathRef} {...props} />;
+  return <path vectorEffect="non-scaling-stroke" ref={pathRef} {...props} />;
 };
 
 const SvgContinent = ({ featureRef, topoJSON, projection, onCountryClick, onContinentClick }) => {
@@ -172,29 +179,34 @@ const ContryTooltip = ({ feature }) => {
 
 const SvgMap = props => {
   const svgRef = useRef();
+  const wrapperRef = useRef();
   const featureRef = useRef();
 
   const { width: screenWidth, height: screenHeight } = useWindowDimensions({ width: 0, height: 0 });
-  const width = Math.max(screenWidth - 50, MIN_WIDTH);
-  const height = screenHeight;
-  const [centroid, setCentroid] = useState([width / 2, height / 2]);
-  const [overFeature, setOverFeature] = useState(null);
-  const offsetY = (screenHeight - height) / 2;
+  const mapWidth = Math.max(screenWidth, MIN_WIDTH);
+  const mapHeight = screenHeight;
+  const screenCentroid = [screenWidth / 2, screenHeight / 2];
+  const mapCentroid = [mapWidth / 2, mapHeight / 2];
+  console.log("mapCentroid", mapCentroid);
+  console.log("screenCentroid", screenCentroid);
+  const mapOffset = [mapCentroid[0] - screenCentroid[0], mapCentroid[1] - screenCentroid[1]];
+  console.log("mapOffset", mapOffset);
+  const originalCentroid = [mapCentroid[0] + mapOffset[0], mapCentroid[1] + mapOffset[1]];
+  console.log("offsetCentroid", originalCentroid);
+
+  const [centroid, setCentroid] = useState(mapCentroid);
+  const offsetY = (screenHeight - mapHeight) / 2;
 
   const [scale, setScale] = useState(1);
-
+  console.log("scale", scale);
   useEffect(() => {
-    if (!featureRef.current) setCentroid([width / 2, height / 2]);
-  }, [width, height]);
-
-  useEffect(() => {
-    if (svgRef.current) setTimeout(() => svgRef.current.scrollTo(centroid[0], 0), 1000);
-  }, [centroid]);
+    if (!featureRef.current) setCentroid(mapCentroid);
+  }, [mapWidth, mapHeight]);
 
   projection.fitExtent(
     [
       [0, 0],
-      [width, height],
+      [mapWidth, mapHeight],
     ],
     TOPO_COUNTRIES
   );
@@ -202,42 +214,54 @@ const SvgMap = props => {
     const isSame = isSameFeatures(featureRef, feature);
     const continent = feature.properties.CONTINENT;
     if (isSame) feature = TOPO_COUNTRIES;
-    const centroid = pathGenerator.centroid(feature);
+    const featureCentroid = pathGenerator.centroid(feature);
     const bounds = pathGenerator.bounds(feature);
-    const fullX = originalBounds[1][0] - originalBounds[0][0];
+    console.log("bounds", bounds);
+    console.log("centroid", featureCentroid);
+    // const fullX = originalBounds[1][0] - originalBounds[0][0];
+    const fullX = mapWidth;
+    console.log("fullX", fullX);
+    const mapHeight = originalBounds[1][1] - originalBounds[0][1];
+    console.log("mapHeight", mapHeight);
+    const offsetY = mapHeight - mapHeight;
+    console.log("offsetY", offsetY);
     const featX = bounds[1][0] - bounds[0][0];
     const scaleX = fullX / featX;
-    const fullY = originalBounds[1][1] - originalBounds[0][1];
+    const fullY = mapHeight;
     const featY = bounds[1][1] - bounds[0][1];
     const scaleY = fullY / featY;
-    const ratioX = featX / width;
-    const ratioY = featY / height;
+    const ratioX = featX / mapWidth;
+    const ratioY = featY / mapHeight;
 
+    const offsetFeatureCentroid = [featureCentroid[0] + mapOffset[0], featureCentroid[1] + mapOffset[1]];
+    console.log("offsetFeatureCentroid", offsetFeatureCentroid);
     featureRef.current = feature;
 
     if (isSame) {
       setScale(1);
-      setCentroid([width / 2, height / 2]);
+      setCentroid(mapCentroid);
     } else if (["Asia", "Europe", "North America"].includes(continent)) {
-      setScale(scaleX / 1.5 > 1 ? scaleX / 1.5 : 1.5);
-      setCentroid([centroid[0], centroid[1]]);
+      setScale(ratioY > 1 ? ratioY : 1.5);
+      setCentroid(featureCentroid);
     } else {
       setScale(ratioY > 1 ? ratioY : 1.5);
-      setCentroid([centroid[0], centroid[1]]);
+      setCentroid(featureCentroid);
     }
   };
 
-  if (width === 0 && height === 0) return null;
+  if (mapWidth === 0 && mapHeight === 0) return null;
 
   return (
-    <SvgWrapper>
+    <SvgWrapper ref={wrapperRef}>
       <AnimatedSvg
         ref={svgRef}
-        width={width}
-        height={height}
-        offsetY={offsetY}
+        width={mapWidth}
+        height={mapHeight}
+        viewBox={`0 0 ${mapWidth} ${mapHeight}`}
         x={centroid[0]}
         y={centroid[1]}
+        offsetX={mapOffset[0]}
+        offsetY={mapOffset[1]}
         scale={scale}
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
@@ -253,7 +277,7 @@ const SvgMap = props => {
           topoJSON={TOPO_COUNTRIES}
         />
       </AnimatedSvg>
-      {overFeature && <ContryTooltip feature={overFeature} />}
+      {/* {overFeature && <ContryTooltip feature={overFeature} />} */}
     </SvgWrapper>
   );
 };
