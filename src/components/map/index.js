@@ -7,6 +7,9 @@ import styled, { css } from "styled-components";
 import oceanBG from "../../assets/images/Flowers_White.jpg";
 import earthBG from "../../assets/images/Flowers_Red.png";
 import WORLD_TOPO_JSON from "../../assets/geoJsons/world.topo.json";
+import { useGesture } from "@use-gesture/react";
+import { useSpring, animated, config } from "@react-spring/web";
+import { easeQuad } from "d3-ease";
 
 const BG_IMAGE_WIDTH = 1920;
 const BG_IMAGE_HEIGHT = 919;
@@ -15,39 +18,60 @@ const MIN_WIDTH = 1100;
 const TOPO_COUNTRIES = topojson.feature(WORLD_TOPO_JSON, WORLD_TOPO_JSON.objects.world);
 const projection = geo.geoEqualEarth();
 const pathGenerator = geo.geoPath().projection(projection);
-const originalBounds = pathGenerator.bounds(TOPO_COUNTRIES);
 
 const SvgWrapper = styled.div`
   background-image: url(${oceanBG});
+  background-attachment: fixed;
   background-size: cover;
   overflow: hidden;
-  min-height: 100vh;
+  height: 100vh;
   position: relative;
   min-width: 100%;
 `;
 
-const AnimatedSvg = styled.svg`
+const AnimatedSvg = styled(animated.svg)`
   stroke: transparent;
+  touch-action: none;
   background-color: transparent;
   background-image: url(${earthBG});
   background-size: contain;
-  background-position: top 45% left 75%;
+  background-position: center left 75%;
   background-repeat: no-repeat;
   /* background-size: ${({ width }) => width}px ${({ width }) => width / BG_IMAGE_RATIO}px; */
   background-size: 90%;
 
   fill: transparent;
   will-change: transform, stroke-width;
-  transition: transform 1s ease-in;
+  /* transition: transform 0.7s ease-in; */
   /* transform: translate(${({ width, height, scale }) =>
     `${(width / 2) * scale}px, ${(height / 2) * scale}px`})
     translate(${({ x, y, scale }) => `-${x * scale}px, -${y * scale}px`}) scale(${({ scale }) => scale}); */
-  transform: translate(
+  /* transform: translate(
       ${({ x, y, width, height, offsetX, offsetY, scale }) =>
-        `${(width / 2) * scale - x * scale - offsetX}px, ${(height / 2) * scale - y * scale - offsetY}px`}
+    `${(width / 2) * scale - x * scale - offsetX}px, ${(height / 2) * scale - y * scale - offsetY}px`}
     )
-    scale(${({ scale }) => scale});
+    scale(${({ scale }) => scale}); */
 `;
+
+const getTranslate = (width, height, x, y, offsetX, offsetY, scale) => {
+  // console.log(
+  //   "width",
+  //   width,
+  //   "height",
+  //   height,
+  //   "x",
+  //   x,
+  //   "y",
+  //   y,
+  //   "offsetX",
+  //   offsetX,
+  //   "offsetY",
+  //   offsetY,
+  //   "scale",
+  //   scale
+  // );
+  return `${(width / 2) * scale - x * scale - offsetX}px, ${(height / 2) * scale - y * scale - offsetY}px`;
+};
 
 const HighlightedPath = css`
   path {
@@ -72,26 +96,17 @@ const ContinentGroup = styled.g`
 
   path {
     will-change: stroke-width, stroke;
-    transition: stroke 0.3s ease-in 1s;
+    transition: stroke 0.3s ease-in 0.5s;
   }
 
   ${({ isSelected }) => isSelected && HighlightedPath}
   ${({ isSelected }) => !isSelected && HighlightedCountry}
 `;
 
-const CountryTooltipContainer = styled.div`
-  background-color: white;
-  border: 1px solid black;
-  position: absolute;
-  top: ${({ top }) => top}px;
-  left: ${({ left }) => left}px;
-  color: black;
-`;
-
-const isSameFeatures = (featureRef, feature) => {
-  if (!featureRef.current) return;
-  if (!featureRef.current.properties) return;
-  return feature.properties.CONTINENT === featureRef.current.properties.CONTINENT;
+const isSameFeatures = (feature1, feature2) => {
+  if (!feature1.properties) return;
+  if (!feature2.properties) return;
+  return feature1.properties.CONTINENT === feature2.properties.CONTINENT;
 };
 
 const SvgPath = ({ d, onClick, ...props }) => {
@@ -104,7 +119,7 @@ const SvgPath = ({ d, onClick, ...props }) => {
   return <path vectorEffect="non-scaling-stroke" ref={pathRef} {...props} />;
 };
 
-const SvgContinent = ({ featureRef, topoJSON, projection, onCountryClick, onContinentClick }) => {
+const SvgContinent = ({ selectedFeature, topoJSON, projection, onCountryClick, onContinentClick }) => {
   const groupedTopoJSON = topoJSON.features.reduce((storage, feature) => {
     const CONTINENT = feature.properties.CONTINENT;
     if (!storage[CONTINENT]) {
@@ -119,16 +134,16 @@ const SvgContinent = ({ featureRef, topoJSON, projection, onCountryClick, onCont
     storage[CONTINENT].features.push(feature);
     return storage;
   }, {});
-
+  console.log("selectedFeature", selectedFeature);
   return Object.keys(groupedTopoJSON).map(CONTINENT => {
     const featureCollection = groupedTopoJSON[CONTINENT];
-    const isSelected = isSameFeatures(featureRef, featureCollection);
+    const isSelected = isSameFeatures(selectedFeature, featureCollection);
+    const handleClick = e => {
+      e.stopPropagation();
+      if (onContinentClick) onContinentClick(featureCollection);
+    };
     return (
-      <ContinentGroup
-        key={CONTINENT}
-        isSelected={isSelected}
-        onClick={() => onContinentClick(featureCollection)}
-      >
+      <ContinentGroup key={CONTINENT} isSelected={isSelected} onClick={handleClick}>
         <SvgPathsFromFeature
           features={featureCollection.features}
           projection={projection}
@@ -157,25 +172,6 @@ const SvgPathsFromFeature = ({ features, projection, onClick, onMouseOver }) => 
   });
 };
 
-const SvgTopoCities = ({ topoJSON, projection, onPathClick }) => {
-  const pathGenerator = geo.geoPath().projection(projection);
-
-  return topoJSON.features.map((feature, i) => {
-    const [x, y] = pathGenerator.centroid(feature);
-
-    return <circle key={i} onClick={() => onPathClick(feature)} r={1} cx={x} cy={y} fill="black" />;
-  });
-};
-
-const ContryTooltip = ({ feature }) => {
-  const centroid = pathGenerator.centroid(feature);
-  return (
-    <CountryTooltipContainer top={centroid[1]} left={centroid[0]}>
-      {feature.properties.ADMIN}
-    </CountryTooltipContainer>
-  );
-};
-
 const SvgMap = props => {
   const svgRef = useRef();
   const wrapperRef = useRef();
@@ -183,23 +179,67 @@ const SvgMap = props => {
 
   const { width: screenWidth, height: screenHeight } = useWindowDimensions({ width: 0, height: 0 });
   const mapWidth = Math.max(screenWidth, MIN_WIDTH);
-  const mapHeight = mapWidth / BG_IMAGE_RATIO;
+  const mapHeight = screenHeight;
   const screenCentroid = [screenWidth / 2, screenHeight / 2];
   const mapCentroid = [mapWidth / 2, mapHeight / 2];
-  console.log("mapCentroid", mapCentroid);
-  console.log("screenCentroid", screenCentroid);
   const mapOffset = [mapCentroid[0] - screenCentroid[0], mapCentroid[1] - screenCentroid[1]];
-  console.log("mapOffset", mapOffset);
-  const originalCentroid = [mapCentroid[0] + mapOffset[0], mapCentroid[1] + mapOffset[1]];
-  console.log("offsetCentroid", originalCentroid);
+  const [selectedFeature, setFeature] = useState(TOPO_COUNTRIES);
+  const [isDraggin, setDragging] = useState(false);
+  const [styles, api] = useSpring(() => ({
+    translate: getTranslate(
+      mapWidth,
+      mapHeight,
+      mapCentroid[0],
+      mapCentroid[1],
+      mapOffset[0],
+      mapOffset[1],
+      1
+    ),
+    config: config.slow,
+  }));
+  const centroid = pathGenerator.centroid(selectedFeature);
 
-  const [centroid, setCentroid] = useState(mapCentroid);
-  const offsetY = (screenHeight - mapHeight) / 2;
+  const bind = useGesture(
+    {
+      onDrag: ({ delta, offset: [x, y], first, last }) => {
+        window.scroll(0, window.scrollY - delta[1]);
+        if (first) setDragging(true);
+        else if (last) setDragging(false);
+
+        api.start({
+          translate: getTranslate(
+            mapWidth,
+            mapHeight,
+            centroid[0],
+            centroid[1],
+            mapOffset[0] - x,
+            mapOffset[1],
+            scale
+          ),
+          scale,
+        });
+      },
+    },
+    { target: svgRef, drag: { delay: 500 } }
+  );
 
   const [scale, setScale] = useState(1);
-  console.log("scale", scale);
+
   useEffect(() => {
-    if (!featureRef.current) setCentroid(mapCentroid);
+    if (!featureRef.current) {
+      api.start({
+        translate: getTranslate(
+          mapWidth,
+          mapHeight,
+          mapCentroid[0],
+          mapCentroid[1],
+          mapOffset[0],
+          mapOffset[1],
+          scale
+        ),
+        scale,
+      });
+    }
   }, [mapWidth, mapHeight]);
 
   projection.fitExtent(
@@ -210,8 +250,8 @@ const SvgMap = props => {
     TOPO_COUNTRIES
   );
   const onFeatureClick = feature => {
-    const isSame = isSameFeatures(featureRef, feature);
-    const continent = feature.properties.CONTINENT;
+    if (isDraggin) return;
+    const isSame = isSameFeatures(selectedFeature, feature);
     if (isSame) feature = TOPO_COUNTRIES;
     const featureCentroid = pathGenerator.centroid(feature);
     const bounds = pathGenerator.bounds(feature);
@@ -220,32 +260,56 @@ const SvgMap = props => {
     // const fullX = originalBounds[1][0] - originalBounds[0][0];
     const fullX = mapWidth;
     console.log("fullX", fullX);
-    const mapHeight = originalBounds[1][1] - originalBounds[0][1];
     console.log("mapHeight", mapHeight);
     const offsetY = mapHeight - mapHeight;
     console.log("offsetY", offsetY);
     const featX = bounds[1][0] - bounds[0][0];
     const scaleX = fullX / featX;
-    const fullY = mapHeight;
-    const featY = bounds[1][1] - bounds[0][1];
-    const scaleY = fullY / featY;
-    const ratioX = featX / mapWidth;
-    const ratioY = featY / mapHeight;
+    const scale = scaleX / 3 > 1 ? scaleX / 3 : 1.5;
 
-    const offsetFeatureCentroid = [featureCentroid[0] + mapOffset[0], featureCentroid[1] + mapOffset[1]];
-    console.log("offsetFeatureCentroid", offsetFeatureCentroid);
     featureRef.current = feature;
-
     if (isSame) {
+      api.start({
+        translate: getTranslate(
+          mapWidth,
+          mapHeight,
+          centroid[0],
+          mapCentroid[1],
+          mapOffset[0],
+          mapOffset[1],
+          1
+        ),
+        scale: 1,
+      });
       setScale(1);
-      setCentroid(mapCentroid);
-    } else if (["Asia", "Europe", "North America"].includes(continent)) {
-      setScale(ratioY > 1 ? ratioY : 1.5);
-      setCentroid(featureCentroid);
+      setFeature(TOPO_COUNTRIES);
     } else {
-      setScale(ratioY > 1 ? ratioY : 1.5);
-      setCentroid(featureCentroid);
+      api.start({
+        translate: getTranslate(
+          mapWidth,
+          mapHeight,
+          featureCentroid[0],
+          featureCentroid[1],
+          mapOffset[0],
+          mapOffset[1],
+          scale
+        ),
+        scale,
+      });
+      setScale(scale);
+      setFeature(feature);
     }
+
+    // if (isSame) {
+    //   setScale(1);
+    //   setCentroid(mapCentroid);
+    // } else if (["Asia", "Europe", "North America"].includes(continent)) {
+    //   setScale(scaleX / 3 > 1 ? scaleX / 3 : 1.5);
+    //   setCentroid(featureCentroid);
+    // } else {
+    //   setScale(ratioY > 1 ? ratioY : 1.5);
+    //   setCentroid(featureCentroid);
+    // }
   };
 
   if (mapWidth === 0 && mapHeight === 0) return null;
@@ -254,23 +318,19 @@ const SvgMap = props => {
     <SvgWrapper ref={wrapperRef}>
       <AnimatedSvg
         ref={svgRef}
+        style={styles}
         width={mapWidth}
         height={mapHeight}
-        viewBox={`0 0 ${mapWidth} ${mapHeight}`}
-        x={centroid[0]}
-        y={centroid[1]}
-        offsetX={mapOffset[0]}
-        offsetY={mapOffset[1]}
         scale={scale}
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
+        {...bind}
         {...props}
       >
         <SvgContinent
-          featureRef={featureRef}
           projection={projection}
-          isSelected={featureRef.current}
+          selectedFeature={selectedFeature}
           onContinentClick={onFeatureClick}
           onCountryClick={console.log}
           topoJSON={TOPO_COUNTRIES}
