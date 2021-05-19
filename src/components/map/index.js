@@ -42,11 +42,13 @@ const AnimatedSvg = styled.svg`
   /* transform: translate(${({ width, height, scale }) =>
     `${(width / 2) * scale}px, ${(height / 2) * scale}px`})
     translate(${({ x, y, scale }) => `-${x * scale}px, -${y * scale}px`}) scale(${({ scale }) => scale}); */
-  transform: 
-    translate(${({ width, height, scale }) => `${(width / 2) * scale}px, ${(height / 2) * scale}px`})
-    translate(${({ x, y, scale }) => `-${x * scale}px, -${y * scale}px`})
-    scale(${({ scale }) => scale})
-    translate(${({ offsetX, offsetY, scale }) => `-${offsetX / scale}px, -${offsetY}px`})
+  transform: translate(
+      ${({ x, y, width, height, offsetX, offsetY, scale }) =>
+        `${(width / 2) * scale - x * scale - offsetX / scale}px, ${
+          (height / 2) * scale - y * scale - offsetY / scale
+        }px`}
+    )
+    scale(${({ scale }) => scale});
 `;
 
 const HighlightedPath = css`
@@ -184,7 +186,7 @@ const SvgMap = props => {
 
   const { width: screenWidth, height: screenHeight } = useWindowDimensions({ width: 0, height: 0 });
   const mapWidth = Math.max(screenWidth, MIN_WIDTH);
-  const mapHeight = screenHeight;
+  const mapHeight = mapWidth / BG_IMAGE_RATIO;
   const screenCentroid = [screenWidth / 2, screenHeight / 2];
   const mapCentroid = [mapWidth / 2, mapHeight / 2];
   console.log("mapCentroid", mapCentroid);
