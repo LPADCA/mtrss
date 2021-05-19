@@ -44,8 +44,8 @@ const AnimatedSvg = styled.svg`
     translate(${({ x, y, scale }) => `-${x * scale}px, -${y * scale}px`}) scale(${({ scale }) => scale}); */
   transform: translate(
       ${({ x, y, width, height, offsetX, offsetY, scale }) =>
-        `${(width / 2) * scale - x * scale - offsetX / scale}px, ${
-          (height / 2) * scale - y * scale - offsetY / scale
+        `${(width / 2) * scale - x * scale - offsetX}px, ${
+          (height / 2) * scale - y * scale - offsetY
         }px`}
     )
     scale(${({ scale }) => scale});
