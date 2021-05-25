@@ -5,11 +5,10 @@ import * as geo from "d3-geo";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import styled, { css } from "styled-components";
 import oceanBG from "../../assets/images/Flowers_White.jpg";
-import earthBG from "../../assets/images/Flowers_Red.png";
+import earthBG from "../../assets/images/flowers-red.png";
 import WORLD_TOPO_JSON from "../../assets/geoJsons/world.topo.json";
 import { useGesture } from "@use-gesture/react";
 import { useSpring, animated, config } from "@react-spring/web";
-import { easeQuad } from "d3-ease";
 
 const BG_IMAGE_WIDTH = 1920;
 const BG_IMAGE_HEIGHT = 919;
@@ -18,6 +17,8 @@ const MIN_WIDTH = 1100;
 const TOPO_COUNTRIES = topojson.feature(WORLD_TOPO_JSON, WORLD_TOPO_JSON.objects.world);
 const projection = geo.geoEqualEarth();
 const pathGenerator = geo.geoPath().projection(projection);
+const MAP_BOUNDS = pathGenerator.bounds(TOPO_COUNTRIES);
+console.log('MAP_BOUNDS', MAP_BOUNDS)
 
 const SvgWrapper = styled.div`
   background-image: url(${oceanBG});
@@ -35,22 +36,12 @@ const AnimatedSvg = styled(animated.svg)`
   background-color: transparent;
   background-image: url(${earthBG});
   background-size: contain;
-  background-position: center left 75%;
+  background-position: center right;
   background-repeat: no-repeat;
-  /* background-size: ${({ width }) => width}px ${({ width }) => width / BG_IMAGE_RATIO}px; */
-  background-size: 90%;
+  background-size: 93%;
 
   fill: transparent;
   will-change: transform, stroke-width;
-  /* transition: transform 0.7s ease-in; */
-  /* transform: translate(${({ width, height, scale }) =>
-    `${(width / 2) * scale}px, ${(height / 2) * scale}px`})
-    translate(${({ x, y, scale }) => `-${x * scale}px, -${y * scale}px`}) scale(${({ scale }) => scale}); */
-  /* transform: translate(
-      ${({ x, y, width, height, offsetX, offsetY, scale }) =>
-    `${(width / 2) * scale - x * scale - offsetX}px, ${(height / 2) * scale - y * scale - offsetY}px`}
-    )
-    scale(${({ scale }) => scale}); */
 `;
 
 const getTranslate = (width, height, x, y, offsetX, offsetY, scale) => {
@@ -161,8 +152,8 @@ const SvgPathsFromFeature = ({ features, projection, onClick, onMouseOver }) => 
   };
 
   return features.map(feature => {
+    if (pathGenerator.measure(feature) === 0) return;
     const path = pathGenerator(feature);
-
     const handleClick = () => {
       if (onClick) onClick(feature);
     };
@@ -255,14 +246,7 @@ const SvgMap = props => {
     if (isSame) feature = TOPO_COUNTRIES;
     const featureCentroid = pathGenerator.centroid(feature);
     const bounds = pathGenerator.bounds(feature);
-    console.log("bounds", bounds);
-    console.log("centroid", featureCentroid);
-    // const fullX = originalBounds[1][0] - originalBounds[0][0];
     const fullX = mapWidth;
-    console.log("fullX", fullX);
-    console.log("mapHeight", mapHeight);
-    const offsetY = mapHeight - mapHeight;
-    console.log("offsetY", offsetY);
     const featX = bounds[1][0] - bounds[0][0];
     const scaleX = fullX / featX;
     const scale = scaleX / 3 > 1 ? scaleX / 3 : 1.5;
@@ -289,7 +273,7 @@ const SvgMap = props => {
           mapWidth,
           mapHeight,
           featureCentroid[0],
-          featureCentroid[1],
+          featureCentroid[1] + 50,
           mapOffset[0],
           mapOffset[1],
           scale
@@ -299,17 +283,6 @@ const SvgMap = props => {
       setScale(scale);
       setFeature(feature);
     }
-
-    // if (isSame) {
-    //   setScale(1);
-    //   setCentroid(mapCentroid);
-    // } else if (["Asia", "Europe", "North America"].includes(continent)) {
-    //   setScale(scaleX / 3 > 1 ? scaleX / 3 : 1.5);
-    //   setCentroid(featureCentroid);
-    // } else {
-    //   setScale(ratioY > 1 ? ratioY : 1.5);
-    //   setCentroid(featureCentroid);
-    // }
   };
 
   if (mapWidth === 0 && mapHeight === 0) return null;
