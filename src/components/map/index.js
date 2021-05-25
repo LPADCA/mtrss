@@ -18,7 +18,6 @@ const TOPO_COUNTRIES = topojson.feature(WORLD_TOPO_JSON, WORLD_TOPO_JSON.objects
 const projection = geo.geoEqualEarth();
 const pathGenerator = geo.geoPath().projection(projection);
 const MAP_BOUNDS = pathGenerator.bounds(TOPO_COUNTRIES);
-console.log('MAP_BOUNDS', MAP_BOUNDS)
 
 const SvgWrapper = styled.div`
   background-image: url(${oceanBG});
@@ -98,6 +97,11 @@ const isSameFeatures = (feature1, feature2) => {
   if (!feature1.properties) return;
   if (!feature2.properties) return;
   return feature1.properties.CONTINENT === feature2.properties.CONTINENT;
+};
+
+const isNorth = feature => {
+  if (!feature.properties) return;
+  return ["Asia", "Europe", "North America"].indexOf(feature.properties.CONTINENT) + 1;
 };
 
 const SvgPath = ({ d, onClick, ...props }) => {
@@ -268,6 +272,9 @@ const SvgMap = props => {
       setScale(1);
       setFeature(TOPO_COUNTRIES);
     } else {
+      // Hack :(
+      const yOffset = isNorth(feature) ? 50 : 0;
+      console.log('yOffset', yOffset)
       api.start({
         translate: getTranslate(
           mapWidth,
