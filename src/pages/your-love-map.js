@@ -8,6 +8,7 @@ import heart2xUrl from "../assets/images/heart@2x.png";
 import Footer from "../components/footer";
 import { mediaQueries } from "../screenSizes";
 import PostCardForm from "../components/your-love-map/postcard-form";
+import { navigate } from "gatsby";
 
 const GlobalStyle = createGlobalStyle`
   html {
@@ -132,6 +133,11 @@ const postcardRequest = async args => {
   throw new Error(response.status);
 };
 
+const openPostcard = async (args) => {
+  const { url } = await postcardRequest(args);
+  navigate("/love-message/" + url);
+};
+
 const YourLoveMapPage = () => {
   return (
     <Layout>
@@ -145,7 +151,7 @@ const YourLoveMapPage = () => {
         </p>
       </Hero>
       <SvgMap />
-      <PostCardForm onSubmit={postcardRequest} />
+      <PostCardForm onSubmit={openPostcard} />
       <AlbumArtContainer>
         <AlbumCircle>
           <HeartImg src={heartUrl} width="506" height="506" srcSet={heart2xUrl} />

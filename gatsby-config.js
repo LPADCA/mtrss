@@ -31,7 +31,7 @@ module.exports = {
   pathPrefix: "/gatsby-contentful-starter",
   proxy: {
     prefix: "/api",
-    url: "http://localhost:8080/",
+    url: "http://localhost:8080",
   },
   plugins: [
     {

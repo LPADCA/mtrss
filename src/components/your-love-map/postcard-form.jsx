@@ -1,14 +1,75 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import WORLD_TOPO_JSON from "../../assets/geoJsons/world2.topo.json";
 
+const inputMixin = css`
+  flex: 1 0 auto;
+  background: none;
+  border: none;
+  font-size: 16px;
+  border-bottom: 2px solid #ff3636;
+  padding: 3px 5px 5px;
+
+  &::placeholder {
+    color: #ff3636;
+  }
+`;
+
 const Form = styled.form`
-  margin: 0 auto;
+  margin: 50px auto;
   width: 600px;
 `;
 
 const TextArea = styled.textarea`
+  ${inputMixin}
   width: 100%;
+  resize: none;
+  color: white;
+  caret-color: white;
+`;
+
+const Line = styled.span`
+  display: inline-flex;
+  width: 100%;
+  margin-bottom: 20px;
+`;
+
+const SecondLine = styled(Line)`
+  margin-top: 20px;
+  justify-content: flex-end;
+  align-items: center;
+`;
+
+const Input = styled.input`
+  ${inputMixin}
+  margin: 0 5px;
+  color: white;
+`;
+
+const Select = styled.select`
+  ${inputMixin}
+  margin-left: 5px;
+  color: white;
+
+  &:invalid,
+  & option[value=""] {
+    color: #ff3636;
+  }
+`;
+
+const Button = styled.button`
+  width: 100%;
+  height: 48px;
+  background: #ff3636 0% 0% no-repeat padding-box;
+  border-radius: 8px;
+  color: white;
+  font-size: 16px;
+  border: none;
+
+  &:disabled,
+  &:invalid {
+    color: black;
+  }
 `;
 
 const COUNTRIES = [...new Set(WORLD_TOPO_JSON.objects.world.geometries.map(e => e.properties.NAME))].sort(
@@ -30,26 +91,34 @@ const PostCardForm = ({ onSubmit }) => {
   };
   return (
     <Form onSubmit={handleSubmit}>
-      <p>
+      <Line>
         Sending love to{" "}
-        <input required placeholder="your love" value={name} onChange={e => setName(e.target.value)} /> in{" "}
-        <select required placeholder="country" value={country} onChange={e => setCountry(e.target.value)}>
+        <Input required placeholder="your love" value={name} onChange={e => setName(e.target.value)} /> in{" "}
+        <Select required value={country} onChange={e => setCountry(e.target.value)}>
           <option value="" disabled hidden>
-            country
+            Country
           </option>
           {COUNTRIES.map(country => (
             <option key={country} value={country}>
               {country}
             </option>
           ))}
-        </select>
-        <TextArea required rows={6} value={note} onChange={e => setNote(e.target.value)}></TextArea>
-      </p>
-      <p>
-        Sincerely yours,{" "}
-        <input required placeholder="" value={from} onChange={e => setFrom(e.target.value)} />
-      </p>
-      <button>Create Postcard</button>
+        </Select>
+      </Line>
+      <TextArea
+        required
+        rows={4}
+        value={note}
+        placeholder="write a few words"
+        onChange={e => setNote(e.target.value)}
+      ></TextArea>
+      <SecondLine>
+        <div>
+          Sincerely yours,{" "}
+          <Input required placeholder="" value={from} onChange={e => setFrom(e.target.value)} />
+        </div>
+      </SecondLine>
+      <Button>Create Postcard</Button>
     </Form>
   );
 };
