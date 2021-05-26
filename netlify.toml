@@ -1,0 +1,4 @@
+[[redirects]]
+  from = "/api"
+  to = "https://api.mtrss.art/api"
+  status = "200"

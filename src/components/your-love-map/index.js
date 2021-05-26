@@ -6,7 +6,7 @@ import useWindowDimensions from "../../hooks/useWindowDimensions";
 import styled, { css } from "styled-components";
 import oceanBG from "../../assets/images/Flowers_White.jpg";
 import earthBG from "../../assets/images/flowers-red.png";
-import WORLD_TOPO_JSON from "../../assets/geoJsons/world.topo.json";
+import WORLD_TOPO_JSON from "../../assets/geoJsons/world2.topo.json";
 import { useGesture } from "@use-gesture/react";
 import { useSpring, animated, config } from "@react-spring/web";
 
@@ -17,7 +17,6 @@ const MIN_WIDTH = 1100;
 const TOPO_COUNTRIES = topojson.feature(WORLD_TOPO_JSON, WORLD_TOPO_JSON.objects.world);
 const projection = geo.geoEqualEarth();
 const pathGenerator = geo.geoPath().projection(projection);
-const MAP_BOUNDS = pathGenerator.bounds(TOPO_COUNTRIES);
 
 const SvgWrapper = styled.div`
   background-image: url(${oceanBG});
@@ -129,7 +128,6 @@ const SvgContinent = ({ selectedFeature, topoJSON, projection, onCountryClick, o
     storage[CONTINENT].features.push(feature);
     return storage;
   }, {});
-  console.log("selectedFeature", selectedFeature);
   return Object.keys(groupedTopoJSON).map(CONTINENT => {
     const featureCollection = groupedTopoJSON[CONTINENT];
     const isSelected = isSameFeatures(selectedFeature, featureCollection);
@@ -196,8 +194,14 @@ const SvgMap = props => {
 
   const bind = useGesture(
     {
-      onDrag: ({ delta, offset: [x, y], first, last }) => {
-        window.scroll(0, window.scrollY - delta[1]);
+      onDrag: args => {
+        const {
+          delta,
+          offset: [x, y],
+          first,
+          last,
+        } = args;
+        window.scroll(0, window.scrollY - delta[1] / 2);
         if (first) setDragging(true);
         else if (last) setDragging(false);
 
@@ -215,7 +219,7 @@ const SvgMap = props => {
         });
       },
     },
-    { target: svgRef, drag: { delay: 500 } }
+    { target: svgRef, drag: { delay: 1000 } }
   );
 
   const [scale, setScale] = useState(1);
@@ -253,7 +257,7 @@ const SvgMap = props => {
     const fullX = mapWidth;
     const featX = bounds[1][0] - bounds[0][0];
     const scaleX = fullX / featX;
-    const scale = scaleX / 3 > 1 ? scaleX / 3 : 1.5;
+    const scale = scaleX / 3.5 > 1 ? scaleX / 3.5 : 1.5;
 
     featureRef.current = feature;
     if (isSame) {
@@ -274,13 +278,13 @@ const SvgMap = props => {
     } else {
       // Hack :(
       const yOffset = isNorth(feature) ? 50 : 0;
-      console.log('yOffset', yOffset)
+
       api.start({
         translate: getTranslate(
           mapWidth,
           mapHeight,
           featureCentroid[0],
-          featureCentroid[1] + 50,
+          featureCentroid[1] + yOffset,
           mapOffset[0],
           mapOffset[1],
           scale
@@ -312,7 +316,6 @@ const SvgMap = props => {
           projection={projection}
           selectedFeature={selectedFeature}
           onContinentClick={onFeatureClick}
-          onCountryClick={console.log}
           topoJSON={TOPO_COUNTRIES}
         />
       </AnimatedSvg>

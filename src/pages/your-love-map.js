@@ -1,12 +1,13 @@
 import React from "react";
 import styled, { createGlobalStyle, keyframes } from "styled-components";
-import SvgMap from "../components/map";
+import SvgMap from "../components/your-love-map";
 import Layout from "../components/layout";
 import { ReactComponent as LoveFrameSvg } from "../assets/images/love-frames.svg";
 import heartUrl from "../assets/images/heart.png";
 import heart2xUrl from "../assets/images/heart@2x.png";
 import Footer from "../components/footer";
 import { mediaQueries } from "../screenSizes";
+import PostCardForm from "../components/your-love-map/postcard-form";
 
 const GlobalStyle = createGlobalStyle`
   html {
@@ -114,6 +115,23 @@ const BottomLogo = styled.div`
   align-items: center;
 `;
 
+const postcardRequest = async args => {
+  console.log("args", args);
+  const response = await fetch(`/api/love-message`, {
+    method: "POST",
+    body: JSON.stringify(args),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  if (response.ok) {
+    const res = await response.json();
+    console.log("res", res);
+    return res;
+  }
+  throw new Error(response.status);
+};
+
 const YourLoveMapPage = () => {
   return (
     <Layout>
@@ -127,6 +145,7 @@ const YourLoveMapPage = () => {
         </p>
       </Hero>
       <SvgMap />
+      <PostCardForm onSubmit={postcardRequest} />
       <AlbumArtContainer>
         <AlbumCircle>
           <HeartImg src={heartUrl} width="506" height="506" srcSet={heart2xUrl} />
