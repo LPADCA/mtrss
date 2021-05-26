@@ -3,3 +3,8 @@
   to = "https://api.mtrss.art/api/:splat"
   status = 200
 
+[[redirects]]
+  from = "/love-message/*"
+  to = "/love-message"
+  status = 200
+

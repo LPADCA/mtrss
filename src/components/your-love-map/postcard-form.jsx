@@ -33,12 +33,7 @@ const PostCardForm = ({ onSubmit }) => {
       <p>
         Sending love to{" "}
         <input required placeholder="your love" value={name} onChange={e => setName(e.target.value)} /> in{" "}
-        <select
-          required
-          placeholder="country"
-          value={country}
-          onChange={e => setCountry(e.target.value)}
-        >
+        <select required placeholder="country" value={country} onChange={e => setCountry(e.target.value)}>
           <option value="" disabled hidden>
             country
           </option>
