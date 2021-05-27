@@ -1,15 +1,7 @@
-const Promise = require('bluebird')
-const path = require('path')
-
-exports.createPages = ({ graphql, actions }) => {
-  const { createPage } = actions;
-}
-
-
 exports.createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions;
-  //actions.printTypeDefinitions({})
-  //actions.printTypeDefinitions({});
+  // actions.printTypeDefinitions({})
+  // actions.printTypeDefinitions({});
   const typeDefs = `
   type ContentfulHomepage implements Node {
     merchShopUrl: String
@@ -28,7 +20,8 @@ exports.createSchemaCustomization = ({ actions }) => {
   createTypes(typeDefs);
 };
 
-{/*
+{
+  /*
 module.exports.onPreInit = () => {
   const carouselSrcFile =
     'node_modules/3d-react-carousal/dist/index.js';
@@ -41,9 +34,11 @@ module.exports.onPreInit = () => {
       .readFileSync(carouselSrcFile, 'utf8')
       .replace('(window,', `(typeof window==='undefined'?{}:window,`)
   );
-}; */}
+}; */
+}
 
-  {/*
+{
+  /*
 
     audioTrack: AudioTrack 
   }
@@ -102,5 +97,5 @@ module.exports.onPreInit = () => {
         })
       })
     )
-  }) */}
-
+  }) */
+}
