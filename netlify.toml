@@ -5,6 +5,6 @@
 
 [[redirects]]
   from = "/love-message/*"
-  to = "/love-message"
+  to = "/love-message/:splat"
   status = 200
 
