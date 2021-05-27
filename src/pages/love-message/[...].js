@@ -1,16 +1,16 @@
 import React from "react";
 import { Router, Redirect } from "@reach/router";
-import Layout from "../../components/layout";
 import MessagePage from "../../components/your-love-map/message-page";
+import LoveLayout from "../../components/your-love-map/love-layout";
 
 const App = () => {
   return (
-    <Layout>
+    <LoveLayout>
       <Router basepath="/love-message">
         <MessagePage path="/:url" />
         <Redirect noThrow from="/" to="/your-love-map\//" />
       </Router>
-    </Layout>
+    </LoveLayout>
   );
 };
 export default App;

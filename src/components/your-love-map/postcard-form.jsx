@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import WORLD_TOPO_JSON from "../../assets/geoJsons/world2.topo.json";
+import Button from "../button";
 
 const inputMixin = css`
   flex: 1 0 auto;
@@ -17,7 +18,8 @@ const inputMixin = css`
 
 const Form = styled.form`
   margin: 50px auto;
-  width: 600px;
+  width: 100%;
+  max-width: 600px;
 `;
 
 const TextArea = styled.textarea`
@@ -54,21 +56,6 @@ const Select = styled.select`
   &:invalid,
   & option[value=""] {
     color: #ff3636;
-  }
-`;
-
-const Button = styled.button`
-  width: 100%;
-  height: 48px;
-  background: #ff3636 0% 0% no-repeat padding-box;
-  border-radius: 8px;
-  color: white;
-  font-size: 16px;
-  border: none;
-
-  &:disabled,
-  &:invalid {
-    color: black;
   }
 `;
 
