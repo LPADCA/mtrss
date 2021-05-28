@@ -5,12 +5,38 @@ import { Helmet } from "react-helmet";
 import Scroller from "../components/scroller";
 // import Hero from '../components/hero'
 import Layout from "../components/layout";
+import Collapse from "@kunukn/react-collapse";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { Carousel } from "../components/3rdparty/Carousel";
-import Footer from "../components/footer";
+
+const ARBUM_DATA = [
+  { link: "https://ffm.to/yvqm2de" },
+  { link: "https://ffm.to/yeqvjb1" },
+  { link: "https://ffm.to/qmyoqj7" },
+  { link: "https://ffm.to/9webja4" },
+  { link: "https://ffm.to/kdwjob8" },
+  { link: "https://ffm.to/l19dpoe" },
+  { link: "https://ffm.to/g7dyodo" },
+  { link: "https://ffm.to/dearmbp" },
+  { link: "https://dashgo.co/mvamlrm" },
+];
 
 const RichText = ({ jsonRichText }) => {
   return <>{documentToReactComponents(jsonRichText)}</>;
+};
+
+const AlbumArt = ({ link, index }) => {
+  return (
+    <div className={`AlbumSlide slide${index}`}>
+      <div className="PlayButton">
+        <a target="_blank" href={link} className="button"></a>
+        <div className="overlay">
+          <i className="fas fa-play fa-2x"></i>
+          Listen Now
+        </div>
+      </div>
+    </div>
+  );
 };
 
 class RootIndex extends React.Component {
@@ -44,86 +70,29 @@ class RootIndex extends React.Component {
   render() {
     const audioTrack = this.props.data.contentfulHomepage.audioTrack;
 
-    const buttonURL = this.props.data.contentfulHomepage.buttonUrl;
-    const buttonText = this.props.data.contentfulHomepage.buttonText;
-    const buttonURL2 = "https://ffm.to/yeqvjb1";
-    const buttonText2 = "Listen Now";
-    const buttonURL3 = "https://ffm.to/qmyoqj7";
-    const buttonText3 = "Listen Now";
-    const buttonURL4 = "https://ffm.to/9webja4";
-    const buttonText4 = "Listen Now";
-    const buttonURL5 = "https://ffm.to/kdwjob8";
-    const buttonText5 = "Listen Now";
-    const buttonURL6 = "https://ffm.to/l19dpoe";
-    const buttonText6 = "Listen Now";
-    const buttonURL7 = "https://ffm.to/g7dyodo";
-    const buttonText7 = "Listen Now";
-    const buttonURL8 = "https://ffm.to/dearmbp";
-    const buttonText8 = "Listen Now";
-
-    const slidesDiv = [
-      <div className="AlbumSlide slide8">
-        <a target="_blank" href={buttonURL8} className="button">
-          {buttonText8}
-        </a>
-        <div className="desc">Cali High (Boys Age Remix)</div>
-      </div>,
-      <div className="AlbumSlide slide7">
-        <a target="_blank" href={buttonURL7} className="button">
-          {buttonText7}
-        </a>
-        <div className="desc">Cali High (Chores Remix)</div>
-      </div>,
-      <div className="AlbumSlide slide6">
-        <a target="_blank" href={buttonURL6} className="button">
-          {buttonText6}
-        </a>
-        <div className="desc">Cali High (Lee K Remix)</div>
-      </div>,
-      <div className="AlbumSlide slide5">
-        <a target="_blank" href={buttonURL5} className="button">
-          {buttonText5}
-        </a>
-        <div className="desc">MaKenzie Thomas - Cali High (Official Cover)</div>
-      </div>,
-      <div className="AlbumSlide slide4">
-        <a target="_blank" href={buttonURL4} className="button">
-          {buttonText4}
-        </a>
-        <div className="desc">Cali High (DZA Reflip)</div>
-      </div>,
-      <div className="AlbumSlide slide1">
-        <a target="_blank" href={buttonURL} className="button">
-          {buttonText}
-        </a>
-        <div className="desc">MTRSS - Cali High (feat. Graham Candy, Ilya Lagutenko, Jesse Siebenberg)</div>
-      </div>,
-      <div className="AlbumSlide slide2">
-        <a target="_blank" href={buttonURL2} className="button">
-          {buttonText2}
-        </a>
-        <div className="desc">MTRSS - Cali High (Alle Farben Remix)</div>
-      </div>,
-      <div className="AlbumSlide slide3">
-        <a target="_blank" href={buttonURL3} className="button">
-          {buttonText3}
-        </a>
-        <div className="desc">MTRSS, Fede Montero - Cali High (Versión en Español)</div>
-      </div>,
-    ];
-
     return (
       <Layout location={this.props.location} data={this.props.data}>
-        <Helmet>
+        <Helmet title={siteTitle}>
           <link
-            href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
             rel="stylesheet"
-            integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+            integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
             crossOrigin="anonymous"
+            referrerpolicy="no-referrer"
           />
-
+          <link rel="preconnect" href="https://fonts.gstatic.com" />
+          <link
+            href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+            rel="stylesheet"
+          />
         </Helmet>
-        <Carousel slides={slidesDiv} autoplay={false} interval={1000} />
+        <Carousel
+          slides={ARBUM_DATA.map((props, i) => (
+            <AlbumArt key={props.link} index={i + 1} {...props} />
+          )).reverse()}
+          autoplay={false}
+          interval={1000}
+        />
         {/* <div id="mtrss-video-hero" className="video-hero">
             <div className="video-wrapper">
               <div className="iframe-wrapper">
