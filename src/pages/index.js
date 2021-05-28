@@ -17,7 +17,6 @@ const RichText = ({jsonRichText}) => {
     )
 }
 
-
 class RootIndex extends React.Component {
   constructor(props) {
     super();
@@ -69,8 +68,16 @@ class RootIndex extends React.Component {
     const buttonText7 = "Listen Now";
     const buttonURL8 = "https://ffm.to/dearmbp";
     const buttonText8 = "Listen Now";
+    const buttonURL9 = "https://dashgo.co/mvamlrm";
+    const buttonText9 = "Listen Now";
 
     let slidesDiv = [
+      <div className="AlbumSlide slide9">
+        <a target="_blank" href={buttonURL9} className="button">{buttonText9}</a>
+        <div className="desc">
+          Ecosystem (MTRSS Version)
+        </div>
+      </div>,
       <div className="AlbumSlide slide8">
         <a target="_blank" href={buttonURL8} className="button">{buttonText8}</a>
         <div className="desc">
