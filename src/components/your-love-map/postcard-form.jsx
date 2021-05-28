@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled, { css } from "styled-components";
 import WORLD_TOPO_JSON from "../../assets/geoJsons/world2.topo.json";
 import Button from "../button";
@@ -66,6 +66,8 @@ const COUNTRIES = [...new Set(WORLD_TOPO_JSON.objects.world.geometries.map(e => 
     return 0;
   }
 );
+
+
 
 const PostCardForm = ({ onSubmit }) => {
   const [name, setName] = useState("");
