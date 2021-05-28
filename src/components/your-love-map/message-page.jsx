@@ -87,8 +87,8 @@ const NewWindowPostCard = ({ message, onClose }) => {
     saveImage(postcardRef.current, onClose);
   }, []);
   return (
-    <NewWindowPortal onClose={onClose}>
-      <NewWindowPostcardStyles />
+    <div onClose={onClose}>
+      {/* <NewWindowPostcardStyles /> */}
       <StoryPostcardContainer>
         <Postcard ref={postcardRef}>
           <p>to: {message.name}</p>
@@ -97,7 +97,7 @@ const NewWindowPostCard = ({ message, onClose }) => {
           <p>with love: {message.from}</p>
         </Postcard>
       </StoryPostcardContainer>
-    </NewWindowPortal>
+    </div>
   );
 };
 
