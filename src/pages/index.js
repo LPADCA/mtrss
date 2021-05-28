@@ -8,6 +8,7 @@ import Layout from "../components/layout";
 import Collapse from "@kunukn/react-collapse";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { Carousel } from "../components/3rdparty/Carousel";
+import Footer from "../components/footer";
 
 const ARBUM_DATA = [
   { link: "https://ffm.to/yvqm2de" },
@@ -72,13 +73,13 @@ class RootIndex extends React.Component {
 
     return (
       <Layout location={this.props.location} data={this.props.data}>
-        <Helmet title={siteTitle}>
+        <Helmet>
           <link
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
             integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
             crossOrigin="anonymous"
-            referrerpolicy="no-referrer"
+            referrerPolicy="no-referrer"
           />
           <link rel="preconnect" href="https://fonts.gstatic.com" />
           <link
@@ -191,10 +192,6 @@ class RootIndex extends React.Component {
             </div>
           </div>
         </div>
-
-        {/* <div id="spotify">
-            <iframe src="https://open.spotify.com/embed/artist/6k4nRFSKe2EQuzMHAtY1gp" width="300" height="380" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-          </div> */}
         <Footer />
       </Layout>
     );
