@@ -67,8 +67,10 @@ const NewWindowPortal = ({ children, onClose }) => {
     windowRef.current = window.open("", "", "width=1080,height=1920");
     windowRef.current.document.body.appendChild(containerRef.current);
     return () => {
-      windowRef.current.close();
-      if (onClose) onClose();
+      setTimeout(() => {
+        windowRef.current.close();
+        if (onClose) onClose();
+      }, 1000)
     };
   }, []);
 
