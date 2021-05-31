@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import styled, { css } from "styled-components";
 import WORLD_TOPO_JSON from "../../assets/geoJsons/world2.topo.json";
 import Button from "../button";
@@ -67,7 +67,48 @@ const COUNTRIES = [...new Set(WORLD_TOPO_JSON.objects.world.geometries.map(e => 
   }
 );
 
-
+const NOTES = [
+  `“When I am with you there’s no place I’d rather be.”
+ - Clean Bandit - Rather be`,
+  `“How wonderful life is while you’re in the world.”
+ - Elton John, ‘Your Song’`,
+  `“You’re the only one that I want. Think I’m addicted to your light.”
+ - Beyoncé, ‘Halo’`,
+  `“Cause all of me loves all of you.”
+ - John Legend, ‘All of Me’`,
+  `“My world is a better place because of you.”
+ - Celine Dion, ‘Because You Loved Me’`,
+  `“My heart’s been borrowed and yours has been blue; all’s well that ends well to end up with you.”
+ - Taylor Swift, ‘Lover’`,
+  `“But I won’t hesitate no more. No more it cannot wait, I’m yours”
+ - Jason Mraz, ‘I’m Yours’`,
+  `“I’m so in love with you and I hope you know”
+ - James Arthur ‘Say You Won’t Let Go’`,
+  `“Darling, I will be loving you till we’re seventy”
+ - Ed Sheeran, ‘Thinking Out Loud’`,
+  ` “I fall in love with you every single day”
+ - Ed Sheeran, ‘Perfect’`,
+  ` “I just wanna be part of your symphony”
+ - Clean Bandit, ‘Symphony’`,
+  `“However far away, I will always loving you”
+ - The Cure, ‘Lovesong’`,
+  ` “You’re my passport home, without you close I can’t go on”
+ - JP Cooper, ‘Passport Home’`,
+  ` “I like me better when I’m with you”
+ - Lauv, ‘I Like Me Better’`,
+  ` “I’d spend every hour of every day keeping you safe”
+ - Calum Scott, ‘You Are the Reason’`,
+  ` “You could put an ocean between our love, it won’t keep us apart”
+ - Martin Garrix (feat. Khalid), ‘Ocean’`,
+  `“If life is a movie, oh, you’re the best part”
+ - Daniel Caesar (feat. H.E.R.), ‘Best Part’`,
+  ` “Your love is better than ice cream.”
+ - Sarah McLachlan, ‘Ice Cream’`,
+  ` “Everything means nothing if I ain’t got you”
+ - Alicia Keys, ‘If I ain’t got you’`,
+  ` “If the world was ending you’d come over, right?”
+ - JP Saxe & Julia Michaels, ‘If the World Was Ending’`,
+];
 
 const PostCardForm = ({ onSubmit }) => {
   const [name, setName] = useState("");
@@ -94,13 +135,16 @@ const PostCardForm = ({ onSubmit }) => {
           ))}
         </Select>
       </Line>
-      <TextArea
-        required
-        rows={4}
-        value={note}
-        placeholder="write a few words"
-        onChange={e => setNote(e.target.value)}
-      ></TextArea>
+      <Select required value={country} onChange={e => setNote(e.target.value)}>
+        {NOTES.map(note => {
+          return (
+            <option key={note} value={note}>
+              {note}
+            </option>
+          );
+        })}
+      </Select>
+
       <SecondLine>
         <div>
           Sincerely yours,{" "}

@@ -5,6 +5,7 @@ import styled from "styled-components";
 import domtoimage from "dom-to-image";
 import Button from "../button";
 import { StaticImage } from "gatsby-plugin-image";
+import SvgMap from "./love-map";
 
 const PageContainer = styled.div`
   display: flex;
@@ -35,15 +36,12 @@ const PostmarkCotainer = styled.div`
   margin-left: calc(100% - 110px);
 `;
 
-const Postcard = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  transform-origin: 50% 0;
-  font-size: 24px;
+const MapContainer = styled.div`
+  margin: 20px 0;
+`;
+
+const PostcardContent = styled.div`
+  color: black;
 `;
 
 const CardButton = styled(Button)`
@@ -57,10 +55,16 @@ const ExpandedCardContainer = styled.div`
   top: -999px;
 `;
 
+const Underline = styled.span`
+  border-bottom: 1px solid black;
+  display: inline-block;
+  width: 50%;
+`;
+
 const saveImage = (domNode, onClose) => {
   domtoimage.toJpeg(domNode, { quality: 0.95 }).then(function (dataUrl) {
     var link = document.createElement("a");
-    link.download = "my-image-name.jpeg";
+    link.download = "postcard.jpeg";
     link.href = dataUrl;
     link.click();
     onClose();
@@ -74,13 +78,15 @@ const ExpandedPostCard = ({ message, onClose }) => {
   }, []);
   return (
     <ExpandedCardContainer>
-      <StoryPostcardContainer>
-        <Postcard ref={postcardRef}>
-          <p>to: {message.name}</p>
+      <StoryPostcardContainer ref={postcardRef}>
+        <PostcardContent>
+          <p>
+            To, <br /> <s>{message.name}</s>
+          </p>
           <p>from: {message.country}</p>
           <p>message: {message.note}</p>
           <p>with love: {message.from}</p>
-        </Postcard>
+        </PostcardContent>
       </StoryPostcardContainer>
     </ExpandedCardContainer>
   );
@@ -100,19 +106,24 @@ const MessagePage = ({ url }) => {
   if (!message) return <div>loading</div>;
 
   return (
-    <PageContainer>
+    <PageContainer ref={postcardRef}>
       <SmallPostcardContainer>
         <PostmarkCotainer>
           <StaticImage src="../../assets/images/heart.png" width={110} height={110} />
         </PostmarkCotainer>
-        <Postcard ref={postcardRef}>
-          <p>to: {message.name}</p>
+        <MapContainer>
+          <SvgMap screenWidth={400} screenHeight={220} />
+        </MapContainer>
+        <PostcardContent>
+          <p>
+            To, <br /> <Underline>{message.name}</Underline>
+          </p>
           <p>from: {message.country}</p>
           <p>message: {message.note}</p>
           <p>with love: {message.from}</p>
-        </Postcard>
+        </PostcardContent>
       </SmallPostcardContainer>
-      <CardButton onClick={() => showPostcard(true)}>save image</CardButton>
+      <CardButton onClick={() => showPostcard(true)}>Save image</CardButton>
       {isPostcardShow && <ExpandedPostCard message={message} onClose={() => showPostcard(false)} />}
     </PageContainer>
   );
