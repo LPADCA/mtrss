@@ -1,30 +1,41 @@
 import React, { useEffect, useState, useRef } from "react";
 import { getPostcardRequest } from "../../api/love-message-api";
 import { navigate } from "gatsby";
-import styled, { createGlobalStyle, StyleSheetManager } from "styled-components";
+import styled from "styled-components";
 import domtoimage from "dom-to-image";
 import Button from "../button";
-import ReactDOM from "react-dom";
+import { StaticImage } from "gatsby-plugin-image";
 
-const PostcardContainer = styled.div`
+const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
 
-const SmallPostcardContainer = styled.div`
-  width: 570px;
-  height: 980px;
+const PostcardContainer = styled.div`
+  background-color: #ffffff;
+  border: 5px solid red;
 `;
 
-const StoryPostcardContainer = styled.div`
+const SmallPostcardContainer = styled(PostcardContainer)`
+  width: 570px;
+  height: 980px;
+  padding: 20px;
+`;
+
+const StoryPostcardContainer = styled(PostcardContainer)`
   width: 1080px;
   height: 1920px;
 `;
 
+const PostmarkCotainer = styled.div`
+  border: 1px solid black;
+  display: inline-block;
+  margin-left: calc(100% - 110px);
+`;
+
 const Postcard = styled.div`
-  border: 5px solid red;
   width: 100%;
   height: 100%;
   display: flex;
@@ -33,13 +44,17 @@ const Postcard = styled.div`
   align-items: center;
   transform-origin: 50% 0;
   font-size: 24px;
-  background-color: black;
 `;
 
 const CardButton = styled(Button)`
   max-width: 400px;
   width: 100%;
   margin-top: 50px;
+`;
+
+const ExpandedCardContainer = styled.div`
+  position: absolute;
+  top: -999px;
 `;
 
 const saveImage = (domNode, onClose) => {
@@ -52,43 +67,13 @@ const saveImage = (domNode, onClose) => {
   });
 };
 
-const NewWindowPostcardStyles = createGlobalStyle`
-  body {
-    background-color: black;
-    color: white;
-    margin: 0;
-  }
-`;
-
-const NewWindowPortal = ({ children, onClose }) => {
-  const windowRef = useRef();
-  const containerRef = useRef(document.createElement("div"));
-  useEffect(() => {
-    windowRef.current = window.open("", "", "width=1080,height=1920");
-    windowRef.current.document.body.appendChild(containerRef.current);
-    return () => {
-      setTimeout(() => {
-        windowRef.current.close();
-        if (onClose) onClose();
-      }, 1000)
-    };
-  }, []);
-
-  return (
-    <StyleSheetManager target={containerRef.current}>
-      <>{ReactDOM.createPortal(children, containerRef.current)}</>
-    </StyleSheetManager>
-  );
-};
-
-const NewWindowPostCard = ({ message, onClose }) => {
+const ExpandedPostCard = ({ message, onClose }) => {
   const postcardRef = useRef();
   useEffect(() => {
     saveImage(postcardRef.current, onClose);
   }, []);
   return (
-    <div onClose={onClose}>
-      {/* <NewWindowPostcardStyles /> */}
+    <ExpandedCardContainer>
       <StoryPostcardContainer>
         <Postcard ref={postcardRef}>
           <p>to: {message.name}</p>
@@ -97,7 +82,7 @@ const NewWindowPostCard = ({ message, onClose }) => {
           <p>with love: {message.from}</p>
         </Postcard>
       </StoryPostcardContainer>
-    </div>
+    </ExpandedCardContainer>
   );
 };
 
@@ -115,8 +100,11 @@ const MessagePage = ({ url }) => {
   if (!message) return <div>loading</div>;
 
   return (
-    <PostcardContainer>
+    <PageContainer>
       <SmallPostcardContainer>
+        <PostmarkCotainer>
+          <StaticImage src="../../assets/images/heart.png" width={110} height={110} />
+        </PostmarkCotainer>
         <Postcard ref={postcardRef}>
           <p>to: {message.name}</p>
           <p>from: {message.country}</p>
@@ -125,8 +113,8 @@ const MessagePage = ({ url }) => {
         </Postcard>
       </SmallPostcardContainer>
       <CardButton onClick={() => showPostcard(true)}>save image</CardButton>
-      {isPostcardShow && <NewWindowPostCard message={message} onClose={() => showPostcard(false)} />}
-    </PostcardContainer>
+      {isPostcardShow && <ExpandedPostCard message={message} onClose={() => showPostcard(false)} />}
+    </PageContainer>
   );
 };
 

@@ -23,7 +23,6 @@ const SvgWrapper = styled.div`
   background-attachment: fixed;
   background-size: cover;
   overflow: hidden;
-  height: 100vh;
   position: relative;
   min-width: 100%;
 `;
@@ -59,7 +58,7 @@ const getTranslate = (width, height, x, y, offsetX, offsetY, scale) => {
   //   "scale",
   //   scale
   // );
-  return `${(width / 2) * scale - x * scale - offsetX}px, ${(height / 2) * scale - y * scale - offsetY}px`;
+  return `${(width / 2) * scale - x * scale - offsetX}px, ${(height / 2) * scale - y * scale}px`;
 };
 
 const HighlightedPath = css`
@@ -177,7 +176,6 @@ const SvgMap = props => {
   const mapCentroid = [mapWidth / 2, mapHeight / 2];
   const mapOffset = [mapCentroid[0] - screenCentroid[0], mapCentroid[1] - screenCentroid[1]];
   const [selectedFeature, setFeature] = useState(TOPO_COUNTRIES);
-  const [isDraggin, setDragging] = useState(false);
   const [styles, api] = useSpring(() => ({
     translate: getTranslate(
       mapWidth,
@@ -190,20 +188,16 @@ const SvgMap = props => {
     ),
     config: config.slow,
   }));
-  const centroid = pathGenerator.centroid(selectedFeature);
+  const centroid = selectedFeature === TOPO_COUNTRIES ? pathGenerator.centroid(selectedFeature) : mapCentroid;
 
   const bind = useGesture(
     {
-      onDrag: args => {
-        const {
-          delta,
-          offset: [x, y],
-          first,
-          last,
-        } = args;
+      onDrag: ({ delta, offset: [x], first, last }) => {
         window.scroll(0, window.scrollY - delta[1] / 2);
-        if (first) setDragging(true);
-        else if (last) setDragging(false);
+        console.log("mapOffset[0], x", mapOffset[0], x);
+        console.log("mapOffset[0] - x", mapOffset[0] - x);
+        console.log("selectedFeature", selectedFeature);
+        console.log("centroid", centroid);
 
         api.start({
           translate: getTranslate(
@@ -249,7 +243,6 @@ const SvgMap = props => {
     TOPO_COUNTRIES
   );
   const onFeatureClick = feature => {
-    if (isDraggin) return;
     const isSame = isSameFeatures(selectedFeature, feature);
     if (isSame) feature = TOPO_COUNTRIES;
     const featureCentroid = pathGenerator.centroid(feature);
@@ -259,7 +252,6 @@ const SvgMap = props => {
     const scaleX = fullX / featX;
     const scale = scaleX / 3.5 > 1 ? scaleX / 3.5 : 1.5;
 
-    featureRef.current = feature;
     if (isSame) {
       api.start({
         translate: getTranslate(
