@@ -52,6 +52,7 @@ const Select = styled.select`
   ${inputMixin}
   margin-left: 5px;
   color: white;
+  max-width: 100%;
 
   &:invalid,
   & option[value=""] {
@@ -69,7 +70,7 @@ const COUNTRIES = [...new Set(WORLD_TOPO_JSON.objects.world.geometries.map(e => 
 
 const NOTES = [
   `“When I am with you there’s no place I’d rather be.”
- - Clean Bandit - Rather be`,
+ - Clean Bandit, Rather be`,
   `“How wonderful life is while you’re in the world.”
  - Elton John, ‘Your Song’`,
   `“You’re the only one that I want. Think I’m addicted to your light.”
@@ -135,7 +136,7 @@ const PostCardForm = ({ onSubmit }) => {
           ))}
         </Select>
       </Line>
-      <Select required value={country} onChange={e => setNote(e.target.value)}>
+      <Select required value={note} onChange={e => setNote(e.target.value)}>
         {NOTES.map(note => {
           return (
             <option key={note} value={note}>
@@ -144,7 +145,6 @@ const PostCardForm = ({ onSubmit }) => {
           );
         })}
       </Select>
-
       <SecondLine>
         <div>
           Sincerely yours,{" "}
