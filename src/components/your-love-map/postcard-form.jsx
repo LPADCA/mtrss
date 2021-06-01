@@ -131,7 +131,7 @@ const NOTES = [
 
 const PostCardForm = ({ onSubmit, country, setCountry }) => {
   const [name, setName] = useState("");
-  const [note, setNote] = useState("");
+  const [note, setNote] = useState(NOTES[0]);
   const [from, setFrom] = useState("");
   const handleSubmit = e => {
     e.preventDefault();

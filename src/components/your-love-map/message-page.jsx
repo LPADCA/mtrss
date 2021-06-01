@@ -79,7 +79,6 @@ const ExpandedPostCard = ({ message, onClose }) => {
   return (
     <ExpandedCardContainer>
       <StoryPostcardContainer ref={postcardRef}>
-
         <MapContainer>
           <SvgMap screenWidth={400} screenHeight={220} />
         </MapContainer>
