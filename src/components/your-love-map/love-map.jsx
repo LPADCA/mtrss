@@ -27,7 +27,6 @@ const SvgWrapper = styled.div`
   overflow: hidden;
   position: relative;
   min-width: 100%;
-  width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
 `;
 
@@ -86,17 +85,49 @@ const isSameFeatures = (feature1, feature2) => {
   return feature1.properties.CONTINENT === feature2.properties.CONTINENT;
 };
 
-const SvgPath = ({ d, onClick, ...props }) => {
-  const pathRef = useRef();
+const SvgContinent = ({ featureCollection, selectedFeature, onCountryClick, onContinentClick }) => {
+  const isSelected = isSameFeatures(selectedFeature, featureCollection);
 
-  useEffect(() => {
-    d3.select(pathRef.current).on("click", onClick).transition().duration(100).attr("d", d);
-  }, [d]);
+  const handleCountryClick = feature => {
+    if (isSelected && onCountryClick) onCountryClick(feature);
+  };
+  const handleContinentClick = e => {
+    e.stopPropagation();
+    if (!isSelected && onContinentClick) onContinentClick(featureCollection);
+  };
 
-  return <path vectorEffect="non-scaling-stroke" ref={pathRef} {...props} />;
+  return (
+    <ContinentGroup isSelected={isSelected} onClick={handleContinentClick}>
+      <SvgPathsFromFeature
+        features={featureCollection.features}
+        projection={projection}
+        onClick={handleCountryClick}
+      />
+    </ContinentGroup>
+  );
 };
 
-const SvgContinents = ({ selectedFeature, topoJSON, projection, onCountryClick, onContinentClick }) => {
+const SvgContinents = ({ groupedTopoJSON, selectedFeature, projection, onCountryClick, onContinentClick }) =>
+  Object.keys(groupedTopoJSON).map(CONTINENT => {
+    return (
+      <SvgContinent
+        key={CONTINENT}
+        featureCollection={groupedTopoJSON[CONTINENT]}
+        onCountryClick={onCountryClick}
+        projection={projection}
+        onContinentClick={onContinentClick}
+        selectedFeature={selectedFeature}
+      />
+    );
+  });
+
+const SvgContinentsContainer = ({
+  selectedFeature,
+  topoJSON,
+  projection,
+  onCountryClick,
+  onContinentClick,
+}) => {
   const groupedTopoJSON = topoJSON.features.reduce((storage, feature) => {
     const CONTINENT = feature.properties.CONTINENT;
     if (!storage[CONTINENT]) {
@@ -111,24 +142,15 @@ const SvgContinents = ({ selectedFeature, topoJSON, projection, onCountryClick, 
     storage[CONTINENT].features.push(feature);
     return storage;
   }, {});
-  return Object.keys(groupedTopoJSON).map(CONTINENT => {
-    const featureCollection = groupedTopoJSON[CONTINENT];
-    const isSelected = isSameFeatures(selectedFeature, featureCollection);
-    const handleClick = e => {
-      e.stopPropagation();
-      if (onContinentClick) onContinentClick(featureCollection);
-    };
-
-    return (
-      <ContinentGroup key={CONTINENT} isSelected={isSelected} onClick={handleClick}>
-        <SvgPathsFromFeature
-          features={featureCollection.features}
-          projection={projection}
-          onClick={onCountryClick}
-        />
-      </ContinentGroup>
-    );
-  });
+  return (
+    <SvgContinents
+      groupedTopoJSON={groupedTopoJSON}
+      selectedFeature={selectedFeature}
+      projection={projection}
+      onCountryClick={onCountryClick}
+      onContinentClick={onContinentClick}
+    />
+  );
 };
 
 const SvgPathsFromFeature = ({ features, projection, onClick, onMouseOver }) => {
@@ -145,7 +167,7 @@ const SvgPathsFromFeature = ({ features, projection, onClick, onMouseOver }) => 
     };
 
     if (!path) return null;
-    return <SvgPath key={path} onClick={handleClick} onMouseOver={() => handleMouseOver(feature)} d={path} />;
+    return <path key={path} onClick={handleClick} onMouseOver={() => handleMouseOver(feature)} d={path} />;
   });
 };
 
@@ -262,13 +284,13 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
   };
 
   const handleMapClick = country => {
-    if (noSelected) onCountryClick(country);
+    onCountryClick(country);
   };
 
   if (mapWidth === 0 && mapHeight === 0) return null;
 
   return (
-    <SvgWrapper ref={wrapperRef} height={mapHeight}>
+    <SvgWrapper ref={wrapperRef} height={screenHeight}>
       <AnimatedSvg
         style={styles}
         width={mapWidth}
@@ -279,7 +301,7 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
         xmlnsXlink="http://www.w3.org/1999/xlink"
         {...bind()}
       >
-        <SvgContinents
+        <SvgContinentsContainer
           projection={projection}
           selectedFeature={selectedFeature}
           onContinentClick={onFeatureClick}

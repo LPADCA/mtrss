@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled, { css } from "styled-components";
 import WORLD_TOPO_JSON from "../../assets/geoJsons/world2.topo.json";
 import Button from "../button";
@@ -129,15 +129,15 @@ const NOTES = [
  - JP Saxe & Julia Michaels, ‘If the World Was Ending’`,
 ];
 
-const PostCardForm = ({ onSubmit }) => {
+const PostCardForm = ({ onSubmit, country, setCountry }) => {
   const [name, setName] = useState("");
-  const [country, setCountry] = useState("");
   const [note, setNote] = useState("");
   const [from, setFrom] = useState("");
   const handleSubmit = e => {
     e.preventDefault();
     onSubmit({ name, country, note, from });
   };
+
   return (
     <Form onSubmit={handleSubmit}>
       <FirstLine>
@@ -151,9 +151,9 @@ const PostCardForm = ({ onSubmit }) => {
             <option value="" disabled hidden>
               Country
             </option>
-            {COUNTRIES.map(country => (
-              <option key={country} value={country}>
-                {country}
+            {COUNTRIES.map(c => (
+              <option key={c} value={c}>
+                {c}
               </option>
             ))}
           </CountrySelect>

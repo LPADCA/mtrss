@@ -79,9 +79,13 @@ const ExpandedPostCard = ({ message, onClose }) => {
   return (
     <ExpandedCardContainer>
       <StoryPostcardContainer ref={postcardRef}>
+
+        <MapContainer>
+          <SvgMap screenWidth={400} screenHeight={220} />
+        </MapContainer>
         <PostcardContent>
           <p>
-            To, <br /> <s>{message.name}</s>
+            To, <br /> <Underline>{message.name}</Underline>
           </p>
           <p>from: {message.country}</p>
           <p>message: {message.note}</p>
