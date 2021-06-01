@@ -37,6 +37,7 @@ const Hero = styled.div`
     max-width: 560px;
     text-align: center;
     font-size: 16px;
+    padding: 0 30px;
   }
 `;
 

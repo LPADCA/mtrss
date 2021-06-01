@@ -13,7 +13,7 @@ const openPostcard = async args => {
 const YourLoveMapPage = () => {
   return (
     <LoveLayout>
-      <SvgMap />
+      <SvgMap onCountryClick={console.log} />
       <PostCardForm onSubmit={openPostcard} />
     </LoveLayout>
   );

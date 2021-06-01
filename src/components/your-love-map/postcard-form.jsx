@@ -20,24 +20,35 @@ const Form = styled.form`
   margin: 50px auto;
   width: 100%;
   max-width: 600px;
-`;
-
-const TextArea = styled.textarea`
-  ${inputMixin}
-  width: 100%;
-  resize: none;
-  color: white;
-  caret-color: white;
+  padding: 0 30px;
 `;
 
 const Line = styled.span`
   display: inline-flex;
   width: 100%;
+`;
+
+const LineColumn = styled.div`
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+  width: 50%;
+  display: flex;
   margin-bottom: 20px;
+
+  input {
+    width: 50%;
+  }
+`;
+
+const FirstLine = styled(Line)`
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 const SecondLine = styled(Line)`
-  margin-top: 20px;
+  margin: 20px 0;
   justify-content: flex-end;
   align-items: center;
 `;
@@ -50,7 +61,6 @@ const Input = styled.input`
 
 const Select = styled.select`
   ${inputMixin}
-  margin-left: 5px;
   color: white;
   max-width: 100%;
 
@@ -58,6 +68,14 @@ const Select = styled.select`
   & option[value=""] {
     color: #ff3636;
   }
+`;
+
+const CountrySelect = styled(Select)`
+  margin-left: 5px;
+`;
+
+const SongSelect = styled(Select)`
+  width: 100%;
 `;
 
 const COUNTRIES = [...new Set(WORLD_TOPO_JSON.objects.world.geometries.map(e => e.properties.NAME))].sort(
@@ -122,21 +140,26 @@ const PostCardForm = ({ onSubmit }) => {
   };
   return (
     <Form onSubmit={handleSubmit}>
-      <Line>
-        Sending love to{" "}
-        <Input required placeholder="your love" value={name} onChange={e => setName(e.target.value)} /> in{" "}
-        <Select required value={country} onChange={e => setCountry(e.target.value)}>
-          <option value="" disabled hidden>
-            Country
-          </option>
-          {COUNTRIES.map(country => (
-            <option key={country} value={country}>
-              {country}
+      <FirstLine>
+        <LineColumn>
+          <span>Sending love to </span>
+          <Input required placeholder="your love" value={name} onChange={e => setName(e.target.value)} />
+        </LineColumn>
+        <LineColumn>
+          <span> in </span>
+          <CountrySelect required value={country} onChange={e => setCountry(e.target.value)}>
+            <option value="" disabled hidden>
+              Country
             </option>
-          ))}
-        </Select>
-      </Line>
-      <Select required value={note} onChange={e => setNote(e.target.value)}>
+            {COUNTRIES.map(country => (
+              <option key={country} value={country}>
+                {country}
+              </option>
+            ))}
+          </CountrySelect>
+        </LineColumn>
+      </FirstLine>
+      <SongSelect required value={note} onChange={e => setNote(e.target.value)}>
         {NOTES.map(note => {
           return (
             <option key={note} value={note}>
@@ -144,10 +167,10 @@ const PostCardForm = ({ onSubmit }) => {
             </option>
           );
         })}
-      </Select>
+      </SongSelect>
       <SecondLine>
         <div>
-          Sincerely yours,{" "}
+          <span>Sincerely yours, </span>
           <Input required placeholder="" value={from} onChange={e => setFrom(e.target.value)} />
         </div>
       </SecondLine>
