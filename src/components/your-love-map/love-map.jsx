@@ -190,35 +190,48 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
       offsetY: mapOffset[1],
       scale: 1,
     }),
+    pos: [0, 0],
     config: config.slow,
   }));
   const noSelected = isSameFeatures(selectedFeature, TOPO_COUNTRIES);
   const centroid = noSelected ? mapCentroid : pathGenerator.centroid(selectedFeature);
   const bind = useDrag(
-    ({ delta, offset: [x], dragging }) => {
+    args => {
+      const {
+        delta,
+        movement: [x],
+        dragging,
+      } = args;
       if (!dragging) return;
-      window.scroll(0, window.scrollY - delta[1]);
-      api({
+      const offsetX = mapOffset[0] - x;
+      const displayOffsetY = window.scrollY - delta[1];
+      const pos = [x, 0];
+      window.scroll(0, displayOffsetY);
+      api.start({
         translate: getTranslate({
           width: mapWidth,
           height: mapHeight,
           x: centroid[0],
           y: centroid[1],
-          offsetX: mapOffset[0] - x,
+          offsetX: offsetX,
           offsetY: mapOffset[1],
           scale: scale,
         }),
+        pos: pos,
         scale,
       });
     },
-    { delay: 1000 }
+    {
+      delay: 1000,
+      initial: () => styles.pos.get(),
+    }
   );
 
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
     if (noSelected) {
-      api({
+      api.start({
         translate: getTranslate({
           width: mapWidth,
           height: mapHeight,
@@ -228,6 +241,7 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
           offsetY: mapOffset[1],
           scale: scale,
         }),
+        pos: [0, 0],
         scale,
       });
     }
@@ -249,9 +263,8 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
     const featX = bounds[1][0] - bounds[0][0];
     const scaleX = fullX / featX;
     const scale = scaleX / 3.5 > 1 ? scaleX / 3.5 : 1.5;
-
     if (isSame) {
-      api({
+      api.start({
         translate: getTranslate({
           width: mapWidth,
           height: mapHeight,
@@ -266,7 +279,7 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
       setScale(1);
       setFeature(TOPO_COUNTRIES);
     } else {
-      api({
+      api.start({
         translate: getTranslate({
           width: mapWidth,
           height: mapHeight,
@@ -276,6 +289,8 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
           offsetY: mapOffset[1],
           scale: scale,
         }),
+        pos: [0, 0],
+
         scale,
       });
       setScale(scale);
