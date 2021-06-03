@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-import * as d3 from "d3";
 import * as topojson from "topojson-client";
 import * as geo from "d3-geo";
 import styled, { css } from "styled-components";
@@ -8,7 +7,6 @@ import earthBG from "../../assets/images/flowers-red.png";
 import WORLD_TOPO_JSON from "../../assets/geoJsons/world3.topo.json";
 import { useDrag } from "react-use-gesture";
 import { useSpring, animated, config } from "@react-spring/web";
-import { path } from "d3";
 
 const BG_IMAGE_WIDTH = 2660;
 const BG_IMAGE_HEIGHT = 1484;
@@ -68,7 +66,6 @@ const AnimatedSvg = styled(animated.svg)`
 `;
 
 const getTranslate = args => {
-  console.log("args", args);
   const { screenCentroid, x, y, offsetX = 0, offsetY = 0, scale } = args;
   return `${screenCentroid[0] - x * scale - offsetX}px, ${screenCentroid[1] - y * scale - offsetY}px`;
 };
@@ -203,11 +200,7 @@ const SvgPathsFromFeature = ({ features, projection, onClick, onMouseOver }) => 
       <g key={path}>
         <path onClick={handleClick} d={path} />
         {/* {stats && <Circle cx={centroid[0]} cy={centroid[1]} r="10"></Circle>} */}
-        {/* {stats && (
-          <text x={centroid[0]} fill="black" y={centroid[1]}>
-            {stats.value}
-          </text>
-        )} */}
+
       </g>
     );
   });
@@ -243,7 +236,11 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
     };
   };
 
-  const [styles, api] = useSpring(() => getTranslateWithOffset(50));
+  const [styles, api] = useSpring(() => getTranslateWithOffset(50), {
+    mass: 1000,
+    tension: 1000,
+    friction: 60,
+  });
 
   const bind = useDrag(
     args => {
