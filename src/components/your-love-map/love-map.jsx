@@ -8,6 +8,7 @@ import earthBG from "../../assets/images/flowers-red.png";
 import WORLD_TOPO_JSON from "../../assets/geoJsons/world3.topo.json";
 import { useDrag } from "react-use-gesture";
 import { useSpring, animated, config } from "@react-spring/web";
+import { path } from "d3";
 
 const BG_IMAGE_WIDTH = 2660;
 const BG_IMAGE_HEIGHT = 1484;
@@ -61,15 +62,15 @@ const AnimatedSvg = styled(animated.svg)`
   background-position: center right;
   background-repeat: no-repeat;
   background-size: 93%;
-  /* width: ${({ scale }) => 100 * scale}%;
-  height: ${({ scale }) => 100 * scale}%; */
+  min-width: ${MIN_WIDTH}px;
   fill: transparent;
   will-change: transform, stroke-width, width, height;
 `;
 
 const getTranslate = args => {
-  const { width, height, x, y, offsetX, offsetY, scale } = args;
-  return `${(width / 2) * scale - x * scale - offsetX}px, ${(height / 2) * scale - y * scale - offsetY}px`;
+  console.log("args", args);
+  const { screenCentroid, x, y, offsetX = 0, offsetY = 0, scale } = args;
+  return `${screenCentroid[0] - x * scale - offsetX}px, ${screenCentroid[1] - y * scale - offsetY}px`;
 };
 
 const Circle = styled.circle`
@@ -77,9 +78,7 @@ const Circle = styled.circle`
   pointer-events: none;
 `;
 
-const Text = styled.text`
-
-`;
+const Text = styled.text``;
 
 const HighlightedPath = css`
   path {
@@ -125,7 +124,8 @@ const SvgContinent = ({ featureCollection, selectedFeature, onCountryClick, onCo
   };
   const handleContinentClick = e => {
     e.stopPropagation();
-    if (!isSelected && onContinentClick) onContinentClick(featureCollection);
+    // if (!isSelected && onContinentClick) onContinentClick(featureCollection);
+    if (onContinentClick) onContinentClick(featureCollection);
   };
 
   return (
@@ -201,7 +201,7 @@ const SvgPathsFromFeature = ({ features, projection, onClick, onMouseOver }) => 
     if (!path) return null;
     return (
       <g key={path}>
-        <path onClick={handleClick} d={path} />;
+        <path onClick={handleClick} d={path} />
         {stats && <Circle cx={centroid[0]} cy={centroid[1]} r="10"></Circle>}
         {stats && (
           <text x={centroid[0]} fill="black" y={centroid[1]}>
@@ -220,72 +220,32 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
   const mapHeight = Math.max(screenHeight, MIN_WIDTH / BG_IMAGE_RATIO);
   const screenCentroid = [screenWidth / 2, screenHeight / 2];
   const mapCentroid = [mapWidth / 2, mapHeight / 2];
+  const mapBounds = pathGenerator.bounds(TOPO_COUNTRIES);
+  console.log('mapCentroid', mapBounds)
   const mapOffset = [mapCentroid[0] - screenCentroid[0], mapCentroid[1] - screenCentroid[1]];
   const [selectedFeature, setFeature] = useState(TOPO_COUNTRIES);
-  const [styles, api] = useSpring(() => ({
-    translate: getTranslate({
-      width: mapWidth,
-      height: mapHeight,
-      x: mapCentroid[0],
-      y: mapCentroid[1],
-      offsetX: mapOffset[0],
-      offsetY: mapOffset[1],
-      scale: 1,
-    }),
-    pos: [0, 0],
-    config: config.slow,
-  }));
-  const noSelected = isSameFeatures(selectedFeature, TOPO_COUNTRIES);
-  const centroid = noSelected ? mapCentroid : pathGenerator.centroid(selectedFeature);
-  const bind = useDrag(
-    args => {
-      const {
-        delta,
-        movement: [x],
-        dragging,
-      } = args;
-      if (!dragging) return;
-      const offsetX = mapOffset[0] - x;
-      const displayOffsetY = window.scrollY - delta[1];
-      const pos = [x, 0];
-      window.scroll(0, displayOffsetY);
-      api.start({
-        translate: getTranslate({
-          width: mapWidth,
-          height: mapHeight * scale,
-          x: centroid[0],
-          y: centroid[1],
-          offsetX: offsetX,
-          offsetY: mapOffset[1],
-          scale: scale,
-        }),
-        pos: pos,
-        scale,
-      });
-    },
-    {
-      delay: 1000,
-      initial: () => styles.pos.get(),
-    }
-  );
-
   const [scale, setScale] = useState(1);
+  const [centroid, setCentroid] = useState(mapCentroid);
+  const isFullMapShown = selectedFeature === TOPO_COUNTRIES
+
+  const styles = useSpring({
+    width: `${mapWidth * scale}px`,
+    // height: `${100 * scale}%`,
+    translate: getTranslate({
+      screenCentroid: screenCentroid,
+      x: centroid[0],
+      y: centroid[1],
+      offsetX: 50,
+      offsetY: isFullMapShown ? 0 : mapBounds[0][1], 
+      scale: scale,
+    }),
+  });
+  console.log('styles', styles.translate.get())
 
   useEffect(() => {
-    if (noSelected) {
-      api.start({
-        translate: getTranslate({
-          width: mapWidth,
-          height: mapHeight,
-          x: mapCentroid[0],
-          y: mapCentroid[1],
-          offsetX: mapOffset[0],
-          offsetY: mapOffset[1],
-          scale: scale,
-        }),
-        pos: [0, 0],
-        scale,
-      });
+    console.log("selectedFeature === TOPO_COUNTRIES", selectedFeature === TOPO_COUNTRIES);
+    if (isFullMapShown) {
+      setCentroid(mapCentroid);
     }
   }, [mapWidth, mapHeight]);
 
@@ -299,44 +259,20 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
   const onFeatureClick = feature => {
     const isSame = isSameFeatures(selectedFeature, feature);
     if (isSame) feature = TOPO_COUNTRIES;
-    const featureCentroid = pathGenerator.centroid(feature);
-    const bounds = pathGenerator.bounds(feature);
-    const fullX = mapWidth;
-    const featX = bounds[1][0] - bounds[0][0];
-    const scaleX = fullX / featX;
-    const scale = scaleX / 3.5 > 1 ? scaleX / 3.5 : 1.5;
-    if (isSame) {
-      api.start({
-        translate: getTranslate({
-          width: mapWidth,
-          height: mapHeight,
-          x: centroid[0],
-          y: mapCentroid[1],
-          offsetX: mapOffset[0],
-          offsetY: mapOffset[1],
-          scale: 1,
-        }),
-        scale: 1,
-      });
-      setScale(1);
-      setFeature(TOPO_COUNTRIES);
-    } else {
-      api.start({
-        translate: getTranslate({
-          width: mapWidth,
-          height: mapHeight,
-          x: featureCentroid[0],
-          y: featureCentroid[1],
-          offsetX: mapOffset[0],
-          offsetY: mapOffset[1],
-          scale: scale,
-        }),
-        pos: [0, 0],
+    setFeature(feature);
 
-        scale,
-      });
-      setScale(scale);
-      setFeature(feature);
+    const newCentroid = pathGenerator.centroid(feature);
+    const newBounds = pathGenerator.bounds(feature);
+    const newX = newBounds[1][0] - newBounds[0][0];
+    const newY = newBounds[1][1] - newBounds[0][1];
+    const scaleX = mapWidth / newX;
+    const scaleY = mapHeight / newY;
+    const scale = Math.min(scaleX, scaleY);
+    setScale(scale);
+    if (isSame) {
+      setCentroid(mapCentroid);
+    } else {
+      setCentroid(newCentroid);
     }
   };
 
@@ -351,11 +287,10 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
       <AnimatedSvg
         style={styles}
         viewBox={`0 0 ${mapWidth} ${mapHeight}`}
-        scale={scale}
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
-        {...bind()}
+        // {...bind()}
       >
         <SvgContinentsContainer
           projection={projection}
