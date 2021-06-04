@@ -6,7 +6,7 @@ import oceanBG from "../../assets/images/Flowers_White.jpg";
 import earthBG from "../../assets/images/flowers-red.png";
 import WORLD_TOPO_JSON from "../../assets/geoJsons/world3.topo.json";
 import { useDrag } from "react-use-gesture";
-import { useSpring, animated } from "@react-spring/web";
+import { useSpring, animated, config } from "@react-spring/web";
 import LISTENERS_STATS from "../../assets/stats.json";
 import * as scale from "d3-scale";
 
@@ -221,7 +221,9 @@ const SvgPathsFromFeature = ({ features, projection, onClick, onMouseOver }) => 
             opacity={getOpacity(stats.value)}
           ></Circle>
         )}
-        {stats && i % 3 == 0  && <PulseCircle cx={centroid[0]} cy={centroid[1]} r={getRadius(stats.value)}></PulseCircle>}
+        {stats && i % 3 == 0 && (
+          <PulseCircle cx={centroid[0]} cy={centroid[1]} r={getRadius(stats.value)}></PulseCircle>
+        )}
       </g>
     );
   });
@@ -257,11 +259,7 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
     };
   };
 
-  const [styles, api] = useSpring(() => getTranslateWithOffset(50), {
-    mass: 1000,
-    tension: 1000,
-    friction: 0,
-  });
+  const [styles, api] = useSpring(() => ({ ...getTranslateWithOffset(50), config: config.slow }));
 
   const bind = useDrag(
     args => {
