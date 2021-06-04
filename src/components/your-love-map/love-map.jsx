@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
 import * as topojson from "topojson-client";
 import * as geo from "d3-geo";
-import styled, { css } from "styled-components";
+import styled, { css, keyframes } from "styled-components";
 import oceanBG from "../../assets/images/Flowers_White.jpg";
 import earthBG from "../../assets/images/flowers-red.png";
 import WORLD_TOPO_JSON from "../../assets/geoJsons/world3.topo.json";
 import { useDrag } from "react-use-gesture";
-import { useSpring, animated, config } from "@react-spring/web";
+import { useSpring, animated } from "@react-spring/web";
+import LISTENERS_STATS from "../../assets/stats.json";
+import * as scale from "d3-scale";
 
 const BG_IMAGE_WIDTH = 2660;
 const BG_IMAGE_HEIGHT = 1484;
@@ -19,28 +21,15 @@ const TOPO_COUNTRIES = {
 const projection = geo.geoEqualEarth();
 const pathGenerator = geo.geoPath().projection(projection);
 
-const LISTENERS_STATS = [
-  {
-    country: "Germany",
-    value: "6k",
-  },
-  {
-    country: "United States",
-    value: "1.9k",
-  },
-  {
-    country: "Mexico",
-    value: "1.7k",
-  },
-  {
-    country: "Netherlands",
-    value: "935",
-  },
-  {
-    country: "Poland",
-    value: "845",
-  },
-];
+const MIN_VALUE = Math.min(...LISTENERS_STATS.map(s => s.value));
+const MAX_VALUE = Math.max(...LISTENERS_STATS.map(s => s.value));
+const MIN_RADIUS = 5;
+const MAX_RADIUS = 50;
+const MIN_OPACITY = 0.6;
+const MAX_OPACITY = 0.4;
+
+const getRadius = scale.scaleSqrt().domain([MIN_VALUE, MAX_VALUE]).range([MIN_RADIUS, MAX_RADIUS]);
+const getOpacity = scale.scaleSqrt().domain([MIN_VALUE, MAX_VALUE]).range([MIN_OPACITY, MAX_OPACITY]);
 
 const SvgWrapper = styled.div`
   background-image: url(${oceanBG});
@@ -53,6 +42,7 @@ const SvgWrapper = styled.div`
 `;
 
 const AnimatedSvg = styled(animated.svg)`
+  transform-box: fill-box;
   stroke: transparent;
   touch-action: none;
   background-color: transparent;
@@ -70,12 +60,38 @@ const getTranslate = args => {
   return `${screenCentroid[0] - x * scale - offsetX}px, ${screenCentroid[1] - y * scale - offsetY}px`;
 };
 
-const Circle = styled.circle`
-  fill: #49f849;
-  pointer-events: none;
+const pulse = keyframes`
+  from {
+    stroke-width: 3px;
+    stroke-opacity: 1;
+    transform: scale(0.9);
+  }
+  to {
+    stroke-width: 0;
+    stroke-opacity: 0;
+    transform: scale(1.3);
+  }
 `;
 
-const Text = styled.text``;
+const Circle = styled.circle`
+  fill: #fdf0f0;
+  pointer-events: none;
+  opacity: ${({ opacity }) => opacity};
+`;
+
+const PulseCircle = styled.circle`
+  transform-box: fill-box;
+  transform-origin: center;
+  pointer-events: none;
+  stroke: #fdf0f0;
+  stroke-width: 2px;
+  stroke-opacity: 0.5;
+  fill-opacity: 0;
+  animation-duration: 2s;
+  animation-name: ${pulse};
+  animation-iteration-count: infinite;
+  will-change: stroke, transform;
+`;
 
 const HighlightedPath = css`
   path {
@@ -121,7 +137,6 @@ const SvgContinent = ({ featureCollection, selectedFeature, onCountryClick, onCo
   };
   const handleContinentClick = e => {
     e.stopPropagation();
-    // if (!isSelected && onContinentClick) onContinentClick(featureCollection);
     if (onContinentClick) onContinentClick(featureCollection);
   };
 
@@ -183,7 +198,7 @@ const SvgContinentsContainer = ({
 };
 
 const SvgPathsFromFeature = ({ features, projection, onClick, onMouseOver }) => {
-  return features.map(feature => {
+  return features.map((feature, i) => {
     if (pathGenerator.measure(feature) === 0) return;
     const path = pathGenerator(feature);
     const centroid = pathGenerator.centroid(feature);
@@ -194,13 +209,19 @@ const SvgPathsFromFeature = ({ features, projection, onClick, onMouseOver }) => 
     const handleClick = () => {
       if (onClick) onClick(feature.properties.name);
     };
-
     if (!path) return null;
     return (
       <g key={path}>
         <path onClick={handleClick} d={path} />
-        {/* {stats && <Circle cx={centroid[0]} cy={centroid[1]} r="10"></Circle>} */}
-
+        {stats && (
+          <Circle
+            cx={centroid[0]}
+            cy={centroid[1]}
+            r={getRadius(stats.value)}
+            opacity={getOpacity(stats.value)}
+          ></Circle>
+        )}
+        {stats && i % 3 == 0  && <PulseCircle cx={centroid[0]} cy={centroid[1]} r={getRadius(stats.value)}></PulseCircle>}
       </g>
     );
   });
@@ -239,7 +260,7 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
   const [styles, api] = useSpring(() => getTranslateWithOffset(50), {
     mass: 1000,
     tension: 1000,
-    friction: 60,
+    friction: 0,
   });
 
   const bind = useDrag(
