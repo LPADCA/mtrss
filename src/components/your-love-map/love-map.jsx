@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, memo, useCallback } from "react";
+import React, { useEffect, useState, useRef, memo } from "react";
 import * as topojson from "topojson-client";
 import * as geo from "d3-geo";
 import styled, { css, keyframes } from "styled-components";
@@ -6,7 +6,7 @@ import oceanBG from "../../assets/images/Flowers_White.jpg";
 import earthBG from "../../assets/images/flowers-red.png";
 import WORLD_TOPO_JSON from "../../assets/geoJsons/world3.topo.json";
 import { useDrag } from "react-use-gesture";
-import { useSpring, animated, config } from "@react-spring/web";
+import { useSpring, animated } from "@react-spring/web";
 import LISTENERS_STATS from "../../assets/stats.json";
 import * as scale from "d3-scale";
 
@@ -24,7 +24,7 @@ const pathGenerator = geo.geoPath().projection(projection);
 const MIN_VALUE = Math.min(...LISTENERS_STATS.map(s => s.value));
 const MAX_VALUE = Math.max(...LISTENERS_STATS.map(s => s.value));
 const MIN_RADIUS = 5;
-const MAX_RADIUS = 50;
+const MAX_RADIUS = 40;
 const MIN_OPACITY = 0.6;
 const MAX_OPACITY = 0.4;
 
@@ -97,18 +97,20 @@ const Circle = styled.circle`
 `;
 
 const PulseCircle = styled.circle`
+  pointer-events: none;
   transform-box: fill-box;
   transform-origin: center;
-  pointer-events: none;
   stroke: #fdf0f0;
-  stroke-width: 2px;
-  stroke-opacity: 0.5;
+  stroke-width: 0;
+  stroke-opacity: 0;
   fill-opacity: 0;
+  will-change: stroke, transform;
   animation-duration: 2s;
   animation-name: ${pulse};
   animation-iteration-count: infinite;
-  will-change: stroke, transform;
 `;
+
+const Group = styled.g``;
 
 const HighlightedPath = css`
   path {
@@ -123,38 +125,42 @@ const HighlightedPath = css`
 
 const HighlightedCountry = css`
   &:hover {
-    fill: white;
+    stroke: white;
   }
 `;
 
 const ContinentGroup = styled.g`
-  will-change: fill;
-  transition: fill 0.3s ease-in 0s;
-
   path {
     will-change: stroke-width, stroke;
-    transition: stroke 0.3s ease-in 0.5s;
+    transition: stroke 0.3s ease-in;
   }
 
   ${({ isSelected }) => isSelected && HighlightedPath}
   ${({ isSelected }) => !isSelected && HighlightedCountry}
 `;
 
-const isSameFeatures = (feature1, feature2) => {
+const isSameContinents = (feature1, feature2) => {
   if (!feature1.properties) return;
   if (!feature2.properties) return;
   return feature1.properties.continent === feature2.properties.continent;
+};
+
+const isSameFeatures = (feature1, feature2) => {
+  if (!feature1.properties) return;
+  if (!feature2.properties) return;
+  return feature1.properties.name === feature2.properties.name;
 };
 
 const compareFeatureProps = (prevProps, nextProps) => {
   const isSameFeature = isSameFeatures(prevProps.feature, nextProps.feature);
   const isSameWidth = prevProps.mapWidth === nextProps.mapWidth;
   const isSameHeight = prevProps.mapHeight === nextProps.mapHeight;
-  return isSameFeature && isSameWidth && isSameHeight;
+  const isSelected = isSameFeatures(nextProps.feature, nextProps.selectedFeature);
+  return isSameFeature && isSameWidth && isSameHeight && !isSelected;
 };
 
-const SvgPathFromFeature = memo(({ feature, onClick }) => {
-  console.log("render");
+const SvgPathFromFeature = memo(({ feature, selectedFeature, onClick, index, total }) => {
+  const [isShown, setShown] = useState(false);
   if (pathGenerator.measure(feature) === 0) return;
   const path = pathGenerator(feature);
   const centroid = pathGenerator.centroid(feature);
@@ -168,8 +174,12 @@ const SvgPathFromFeature = memo(({ feature, onClick }) => {
   if (!path) return null;
 
   return (
-    <g key={path}>
-      <path onClick={handleClick} d={path} />
+    <Group
+      key={path}
+      name={feature.properties.name}
+      onMouseOver={() => setShown(true)}
+      onMouseLeave={() => setShown(false)}
+    >
       {stats && (
         <Circle
           cx={centroid[0]}
@@ -178,21 +188,32 @@ const SvgPathFromFeature = memo(({ feature, onClick }) => {
           opacity={getOpacity(stats.value)}
         ></Circle>
       )}
-      {stats && <PulseCircle cx={centroid[0]} cy={centroid[1]} r={getRadius(stats.value)}></PulseCircle>}
-    </g>
+      {stats && isShown && (
+        <PulseCircle
+          cx={centroid[0]}
+          cy={centroid[1]}
+          total={total}
+          index={index}
+          r={getRadius(stats.value)}
+        ></PulseCircle>
+      )}
+      <path onClick={handleClick} d={path} />
+    </Group>
   );
 }, compareFeatureProps);
 
 SvgPathFromFeature.displayName = "SvgPathFromFeature";
 
-const SvgPathsFromFeature = ({ mapWidth, mapHeight, features, onClick }) => {
-  return features.map(feature => (
+const SvgPathsFromFeature = ({ mapWidth, selectedFeature, mapHeight, features, onClick }) => {
+  return features.map((feature, index) => (
     <SvgPathFromFeature
       key={feature.properties.su_a3}
       mapWidth={mapWidth}
       mapHeight={mapHeight}
       feature={feature}
       onClick={onClick}
+      index={index}
+      selectedFeature={selectedFeature}
     />
   ));
 };
@@ -205,17 +226,15 @@ const SvgContinent = ({
   onCountryClick,
   onContinentClick,
 }) => {
-  const isSelected = isSameFeatures(selectedFeature, featureCollection);
+  const isSelected = isSameContinents(selectedFeature, featureCollection);
 
-  const handleCountryClick = useCallback(
-    feature => {
-      if (isSelected && onCountryClick) onCountryClick(feature);
-    },
-    [selectedFeature]
-  );
+  const handleCountryClick = feature => {
+    if (isSelected && onCountryClick) onCountryClick(feature);
+  };
+
   const handleContinentClick = e => {
     e.stopPropagation();
-    if (onContinentClick) onContinentClick(featureCollection);
+    if (!isSelected && onContinentClick) onContinentClick(featureCollection);
   };
 
   return (
@@ -225,6 +244,7 @@ const SvgContinent = ({
         mapHeight={mapHeight}
         features={featureCollection.features}
         onClick={handleCountryClick}
+        selectedFeature={selectedFeature}
       />
     </ContinentGroup>
   );
@@ -294,20 +314,21 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
     };
   };
 
-  const [styles, api] = useSpring(() => ({ ...getTranslateWithOffset(50), config: {
-    easing: t => t * t,
-    duration: 500
-  } }));
+  const [styles, api] = useSpring(() => ({
+    ...getTranslateWithOffset(50),
+    config: {
+      duration: 500,
+    },
+  }));
 
-  useDrag(
-    (({ movement: [x], dragging }) => {
+  const bind = useDrag(
+    ({ movement: [x], dragging }) => {
       if (dragging) api.start(getTranslateWithOffset(-x));
     },
     {
-      domTarget: svgRef,
       delay: 1000,
       initial: () => [styles.offsetX.get(), 0],
-    })
+    }
   );
 
   useEffect(() => {
@@ -327,7 +348,7 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
   );
 
   const featureClickHandler = feature => {
-    const isSame = isSameFeatures(selectedFeature, feature);
+    const isSame = isSameContinents(selectedFeature, feature);
     if (isSame) feature = TOPO_COUNTRIES;
     setFeature(feature);
 
@@ -340,7 +361,6 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
     const scaleX = mapWidth / newX;
     const scaleY = mapHeight / newY;
     const scale = Math.min(scaleX, scaleY);
-
     setScale(scale);
     if (isSame) {
       setCentroid(mapCentroid);
@@ -349,7 +369,7 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
     }
   };
 
-  const handleFeatureClick = useCallback(featureClickHandler, [mapWidth, mapHeight, selectedFeature]);
+  const handleFeatureClick = featureClickHandler;
 
   const handleMapClick = country => {
     onCountryClick(country);
@@ -368,6 +388,7 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
         ref={svgRef}
         width={mapWidth}
         height={mapHeight}
+        {...bind()}
       >
         <SvgContinentsContainer
           selectedFeature={selectedFeature}
