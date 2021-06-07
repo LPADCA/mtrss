@@ -151,15 +151,15 @@ const isSameFeatures = (feature1, feature2) => {
   return feature1.properties.name === feature2.properties.name;
 };
 
-const compareFeatureProps = (prevProps, nextProps) => {
-  const isSameFeature = isSameFeatures(prevProps.feature, nextProps.feature);
-  const isSameWidth = prevProps.mapWidth === nextProps.mapWidth;
-  const isSameHeight = prevProps.mapHeight === nextProps.mapHeight;
-  const isSelected = isSameFeatures(nextProps.feature, nextProps.selectedFeature);
-  return isSameFeature && isSameWidth && isSameHeight && !isSelected;
-};
+// const compareFeatureProps = (prevProps, nextProps) => {
+//   const isSameFeature = isSameFeatures(prevProps.feature, nextProps.feature);
+//   const isSameWidth = prevProps.mapWidth === nextProps.mapWidth;
+//   const isSameHeight = prevProps.mapHeight === nextProps.mapHeight;
+//   const isSelected = isSameFeatures(nextProps.feature, nextProps.selectedFeature);
+//   return isSameFeature && isSameWidth && isSameHeight && !isSelected;
+// };
 
-const SvgPathFromFeature = memo(({ feature, selectedFeature, onClick, index, total }) => {
+const SvgPathFromFeature = ({ feature, onClick, index, total }) => {
   const [isShown, setShown] = useState(false);
   if (pathGenerator.measure(feature) === 0) return;
   const path = pathGenerator(feature);
@@ -200,7 +200,7 @@ const SvgPathFromFeature = memo(({ feature, selectedFeature, onClick, index, tot
       <path onClick={handleClick} d={path} />
     </Group>
   );
-}, compareFeatureProps);
+};
 
 SvgPathFromFeature.displayName = "SvgPathFromFeature";
 
@@ -336,6 +336,10 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
   }, [scale, centroid, selectedFeature]);
 
   useEffect(() => {
+    console.log('update selected feature', selectedFeature)
+  }, [selectedFeature]);
+
+  useEffect(() => {
     if (isFullMapShown) setCentroid(mapCentroid);
   }, [mapWidth, mapHeight]);
 
@@ -349,9 +353,10 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
 
   const featureClickHandler = feature => {
     const isSame = isSameContinents(selectedFeature, feature);
+    console.log('featureClickHandler',  selectedFeature, feature, isSame)
     if (isSame) feature = TOPO_COUNTRIES;
     setFeature(feature);
-
+    console.log('selectedFeature after set', selectedFeature);
     const newCentroid = pathGenerator.centroid(feature);
     const newBounds = pathGenerator.bounds(feature);
     const newX = newBounds[1][0] - newBounds[0][0];

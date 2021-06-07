@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import SvgMap from "../components/your-love-map";
 import PostCardForm from "../components/your-love-map/postcard-form";
 import { navigate } from "gatsby";
@@ -11,11 +11,18 @@ const openPostcard = async args => {
 };
 
 const YourLoveMapPage = () => {
+  const ref = useRef();
   const [country, setCountry] = useState("");
+
+  const onCountryClick = country => {
+    if (ref.current) ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    setCountry(country);
+  };
+
   return (
     <LoveLayout>
-      <SvgMap country={country} onCountryClick={setCountry} />
-      <PostCardForm country={country} setCountry={setCountry} onSubmit={openPostcard} />
+      <SvgMap country={country} onCountryClick={onCountryClick} />
+      <PostCardForm ref={ref} country={country} setCountry={setCountry} onSubmit={openPostcard} />
     </LoveLayout>
   );
 };

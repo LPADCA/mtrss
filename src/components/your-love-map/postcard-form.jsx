@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, forwardRef } from "react";
 import styled, { css } from "styled-components";
-import WORLD_TOPO_JSON from "../../assets/geoJsons/world2.topo.json";
+import WORLD_TOPO_JSON from "../../assets/geoJsons/world3.topo.json";
 import Button from "../button";
 
 const inputMixin = css`
@@ -78,7 +78,7 @@ const SongSelect = styled(Select)`
   width: 100%;
 `;
 
-const COUNTRIES = [...new Set(WORLD_TOPO_JSON.objects.world.geometries.map(e => e.properties.NAME))].sort(
+const COUNTRIES = [...new Set(WORLD_TOPO_JSON.objects.world.geometries.map(e => e.properties.name))].sort(
   (a, b) => {
     if (a < b) return -1;
     if (a > b) return 1;
@@ -129,7 +129,7 @@ const NOTES = [
  - JP Saxe & Julia Michaels, ‘If the World Was Ending’`,
 ];
 
-const PostCardForm = ({ onSubmit, country, setCountry }) => {
+const PostCardForm = forwardRef(({ onSubmit, country, setCountry }, ref) => {
   const [name, setName] = useState("");
   const [note, setNote] = useState(NOTES[0]);
   const [from, setFrom] = useState("");
@@ -139,7 +139,7 @@ const PostCardForm = ({ onSubmit, country, setCountry }) => {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form ref={ref} onSubmit={handleSubmit}>
       <FirstLine>
         <LineColumn>
           <span>Sending love to </span>
@@ -177,6 +177,8 @@ const PostCardForm = ({ onSubmit, country, setCountry }) => {
       <Button>Create Postcard</Button>
     </Form>
   );
-};
+});
+
+PostCardForm.displayName = "PostCardForm";
 
 export default PostCardForm;
