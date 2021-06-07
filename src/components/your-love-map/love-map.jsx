@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, memo, useCallback } from "react";
 import * as topojson from "topojson-client";
 import * as geo from "d3-geo";
 import styled, { css, keyframes } from "styled-components";
@@ -42,18 +42,35 @@ const SvgWrapper = styled.div`
 `;
 
 const AnimatedSvg = styled(animated.svg)`
-  transform-box: fill-box;
   stroke: transparent;
-  touch-action: none;
-  background-color: transparent;
   background-image: url(${earthBG});
   background-position: center right;
   background-repeat: no-repeat;
   background-size: 93%;
   min-width: ${MIN_WIDTH}px;
+  height: auto;
   fill: transparent;
   will-change: transform, stroke-width, width, height;
+  touch-action: pan-y;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  user-select: none;
 `;
+
+const GROUPED_TOPO_COUNTRIES = TOPO_COUNTRIES.features.reduce((storage, feature) => {
+  const continent = feature.properties.continent;
+  if (!storage[continent]) {
+    storage[continent] = {
+      type: "FeatureCollection",
+      properties: {
+        continent: continent,
+      },
+      features: [],
+    };
+  }
+  storage[continent].features.push(feature);
+  return storage;
+}, {});
 
 const getTranslate = args => {
   const { screenCentroid, x, y, offsetX = 0, offsetY = 0, scale } = args;
@@ -129,12 +146,73 @@ const isSameFeatures = (feature1, feature2) => {
   return feature1.properties.continent === feature2.properties.continent;
 };
 
-const SvgContinent = ({ featureCollection, selectedFeature, onCountryClick, onContinentClick }) => {
+const compareFeatureProps = (prevProps, nextProps) => {
+  const isSameFeature = isSameFeatures(prevProps.feature, nextProps.feature);
+  const isSameWidth = prevProps.mapWidth === nextProps.mapWidth;
+  const isSameHeight = prevProps.mapHeight === nextProps.mapHeight;
+  return isSameFeature && isSameWidth && isSameHeight;
+};
+
+const SvgPathFromFeature = memo(({ feature, onClick }) => {
+  console.log("render");
+  if (pathGenerator.measure(feature) === 0) return;
+  const path = pathGenerator(feature);
+  const centroid = pathGenerator.centroid(feature);
+  const country = feature.properties.name;
+
+  const stats = LISTENERS_STATS.find(stat => stat.country === country);
+
+  const handleClick = () => {
+    if (onClick) onClick(feature.properties.name);
+  };
+  if (!path) return null;
+
+  return (
+    <g key={path}>
+      <path onClick={handleClick} d={path} />
+      {stats && (
+        <Circle
+          cx={centroid[0]}
+          cy={centroid[1]}
+          r={getRadius(stats.value)}
+          opacity={getOpacity(stats.value)}
+        ></Circle>
+      )}
+      {stats && <PulseCircle cx={centroid[0]} cy={centroid[1]} r={getRadius(stats.value)}></PulseCircle>}
+    </g>
+  );
+}, compareFeatureProps);
+
+SvgPathFromFeature.displayName = "SvgPathFromFeature";
+
+const SvgPathsFromFeature = ({ mapWidth, mapHeight, features, onClick }) => {
+  return features.map(feature => (
+    <SvgPathFromFeature
+      key={feature.properties.su_a3}
+      mapWidth={mapWidth}
+      mapHeight={mapHeight}
+      feature={feature}
+      onClick={onClick}
+    />
+  ));
+};
+
+const SvgContinent = ({
+  mapWidth,
+  mapHeight,
+  featureCollection,
+  selectedFeature,
+  onCountryClick,
+  onContinentClick,
+}) => {
   const isSelected = isSameFeatures(selectedFeature, featureCollection);
 
-  const handleCountryClick = feature => {
-    if (isSelected && onCountryClick) onCountryClick(feature);
-  };
+  const handleCountryClick = useCallback(
+    feature => {
+      if (isSelected && onCountryClick) onCountryClick(feature);
+    },
+    [selectedFeature]
+  );
   const handleContinentClick = e => {
     e.stopPropagation();
     if (onContinentClick) onContinentClick(featureCollection);
@@ -143,95 +221,52 @@ const SvgContinent = ({ featureCollection, selectedFeature, onCountryClick, onCo
   return (
     <ContinentGroup isSelected={isSelected} onClick={handleContinentClick}>
       <SvgPathsFromFeature
+        mapWidth={mapWidth}
+        mapHeight={mapHeight}
         features={featureCollection.features}
-        projection={projection}
         onClick={handleCountryClick}
       />
     </ContinentGroup>
   );
 };
 
-const SvgContinents = ({ groupedTopoJSON, selectedFeature, projection, onCountryClick, onContinentClick }) =>
-  Object.keys(groupedTopoJSON).map(continent => {
+const SvgContinents = ({ mapWidth, mapHeight, selectedFeature, onCountryClick, onContinentClick }) =>
+  Object.keys(GROUPED_TOPO_COUNTRIES).map(continent => {
     return (
       <SvgContinent
         key={continent}
-        featureCollection={groupedTopoJSON[continent]}
+        featureCollection={GROUPED_TOPO_COUNTRIES[continent]}
         onCountryClick={onCountryClick}
-        projection={projection}
         onContinentClick={onContinentClick}
         selectedFeature={selectedFeature}
+        mapWidth={mapWidth}
+        mapHeight={mapHeight}
       />
     );
   });
 
 const SvgContinentsContainer = ({
+  mapWidth,
+  mapHeight,
   selectedFeature,
-  topoJSON,
-  projection,
   onCountryClick,
   onContinentClick,
 }) => {
-  const groupedTopoJSON = topoJSON.features.reduce((storage, feature) => {
-    const continent = feature.properties.continent;
-    if (!storage[continent]) {
-      storage[continent] = {
-        type: "FeatureCollection",
-        properties: {
-          continent: continent,
-        },
-        features: [],
-      };
-    }
-    storage[continent].features.push(feature);
-    return storage;
-  }, {});
   return (
     <SvgContinents
-      groupedTopoJSON={groupedTopoJSON}
+      groupedTopoJSON={GROUPED_TOPO_COUNTRIES}
       selectedFeature={selectedFeature}
-      projection={projection}
       onCountryClick={onCountryClick}
       onContinentClick={onContinentClick}
+      mapWidth={mapWidth}
+      mapHeight={mapHeight}
     />
   );
 };
 
-const SvgPathsFromFeature = ({ features, projection, onClick, onMouseOver }) => {
-  return features.map((feature, i) => {
-    if (pathGenerator.measure(feature) === 0) return;
-    const path = pathGenerator(feature);
-    const centroid = pathGenerator.centroid(feature);
-    const country = feature.properties.name;
-
-    const stats = LISTENERS_STATS.find(stat => stat.country === country);
-
-    const handleClick = () => {
-      if (onClick) onClick(feature.properties.name);
-    };
-    if (!path) return null;
-    return (
-      <g key={path}>
-        <path onClick={handleClick} d={path} />
-        {stats && (
-          <Circle
-            cx={centroid[0]}
-            cy={centroid[1]}
-            r={getRadius(stats.value)}
-            opacity={getOpacity(stats.value)}
-          ></Circle>
-        )}
-        {stats && i % 3 == 0 && (
-          <PulseCircle cx={centroid[0]} cy={centroid[1]} r={getRadius(stats.value)}></PulseCircle>
-        )}
-      </g>
-    );
-  });
-};
-
 const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
   const wrapperRef = useRef();
-
+  const svgRef = useRef();
   const mapWidth = Math.max(screenWidth, MIN_WIDTH);
   const mapHeight = Math.max(screenHeight, MIN_WIDTH / BG_IMAGE_RATIO);
   const screenCentroid = [screenWidth / 2, screenHeight / 2];
@@ -259,24 +294,20 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
     };
   };
 
-  const [styles, api] = useSpring(() => ({ ...getTranslateWithOffset(50), config: config.slow }));
+  const [styles, api] = useSpring(() => ({ ...getTranslateWithOffset(50), config: {
+    easing: t => t * t,
+    duration: 500
+  } }));
 
-  const bind = useDrag(
-    args => {
-      const {
-        delta,
-        movement: [x],
-        dragging,
-      } = args;
-      if (!dragging) return;
-      const displayOffsetY = window.scrollY - delta[1];
-      window.scroll(0, displayOffsetY);
-      api.start(getTranslateWithOffset(-x));
+  useDrag(
+    (({ movement: [x], dragging }) => {
+      if (dragging) api.start(getTranslateWithOffset(-x));
     },
     {
+      domTarget: svgRef,
       delay: 1000,
       initial: () => [styles.offsetX.get(), 0],
-    }
+    })
   );
 
   useEffect(() => {
@@ -294,7 +325,8 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
     ],
     TOPO_COUNTRIES
   );
-  const onFeatureClick = feature => {
+
+  const featureClickHandler = feature => {
     const isSame = isSameFeatures(selectedFeature, feature);
     if (isSame) feature = TOPO_COUNTRIES;
     setFeature(feature);
@@ -317,6 +349,8 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
     }
   };
 
+  const handleFeatureClick = useCallback(featureClickHandler, [mapWidth, mapHeight, selectedFeature]);
+
   const handleMapClick = country => {
     onCountryClick(country);
   };
@@ -331,14 +365,16 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
-        {...bind()}
+        ref={svgRef}
+        width={mapWidth}
+        height={mapHeight}
       >
         <SvgContinentsContainer
-          projection={projection}
           selectedFeature={selectedFeature}
-          onContinentClick={onFeatureClick}
+          onContinentClick={handleFeatureClick}
           onCountryClick={handleMapClick}
-          topoJSON={TOPO_COUNTRIES}
+          mapWidth={mapWidth}
+          mapHeight={mapHeight}
         />
       </AnimatedSvg>
     </SvgWrapper>
