@@ -133,6 +133,7 @@ const ExpandedCardContainer = styled.div`
   position: fixed;
   top: 90px;
   left: 0;
+  opacity: 0;
 `;
 
 const SharingContainer = styled.div``;
