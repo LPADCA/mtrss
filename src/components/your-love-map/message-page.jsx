@@ -5,7 +5,7 @@ import styled from "styled-components";
 import domtoimage from "dom-to-image";
 import Button from "../button";
 import { StaticImage } from "gatsby-plugin-image";
-import SvgMap from "./love-map";
+import { ReactComponent as LocationPointer } from "../../assets/images/pointer.svg";
 
 const PageContainer = styled.div`
   display: flex;
@@ -15,14 +15,16 @@ const PageContainer = styled.div`
 `;
 
 const PostcardContainer = styled.div`
-  background-color: #ffffff;
-  border: 5px solid red;
+  border: 1px solid #830000;
+  position: relative;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
 `;
 
 const SmallPostcardContainer = styled(PostcardContainer)`
-  width: 570px;
-  height: 980px;
-  padding: 20px;
+  width: 636px;
+  height: 636px;
 `;
 
 const StoryPostcardContainer = styled(PostcardContainer)`
@@ -31,17 +33,62 @@ const StoryPostcardContainer = styled(PostcardContainer)`
 `;
 
 const PostmarkCotainer = styled.div`
-  border: 1px solid black;
-  display: inline-block;
-  margin-left: calc(100% - 110px);
+  border: 1px solid #830000;
+  display: inline-flex;
+  width: 110px;
+  height: 110px;
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 `;
 
-const MapContainer = styled.div`
-  margin: 20px 0;
+const ImageContainer = styled.div`
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ImageTitle = styled.span`
+  font-family: "Playfair Display", sans-serif;
+  font-size: 64px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-transform: uppercase;
+  width: 100%;
+  text-align: center;
 `;
 
 const PostcardContent = styled.div`
-  color: black;
+  font-family: "Playfair Display", sans-serif;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+`;
+
+const To = styled.p`
+  font-size: 40px;
+  margin: 0;
+`;
+
+const Note = styled.p`
+  font-size: 18px;
+  color: #ff3636;
+  margin: 0;
+  width: 380px;
+`;
+
+const Line = styled.hr`
+  height: 2px;
+  width: 72px;
+  background-color: white;
+  border: none;
 `;
 
 const CardButton = styled(Button)`
@@ -61,6 +108,10 @@ const Underline = styled.span`
   width: 50%;
 `;
 
+const SharingContainer = styled.div``;
+
+const SocialContainer = styled.div``;
+
 const saveImage = (domNode, onClose) => {
   domtoimage.toJpeg(domNode, { quality: 0.95 }).then(function (dataUrl) {
     var link = document.createElement("a");
@@ -79,9 +130,6 @@ const ExpandedPostCard = ({ message, onClose }) => {
   return (
     <ExpandedCardContainer>
       <StoryPostcardContainer ref={postcardRef}>
-        <MapContainer>
-          <SvgMap screenWidth={400} screenHeight={220} />
-        </MapContainer>
         <PostcardContent>
           <p>
             To, <br /> <Underline>{message.name}</Underline>
@@ -112,21 +160,35 @@ const MessagePage = ({ url }) => {
     <PageContainer ref={postcardRef}>
       <SmallPostcardContainer>
         <PostmarkCotainer>
-          <StaticImage src="../../assets/images/heart.png" width={110} height={110} />
+          <LocationPointer />
+          {message.country}
         </PostmarkCotainer>
-        <MapContainer>
-          <SvgMap screenWidth={400} screenHeight={220} />
-        </MapContainer>
+        <ImageContainer>
+          <StaticImage height={400} src="../../assets/images/heart-shadow@2x.png"></StaticImage>
+          <ImageTitle>Your love</ImageTitle>
+        </ImageContainer>
         <PostcardContent>
-          <p>
-            To, <br /> <Underline>{message.name}</Underline>
-          </p>
-          <p>from: {message.country}</p>
-          <p>message: {message.note}</p>
-          <p>with love: {message.from}</p>
+          <To>To {message.name},</To>
+          <Note>{message.note}</Note>
+          <Line></Line>
+          <Note>Sincerely yours,</Note>
+          <To>{message.from}</To>
         </PostcardContent>
       </SmallPostcardContainer>
       <CardButton onClick={() => showPostcard(true)}>Save image</CardButton>
+      <SharingContainer>
+        <h3>Share on your socials</h3>
+        <SocialContainer>
+          <button
+            className="button"
+            data-sharer="facebook"
+            data-hashtag="hashtag"
+            data-url="https://ellisonleao.github.io/sharer.js/"
+          >
+            facebook
+          </button>
+        </SocialContainer>
+      </SharingContainer>
       {isPostcardShow && <ExpandedPostCard message={message} onClose={() => showPostcard(false)} />}
     </PageContainer>
   );

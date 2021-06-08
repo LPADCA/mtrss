@@ -47,7 +47,17 @@ module.exports = {
       },
     },
     "gatsby-transformer-remark",
-    "gatsby-transformer-sharp",
+    {
+      resolve: `gatsby-plugin-sharp`,
+      options: {
+        defaults: {
+          formats: [`auto`, `webp`],
+          placeholder: `none`,
+          quality: 90,
+          backgroundColor: `transparent`,
+        },
+      },
+    },
     "gatsby-plugin-react-helmet",
     "gatsby-plugin-image",
     "gatsby-plugin-sharp",
