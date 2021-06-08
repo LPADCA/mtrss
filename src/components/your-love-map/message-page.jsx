@@ -5,8 +5,53 @@ import styled from "styled-components";
 import domtoimage from "dom-to-image";
 import Button from "../button";
 import { ReactComponent as LocationPointer } from "../../assets/images/pointer.svg";
+import { ReactComponent as ShareIcon } from "../../assets/images/share.svg";
+// import { ReactComponent as FacebookIcon } from "../../assets/icons/facebook.svg";
 import svgUrl from "../../assets/images/heart-svg.svg";
+import instagramUrl from "../../assets/icons/instagram.png";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
+import {
+  EmailShareButton,
+  FacebookShareButton,
+  HatenaShareButton,
+  InstapaperShareButton,
+  LineShareButton,
+  LinkedinShareButton,
+  LivejournalShareButton,
+  MailruShareButton,
+  OKShareButton,
+  PinterestShareButton,
+  PocketShareButton,
+  RedditShareButton,
+  TelegramShareButton,
+  TumblrShareButton,
+  TwitterShareButton,
+  ViberShareButton,
+  VKShareButton,
+  WhatsappShareButton,
+  WorkplaceShareButton,
+  EmailIcon,
+  FacebookIcon,
+  FacebookMessengerIcon,
+  HatenaIcon,
+  InstapaperIcon,
+  LineIcon,
+  LinkedinIcon,
+  LivejournalIcon,
+  MailruIcon,
+  OKIcon,
+  PinterestIcon,
+  PocketIcon,
+  RedditIcon,
+  TelegramIcon,
+  TumblrIcon,
+  TwitterIcon,
+  ViberIcon,
+  VKIcon,
+  WeiboIcon,
+  WhatsappIcon,
+  WorkplaceIcon,
+} from "react-share";
 
 const POSTCARD_DEFAULT_SIZE = 636;
 const HEART_WIDTH_RATIO = 300 / POSTCARD_DEFAULT_SIZE;
@@ -138,7 +183,30 @@ const ExpandedCardContainer = styled.div`
 
 const SharingContainer = styled.div``;
 
-const SocialContainer = styled.div``;
+const ShareTitle = styled.h3`
+  display: flex;
+  align-items: center;
+  font-weight: 400;
+
+  svg {
+    margin-right: 10px;
+  }
+`;
+
+const SocialContainer = styled.div`
+  & > * {
+    margin-right: 25px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+`;
+
+const InstagramIcon = styled.img`
+  width: 38px;
+  height: 38px;
+`;
 
 const saveImage = (domNode, onClose) => {
   domtoimage
@@ -214,16 +282,20 @@ const MessagePage = ({ url }) => {
       <Postcard message={message} postcardWidth={postcardWidth} />
       <CardButton onClick={() => showPostcard(true)}>Save image</CardButton>
       <SharingContainer>
-        <h3>Share on your socials</h3>
+        <ShareTitle>
+          <ShareIcon height="18" fill="white" /> Share on your socials
+        </ShareTitle>
         <SocialContainer>
-          <button
-            className="button"
-            data-sharer="facebook"
-            data-hashtag="hashtag"
-            data-url="https://ellisonleao.github.io/sharer.js/"
-          >
-            facebook
-          </button>
+          <FacebookShareButton url={window.location.toString()}>
+            <FacebookIcon size={38} />
+          </FacebookShareButton>
+          <TwitterShareButton url={window.location.toString()}>
+            <TwitterIcon size={38} />
+          </TwitterShareButton>
+          <WhatsappShareButton url={window.location.toString()}>
+            <WhatsappIcon size={38} />
+          </WhatsappShareButton>
+          <InstagramIcon src={instagramUrl} />
         </SocialContainer>
       </SharingContainer>
       {isPostcardShow && (
