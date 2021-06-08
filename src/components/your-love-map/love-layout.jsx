@@ -137,10 +137,11 @@ const LoveLayout = ({ children }) => {
       <GlobalStyle />
       <Hero>
         <LoveFrameSvg />
-        <Heading>#YourLoveMap</Heading>
+        <Heading>#YourLove</Heading>
         <p>
-          All we need is love. Listen to the song and tag the person you love the most and give them{" "}
-          <RedLink>#YourLoveNote.</RedLink>
+          What a beauty! Share your love with your loved one on social. Don’t forget to mention @mtrss.art
+          @arielfitz.patrick
+          <RedLink> #YourLoveNote.</RedLink>
         </p>
       </Hero>
       {children}
