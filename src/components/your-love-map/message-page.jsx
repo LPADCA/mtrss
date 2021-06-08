@@ -1,11 +1,28 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, forwardRef } from "react";
 import { getPostcardRequest } from "../../api/love-message-api";
 import { navigate } from "gatsby";
 import styled from "styled-components";
 import domtoimage from "dom-to-image";
 import Button from "../button";
-import { StaticImage } from "gatsby-plugin-image";
 import { ReactComponent as LocationPointer } from "../../assets/images/pointer.svg";
+import svgUrl from "../../assets/images/heart-svg.svg";
+import useWindowDimensions from "../../hooks/useWindowDimensions";
+
+const POSTCARD_DEFAULT_SIZE = 636;
+const HEART_WIDTH_RATIO = 300 / POSTCARD_DEFAULT_SIZE;
+const HEART_WIDTH_HEIGHT_RATIO = 902 / 1156;
+const YOUR_LOVE_RATIO = 64 / POSTCARD_DEFAULT_SIZE;
+const POSTMARK_SIZE_RATIO = 110 / POSTCARD_DEFAULT_SIZE;
+const POSTMARK_POINT_RATIO = 35 / POSTCARD_DEFAULT_SIZE;
+const POSTMARK_FONT_RATIO = 14 / POSTCARD_DEFAULT_SIZE;
+const POSTCARD_NAME_RATIO = 40 / POSTCARD_DEFAULT_SIZE;
+const POSTCARD_NOTE_RATIO = 18 / POSTCARD_DEFAULT_SIZE;
+const POSTCARD_NOTE_WIDTH_RATIO = 520 / POSTCARD_DEFAULT_SIZE;
+const BORDER_RADTIO = 1 / POSTCARD_DEFAULT_SIZE;
+const LINE_WIDTH_RATIO = 72 / POSTCARD_DEFAULT_SIZE;
+const LINE_HEIGHT_RATIO = 2 / POSTCARD_DEFAULT_SIZE;
+const LINE_MARGIN_TOP_RATIO = 20 / POSTCARD_DEFAULT_SIZE;
+const LINE_MARGIN_BOTTOM_RATIO = 8 / POSTCARD_DEFAULT_SIZE;
 
 const PageContainer = styled.div`
   display: flex;
@@ -15,34 +32,36 @@ const PageContainer = styled.div`
 `;
 
 const PostcardContainer = styled.div`
-  border: 1px solid #830000;
+  border: ${({ size }) => size * BORDER_RADTIO}px solid #830000;
+  background-color: black;
   position: relative;
   align-items: center;
   display: flex;
   flex-direction: column;
-`;
-
-const SmallPostcardContainer = styled(PostcardContainer)`
-  width: 636px;
-  height: 636px;
-`;
-
-const StoryPostcardContainer = styled(PostcardContainer)`
-  width: 1080px;
-  height: 1920px;
+  width: ${({ size }) => size}px;
+  height: ${({ size }) => size}px;
+  max-width: 100%;
 `;
 
 const PostmarkCotainer = styled.div`
-  border: 1px solid #830000;
+  border: ${({ size }) => size * BORDER_RADTIO}px solid #830000;
   display: inline-flex;
-  width: 110px;
-  height: 110px;
+  width: ${({ size }) => size * POSTMARK_SIZE_RATIO}px;
+  height: ${({ size }) => size * POSTMARK_SIZE_RATIO}px;
   position: absolute;
   top: 14px;
   right: 16px;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  font-size: ${({ size }) => size * POSTMARK_FONT_RATIO}px;
+  text-align: center;
+`;
+
+const StyledLocationPointer = styled(LocationPointer)`
+  width: ${({ size }) => size * POSTMARK_POINT_RATIO}px;
+  height: auto;
+  margin-bottom: 1em;
 `;
 
 const ImageContainer = styled.div`
@@ -51,11 +70,12 @@ const ImageContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  font-display: block;
 `;
 
 const ImageTitle = styled.span`
   font-family: "Playfair Display", sans-serif;
-  font-size: 64px;
+  font-size: ${({ size }) => size * YOUR_LOVE_RATIO}px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -72,22 +92,34 @@ const PostcardContent = styled.div`
   text-align: center;
 `;
 
-const To = styled.p`
-  font-size: 40px;
+const PostcardName = styled.p`
+  font-family: "Playfair Display", sans-serif;
+  font-size: ${({ size }) => size * POSTCARD_NAME_RATIO}px;
   margin: 0;
+
+  &:first-child {
+    margin-bottom: 0.5em;
+  }
+
+  &:last-child {
+    margin-bottom: 0.5em;
+  }
 `;
 
-const Note = styled.p`
-  font-size: 18px;
+const PostcardNote = styled.p`
+  font-family: "Playfair Display", sans-serif;
+  font-size: ${({ size }) => size * POSTCARD_NOTE_RATIO}px;
   color: #ff3636;
   margin: 0;
-  width: 380px;
+  width: ${({ size }) => size * POSTCARD_NOTE_WIDTH_RATIO}px;
 `;
 
 const Line = styled.hr`
-  height: 2px;
-  width: 72px;
+  height: ${({ size }) => size * LINE_HEIGHT_RATIO}px;
+  width: ${({ size }) => size * LINE_WIDTH_RATIO}px;
   background-color: white;
+  margin-top: ${({ size }) => size * LINE_MARGIN_TOP_RATIO}px;
+  margin-bottom: ${({ size }) => size * LINE_MARGIN_BOTTOM_RATIO}px;
   border: none;
 `;
 
@@ -98,14 +130,9 @@ const CardButton = styled(Button)`
 `;
 
 const ExpandedCardContainer = styled.div`
-  position: absolute;
-  top: -999px;
-`;
-
-const Underline = styled.span`
-  border-bottom: 1px solid black;
-  display: inline-block;
-  width: 50%;
+  position: fixed;
+  top: 90px;
+  left: 0;
 `;
 
 const SharingContainer = styled.div``;
@@ -113,40 +140,65 @@ const SharingContainer = styled.div``;
 const SocialContainer = styled.div``;
 
 const saveImage = (domNode, onClose) => {
-  domtoimage.toJpeg(domNode, { quality: 0.95 }).then(function (dataUrl) {
-    var link = document.createElement("a");
-    link.download = "postcard.jpeg";
-    link.href = dataUrl;
-    link.click();
-    onClose();
-  });
+  domtoimage
+    .toPng(domNode, {
+      style: {
+        fontFamily: "'Playfair Display', sans-serif",
+      },
+    })
+    .then(function (dataUrl) {
+      var link = document.createElement("a");
+      link.download = "postcard.png";
+      link.href = dataUrl;
+      link.click();
+      onClose();
+    });
 };
 
-const ExpandedPostCard = ({ message, onClose }) => {
+const ExpandedPostCard = ({ onClose, message }) => {
   const postcardRef = useRef();
   useEffect(() => {
     saveImage(postcardRef.current, onClose);
   }, []);
   return (
     <ExpandedCardContainer>
-      <StoryPostcardContainer ref={postcardRef}>
-        <PostcardContent>
-          <p>
-            To, <br /> <Underline>{message.name}</Underline>
-          </p>
-          <p>from: {message.country}</p>
-          <p>message: {message.note}</p>
-          <p>with love: {message.from}</p>
-        </PostcardContent>
-      </StoryPostcardContainer>
+      <Postcard ref={postcardRef} message={message} postcardWidth={1080} />
     </ExpandedCardContainer>
   );
 };
 
+const Postcard = forwardRef(({ postcardWidth, message }, ref) => {
+  const HEART_WIDTH = HEART_WIDTH_RATIO * postcardWidth;
+  const HEART_HEIGHT = HEART_WIDTH / HEART_WIDTH_HEIGHT_RATIO;
+  return (
+    <PostcardContainer ref={ref} size={postcardWidth}>
+      <PostmarkCotainer size={postcardWidth}>
+        <StyledLocationPointer size={postcardWidth} />
+        {message.country}
+      </PostmarkCotainer>
+      <ImageContainer>
+        <img width={HEART_WIDTH} height={HEART_HEIGHT} src={svgUrl}></img>
+        <ImageTitle size={postcardWidth}>Your love</ImageTitle>
+      </ImageContainer>
+      <PostcardContent>
+        <PostcardName size={postcardWidth}>To {message.name},</PostcardName>
+        <PostcardNote size={postcardWidth}>{message.note}</PostcardNote>
+        <Line size={postcardWidth}></Line>
+        <PostcardNote size={postcardWidth}>Sincerely yours,</PostcardNote>
+        <PostcardName size={postcardWidth}>{message.from}</PostcardName>
+      </PostcardContent>
+    </PostcardContainer>
+  );
+});
+
+Postcard.displayName = "Postcard";
+
 const MessagePage = ({ url }) => {
   const [message, setMessage] = useState();
-  const [isPostcardShow, showPostcard] = useState();
+  const [isPostcardShow, showPostcard] = useState(false);
   const postcardRef = useRef();
+  const { width } = useWindowDimensions();
+  const postcardWidth = Math.min(width, 636);
 
   useEffect(() => {
     getPostcardRequest(url)
@@ -158,23 +210,7 @@ const MessagePage = ({ url }) => {
 
   return (
     <PageContainer ref={postcardRef}>
-      <SmallPostcardContainer>
-        <PostmarkCotainer>
-          <LocationPointer />
-          {message.country}
-        </PostmarkCotainer>
-        <ImageContainer>
-          <StaticImage height={400} src="../../assets/images/heart-shadow@2x.png"></StaticImage>
-          <ImageTitle>Your love</ImageTitle>
-        </ImageContainer>
-        <PostcardContent>
-          <To>To {message.name},</To>
-          <Note>{message.note}</Note>
-          <Line></Line>
-          <Note>Sincerely yours,</Note>
-          <To>{message.from}</To>
-        </PostcardContent>
-      </SmallPostcardContainer>
+      <Postcard message={message} postcardWidth={postcardWidth} />
       <CardButton onClick={() => showPostcard(true)}>Save image</CardButton>
       <SharingContainer>
         <h3>Share on your socials</h3>
@@ -189,7 +225,9 @@ const MessagePage = ({ url }) => {
           </button>
         </SocialContainer>
       </SharingContainer>
-      {isPostcardShow && <ExpandedPostCard message={message} onClose={() => showPostcard(false)} />}
+      {isPostcardShow && (
+        <ExpandedPostCard message={message} onClose={() => showPostcard(false)}></ExpandedPostCard>
+      )}
     </PageContainer>
   );
 };

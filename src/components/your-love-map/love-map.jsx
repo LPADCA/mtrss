@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, memo } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import * as topojson from "topojson-client";
 import * as geo from "d3-geo";
 import styled, { css, keyframes } from "styled-components";

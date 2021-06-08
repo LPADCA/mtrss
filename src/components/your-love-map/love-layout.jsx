@@ -6,8 +6,25 @@ import heartUrl from "../../assets/images/heart.png";
 import heart2xUrl from "../../assets/images/heart@2x.png";
 import Footer from "../../components/footer";
 import { mediaQueries } from "../../screenSizes";
+import playfairRegularUrl from "../../assets/fonts/PlayfairDisplay-Regular.ttf";
+import playfairBoldUrl from "../../assets/fonts/PlayfairDisplay-Bold.ttf";
 
 const GlobalStyle = createGlobalStyle`
+  @font-face {
+    font-family: 'Playfair Display';
+    font-style: normal;
+    font-weight: 400;
+    font-display: block;
+    src: url(${playfairRegularUrl});
+  }
+  @font-face {
+    font-family: 'Playfair Display';
+    font-style: normal;
+    font-weight: 700;
+    font-display: block;
+    src: url(${playfairBoldUrl});
+  }
+
   html {
     box-sizing: border-box;
   }
