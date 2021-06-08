@@ -78,7 +78,9 @@ module.exports = {
       options: {
         svgo: true,
         svgoConfig: {
-          removeViewBox: false, // remove viewBox when possible (default)
+          plugins: [
+            { removeViewBox: false }, // remove viewBox when possible (default)
+          ],
         },
       },
     },
