@@ -186,6 +186,7 @@ const SharingContainer = styled.div``;
 const ShareTitle = styled.h3`
   display: flex;
   align-items: center;
+  justify-content: center;
   font-weight: 400;
 
   svg {
@@ -194,6 +195,9 @@ const ShareTitle = styled.h3`
 `;
 
 const SocialContainer = styled.div`
+  display: flex;
+  justify-content: center;
+
   & > * {
     margin-right: 25px;
 
@@ -206,6 +210,28 @@ const SocialContainer = styled.div`
 const InstagramIcon = styled.img`
   width: 38px;
   height: 38px;
+`;
+
+const InstaButton = styled.button`
+  width: 38px;
+  height: 38px;
+  background: transparent;
+  border: none;
+  padding: 0;
+`;
+
+const ShareMessageContainer = styled.div`
+  margin-top: 20px;
+  padding: 20px 15px;
+  background: #141115 0% 0% no-repeat padding-box;
+  border: 1px solid white;
+  border-radius: 20px;
+  opacity: 1;
+  backdrop-filter: blur(50px);
+  
+  p {
+    margin: none;
+  }
 `;
 
 const saveImage = (domNode, onClose) => {
@@ -264,6 +290,7 @@ Postcard.displayName = "Postcard";
 
 const MessagePage = ({ url }) => {
   const [message, setMessage] = useState();
+  const [instaText, showInstaText] = useState(false);
   const [isPostcardShow, showPostcard] = useState(false);
   const postcardRef = useRef();
   const { width } = useWindowDimensions();
@@ -295,8 +322,17 @@ const MessagePage = ({ url }) => {
           <WhatsappShareButton url={window.location.toString()}>
             <WhatsappIcon size={38} />
           </WhatsappShareButton>
-          <InstagramIcon src={instagramUrl} />
+          <InstaButton onClick={() => showInstaText(!instaText)}>
+            <InstagramIcon src={instagramUrl} />
+          </InstaButton>
         </SocialContainer>
+        {instaText && (
+          <ShareMessageContainer>
+            <p>Sending love to @ [tag your love]</p>
+            <p>________</p>
+            <p>#YourLoveMap @mtrss.art @arielfitz.patrick</p>
+          </ShareMessageContainer>
+        )}
       </SharingContainer>
       {isPostcardShow && (
         <ExpandedPostCard message={message} onClose={() => showPostcard(false)}></ExpandedPostCard>
