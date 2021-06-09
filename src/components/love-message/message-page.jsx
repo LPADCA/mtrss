@@ -258,7 +258,8 @@ const InstaButtonWithCopy = WithCopy(InstaButton);
 
 const INSTA_MESSAGE = `Sending love to @ [tag your love]\r\n________\r\n#YourLoveMap @mtrss.art @arielfitz.patrick`;
 
-const MessagePage = ({ url }) => {
+const MessagePage = ({ url, location: { href } }) => {
+
   const [message, setMessage] = useState();
   const [instaText, showInstaText] = useState(false);
   const [isPostcardShow, showPostcard] = useState(false);
@@ -280,7 +281,7 @@ const MessagePage = ({ url }) => {
   });
   const postcardWidth = Math.min(width - 40, 636);
 
-  const FULL_URL = window.location.toString();
+  const FULL_URL = href;
 
   useEffect(() => {
     getPostcardRequest(url)
