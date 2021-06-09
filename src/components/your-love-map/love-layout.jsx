@@ -121,6 +121,10 @@ const AlbumCircle = styled.div`
   }
 `;
 
+const PageContent = styled.main`
+  padding: 0 20px;
+`
+
 const HeartImg = styled.img``;
 
 const BottomLogo = styled.div`
@@ -144,7 +148,9 @@ const LoveLayout = ({ children }) => {
           <RedLink> #YourLoveNote.</RedLink>
         </p>
       </Hero>
-      {children}
+      <PageContent>
+        {children}
+      </PageContent>
       <AlbumArtContainer>
         <AlbumCircle>
           <HeartImg src={heartUrl} width="506" height="506" srcSet={heart2xUrl} />

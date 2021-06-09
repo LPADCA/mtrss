@@ -10,47 +10,22 @@ import { ReactComponent as ShareIcon } from "../../assets/images/share.svg";
 import svgUrl from "../../assets/images/heart-svg.svg";
 import instagramUrl from "../../assets/icons/instagram.png";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
+import { mediaQueries } from "../../screenSizes";
 import {
-  EmailShareButton,
   FacebookShareButton,
-  HatenaShareButton,
-  InstapaperShareButton,
-  LineShareButton,
-  LinkedinShareButton,
-  LivejournalShareButton,
-  MailruShareButton,
-  OKShareButton,
-  PinterestShareButton,
-  PocketShareButton,
-  RedditShareButton,
   TelegramShareButton,
   TumblrShareButton,
   TwitterShareButton,
   ViberShareButton,
   VKShareButton,
   WhatsappShareButton,
-  WorkplaceShareButton,
-  EmailIcon,
   FacebookIcon,
-  FacebookMessengerIcon,
-  HatenaIcon,
-  InstapaperIcon,
-  LineIcon,
-  LinkedinIcon,
-  LivejournalIcon,
-  MailruIcon,
-  OKIcon,
-  PinterestIcon,
-  PocketIcon,
-  RedditIcon,
   TelegramIcon,
   TumblrIcon,
   TwitterIcon,
   ViberIcon,
   VKIcon,
-  WeiboIcon,
   WhatsappIcon,
-  WorkplaceIcon,
 } from "react-share";
 import { usePopper } from "react-popper";
 import WithCopy from "../WithCopy";
@@ -200,13 +175,16 @@ const ShareTitle = styled.h3`
 const SocialContainer = styled.div`
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
+  margin: 0 -10px;
+
+  @media ${mediaQueries.xs} {
+    max-width: 250px;
+  }
 
   & > * {
-    margin-right: 25px;
-
-    &:last-child {
-      margin-right: 0;
-    }
+    margin: 0 10px;
+    margin-bottom: 20px;
   }
 `;
 
@@ -301,7 +279,9 @@ const MessagePage = ({ url }) => {
     ],
     placement: "bottom-end",
   });
-  const postcardWidth = Math.min(width, 636);
+  const postcardWidth = Math.min(width - 40, 636);
+
+  const FULL_URL = `https://mtrss.art/love-message/${url}`;
 
   useEffect(() => {
     getPostcardRequest(url)
@@ -320,13 +300,13 @@ const MessagePage = ({ url }) => {
           <ShareIcon height="18" fill="white" /> Share on your socials
         </ShareTitle>
         <SocialContainer>
-          <FacebookShareButton url={window.location.toString()}>
+          <FacebookShareButton url={FULL_URL}>
             <FacebookIcon size={38} />
           </FacebookShareButton>
-          <TwitterShareButton url={window.location.toString()}>
+          <TwitterShareButton url={FULL_URL}>
             <TwitterIcon size={38} />
           </TwitterShareButton>
-          <WhatsappShareButton url={window.location.toString()}>
+          <WhatsappShareButton url={FULL_URL}>
             <WhatsappIcon size={38} />
           </WhatsappShareButton>
           <InstaButtonWithCopy
@@ -336,6 +316,18 @@ const MessagePage = ({ url }) => {
           >
             <InstagramIcon src={instagramUrl} />
           </InstaButtonWithCopy>
+          <TelegramShareButton url={FULL_URL}>
+            <TelegramIcon size={38} />
+          </TelegramShareButton>
+          <ViberShareButton url={FULL_URL}>
+            <ViberIcon size={38} />
+          </ViberShareButton>
+          <TumblrShareButton url={FULL_URL}>
+            <TumblrIcon size={38} />
+          </TumblrShareButton>
+          <VKShareButton url={FULL_URL}>
+            <VKIcon size={38} />
+          </VKShareButton>
         </SocialContainer>
         <InstaTooltip
           isShown={instaText}
