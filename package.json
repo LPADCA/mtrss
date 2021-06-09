@@ -10,6 +10,7 @@
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^14.1.1",
     "@kunukn/react-collapse": "^2.2.9",
+    "@popperjs/core": "^2.9.2",
     "@react-spring/web": "^9.1.2",
     "@svgr/webpack": "^5.5.0",
     "babel-plugin-styled-components": "^1.12.0",
@@ -50,6 +51,7 @@
     "react-mailchimp-subscribe": "^2.1.0",
     "react-multi-carousel": "^2.6.1",
     "react-player": "^2.7.2",
+    "react-popper": "^2.2.5",
     "react-share": "^4.4.0",
     "react-simple-maps": "^2.3.0",
     "react-use-gesture": "^9.1.3",

@@ -52,6 +52,9 @@ import {
   WhatsappIcon,
   WorkplaceIcon,
 } from "react-share";
+import { usePopper } from "react-popper";
+import WithCopy from "../WithCopy";
+import InstaTooltip from "./insta-tooltip";
 
 const POSTCARD_DEFAULT_SIZE = 636;
 const HEART_WIDTH_RATIO = 300 / POSTCARD_DEFAULT_SIZE;
@@ -220,20 +223,6 @@ const InstaButton = styled.button`
   padding: 0;
 `;
 
-const ShareMessageContainer = styled.div`
-  margin-top: 20px;
-  padding: 20px 15px;
-  background: #141115 0% 0% no-repeat padding-box;
-  border: 1px solid white;
-  border-radius: 20px;
-  opacity: 1;
-  backdrop-filter: blur(50px);
-  
-  p {
-    margin: none;
-  }
-`;
-
 const saveImage = (domNode, onClose) => {
   domtoimage
     .toPng(domNode, {
@@ -288,12 +277,30 @@ const Postcard = forwardRef(({ postcardWidth, message }, ref) => {
 
 Postcard.displayName = "Postcard";
 
+const InstaButtonWithCopy = WithCopy(InstaButton);
+
+const INSTA_MESSAGE = `Sending love to @ [tag your love]\r\n________\r\n#YourLoveMap @mtrss.art @arielfitz.patrick`;
+
 const MessagePage = ({ url }) => {
   const [message, setMessage] = useState();
   const [instaText, showInstaText] = useState(false);
   const [isPostcardShow, showPostcard] = useState(false);
   const postcardRef = useRef();
   const { width } = useWindowDimensions();
+  const [referenceElement, setReferenceElement] = useState(null);
+  const [popperElement, setPopperElement] = useState(null);
+  const [arrowElement, setArrowElement] = useState(null);
+  const { styles, attributes } = usePopper(referenceElement, popperElement, {
+    modifiers: [
+      {
+        name: "arrow",
+        options: {
+          element: arrowElement,
+        },
+      },
+    ],
+    placement: "bottom-end",
+  });
   const postcardWidth = Math.min(width, 636);
 
   useEffect(() => {
@@ -322,17 +329,22 @@ const MessagePage = ({ url }) => {
           <WhatsappShareButton url={window.location.toString()}>
             <WhatsappIcon size={38} />
           </WhatsappShareButton>
-          <InstaButton onClick={() => showInstaText(!instaText)}>
+          <InstaButtonWithCopy
+            copyValue={INSTA_MESSAGE}
+            ref={setReferenceElement}
+            onClick={() => showInstaText(!instaText)}
+          >
             <InstagramIcon src={instagramUrl} />
-          </InstaButton>
+          </InstaButtonWithCopy>
         </SocialContainer>
-        {instaText && (
-          <ShareMessageContainer>
-            <p>Sending love to @ [tag your love]</p>
-            <p>________</p>
-            <p>#YourLoveMap @mtrss.art @arielfitz.patrick</p>
-          </ShareMessageContainer>
-        )}
+        <InstaTooltip
+          isShown={instaText}
+          styles={styles}
+          setShown={showInstaText}
+          attributes={attributes}
+          setPopperElement={setPopperElement}
+          setArrowElement={setArrowElement}
+        />
       </SharingContainer>
       {isPostcardShow && (
         <ExpandedPostCard message={message} onClose={() => showPostcard(false)}></ExpandedPostCard>
