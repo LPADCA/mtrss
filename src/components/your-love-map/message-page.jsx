@@ -281,7 +281,7 @@ const MessagePage = ({ url }) => {
   });
   const postcardWidth = Math.min(width - 40, 636);
 
-  const FULL_URL = `https://mtrss.art/love-message/${url}`;
+  const FULL_URL = window.location.toString();
 
   useEffect(() => {
     getPostcardRequest(url)
