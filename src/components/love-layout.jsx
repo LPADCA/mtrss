@@ -1,13 +1,13 @@
 import React from "react";
 import styled, { createGlobalStyle, keyframes } from "styled-components";
-import Layout from "../../components/layout";
-import { ReactComponent as LoveFrameSvg } from "../../assets/images/love-frames.svg";
-import heartUrl from "../../assets/images/heart.png";
-import heart2xUrl from "../../assets/images/heart@2x.png";
-import Footer from "../../components/footer";
-import { mediaQueries } from "../../screenSizes";
-import playfairRegularUrl from "../../assets/fonts/PlayfairDisplay-Regular.ttf";
-import playfairBoldUrl from "../../assets/fonts/PlayfairDisplay-Bold.ttf";
+import Layout from "./layout";
+import { ReactComponent as LoveFrameSvg } from "../assets/images/love-frames.svg";
+import heartUrl from "../assets/images/heart.png";
+import heart2xUrl from "../assets/images/heart@2x.png";
+import Footer from "./footer";
+import { mediaQueries } from "../screenSizes";
+import playfairRegularUrl from "../assets/fonts/PlayfairDisplay-Regular.ttf";
+import playfairBoldUrl from "../assets/fonts/PlayfairDisplay-Bold.ttf";
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -42,8 +42,10 @@ const GlobalStyle = createGlobalStyle`
 
 `;
 
+const Gradient = styled.div`
+`;
+
 const Hero = styled.div`
-  background-color: black;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -70,9 +72,11 @@ const RedLink = styled.a`
 
 const AlbumArtContainer = styled.div`
   display: flex;
-  padding: 200px 0;
   justify-content: center;
+  align-items: center;
   overflow: hidden;
+  flex-direction: column;
+  padding-bottom: 150px;
 `;
 
 const heartbeat = keyframes`
@@ -99,7 +103,8 @@ const heartbeat = keyframes`
   }
 `;
 
-const AlbumCircle = styled.div`
+const AlbumCircle = styled.button`
+  border: none;
   border-radius: 100%;
   box-shadow: 0px 0px 99px #ffffff;
   display: flex;
@@ -123,7 +128,7 @@ const AlbumCircle = styled.div`
 
 const PageContent = styled.main`
   padding: 0 20px;
-`
+`;
 
 const HeartImg = styled.img``;
 
@@ -135,34 +140,44 @@ const BottomLogo = styled.div`
   align-items: center;
 `;
 
+const AlbutArtTitle = styled.h2`
+  font-size: 34px;
+  margin-top: 150px;
+  margin-bottom: 100px;
+  font-weight: 400;
+`;
+
 const LoveLayout = ({ children }) => {
   return (
     <Layout>
       <GlobalStyle />
-      <Hero>
-        <LoveFrameSvg />
-        <Heading>#YourLove</Heading>
-        <p>
-          What a beauty! Share your love with your loved one on social. Don’t forget to mention @mtrss.art
-          @arielfitz.patrick
-          <RedLink> #YourLoveNote.</RedLink>
-        </p>
-      </Hero>
-      <PageContent>
-        {children}
-      </PageContent>
-      <AlbumArtContainer>
-        <AlbumCircle>
-          <HeartImg src={heartUrl} width="506" height="506" srcSet={heart2xUrl} />
-        </AlbumCircle>
-      </AlbumArtContainer>
-      <Footer>
-        <BottomLogo>
-          <a href="/">
-            <img src="/images/mtrss-logo.svg" alt="MTRSS logo" width="170" />
-          </a>
-        </BottomLogo>
-      </Footer>
+      <Gradient>
+        <Hero>
+          <LoveFrameSvg />
+          <Heading>#YourLove</Heading>
+          <p>
+            What a beauty! Share your love with your loved one on social. Don’t forget to mention @mtrss.art
+            @arielfitz.patrick
+            <RedLink> #YourLoveNote.</RedLink>
+          </p>
+        </Hero>
+        <PageContent>{children}</PageContent>
+        <AlbumArtContainer>
+          <AlbutArtTitle>
+            Listen to <RedLink>#YourLove</RedLink> song
+          </AlbutArtTitle>
+          <AlbumCircle>
+            <HeartImg src={heartUrl} width="506" height="506" srcSet={heart2xUrl} />
+          </AlbumCircle>
+        </AlbumArtContainer>
+        <Footer>
+          <BottomLogo>
+            <a href="/">
+              <img src="/images/mtrss-logo.svg" alt="MTRSS logo" width="170" />
+            </a>
+          </BottomLogo>
+        </Footer>
+      </Gradient>
     </Layout>
   );
 };

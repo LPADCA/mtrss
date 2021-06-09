@@ -6,7 +6,6 @@ import domtoimage from "dom-to-image";
 import Button from "../button";
 import { ReactComponent as LocationPointer } from "../../assets/images/pointer.svg";
 import { ReactComponent as ShareIcon } from "../../assets/images/share.svg";
-// import { ReactComponent as FacebookIcon } from "../../assets/icons/facebook.svg";
 import svgUrl from "../../assets/images/heart-svg.svg";
 import instagramUrl from "../../assets/icons/instagram.png";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
@@ -296,7 +295,11 @@ const MessagePage = ({ url }) => {
       <Postcard message={message} postcardWidth={postcardWidth} />
       <CardButton onClick={() => showPostcard(true)}>Save image</CardButton>
       <SharingContainer>
-        <ShareTitle>
+        <ShareTitle
+          css={`
+            margin-top: 50px;
+          `}
+        >
           <ShareIcon height="18" fill="white" /> Share on your socials
         </ShareTitle>
         <SocialContainer>

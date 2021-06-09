@@ -1,9 +1,9 @@
 import React, { useState, useRef } from "react";
 import SvgMap from "../components/your-love-map";
-import PostCardForm from "../components/your-love-map/postcard-form";
+import PostCardForm from "../components/love-message/postcard-form";
 import { navigate } from "gatsby";
 import { createPostcardRequest } from "../api/love-message-api";
-import LoveLayout from "../components/your-love-map/love-layout";
+import LoveLayout from "../components/love-layout";
 
 const openPostcard = async args => {
   const { url } = await createPostcardRequest(args);

@@ -1,7 +1,7 @@
 import React from "react";
 import { Router, Redirect } from "@reach/router";
-import MessagePage from "../../components/your-love-map/message-page";
-import LoveLayout from "../../components/your-love-map/love-layout";
+import MessagePage from "../../components/love-message/message-page";
+import LoveLayout from "../../components/love-layout";
 
 const App = () => {
   return (
