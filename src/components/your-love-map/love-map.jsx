@@ -8,14 +8,13 @@ import { TOPO_COUNTRIES, MIN_WIDTH, BG_IMAGE_RATIO, pathGenerator, projection } 
 import SvgPathFromFeature from "./svg-path-from-feature";
 
 const SvgWrapper = styled.div`
-  margin: 0 -20px;
   background-image: url(${oceanBG});
   background-attachment: fixed;
   background-size: cover;
   overflow: hidden;
-  position: relative;
   min-width: 100%;
   height: ${({ height }) => height}px;
+  min-height: 100%;
 `;
 
 const AnimatedSvg = styled(animated.svg)`
@@ -181,7 +180,31 @@ const SvgContinentsContainer = ({
   );
 };
 
-const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
+class Loader {
+  constructor(callback) {
+    this.callback = callback;
+    this.isAnimationEnded = false;
+    this.isPictureLoaded = false;
+  }
+
+  executeCallback() {
+    if (!this.isAnimationEnded) return;
+    if (!this.isPictureLoaded) return;
+    this.callback();
+  }
+
+  animationEnded() {
+    this.isAnimationEnded = true;
+    this.executeCallback();
+  }
+
+  pictureLoaded() {
+    this.isPictureLoaded = true;
+    this.executeCallback();
+  }
+}
+
+const SvgMap = ({ className, onMapLoaded, screenWidth, screenHeight, onCountryClick }) => {
   const wrapperRef = useRef();
   const svgRef = useRef();
   const mapWidth = Math.max(screenWidth, MIN_WIDTH);
@@ -193,6 +216,8 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
   const [scale, setScale] = useState(1);
   const [centroid, setCentroid] = useState(mapCentroid);
   const isFullMapShown = selectedFeature === TOPO_COUNTRIES;
+
+  const loader = new Loader(onMapLoaded);
 
   const getTranslateWithOffset = offsetX => {
     const translate = getTranslate({
@@ -213,6 +238,7 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
 
   const [styles, api] = useSpring(() => ({
     ...getTranslateWithOffset(50),
+    onRest: e => loader.animationEnded(),
     config: {
       duration: 500,
     },
@@ -240,9 +266,10 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
     const imageLoader = new Image();
     imageLoader.src = earthBG;
 
-    imageLoader.onload = () => {
-      console.log("img loaded");
-    };
+    if (svgRef.current) {
+      svgRef.current.addEventListener("transitionend", () => console.log("transitionend"));
+    }
+    imageLoader.onload = () => loader.pictureLoaded();
   }, []);
 
   projection.fitExtent(
@@ -255,10 +282,8 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
 
   const featureClickHandler = feature => {
     const isSame = isSameContinents(selectedFeature, feature);
-    console.log("featureClickHandler", selectedFeature, feature, isSame);
     if (isSame) feature = TOPO_COUNTRIES;
     setFeature(feature);
-    console.log("selectedFeature after set", selectedFeature);
     const newCentroid = pathGenerator.centroid(feature);
     const newBounds = pathGenerator.bounds(feature);
     const newX = newBounds[1][0] - newBounds[0][0];
@@ -285,7 +310,7 @@ const SvgMap = ({ screenWidth, screenHeight, onCountryClick }) => {
   if (mapWidth === 0 && mapHeight === 0) return null;
 
   return (
-    <SvgWrapper ref={wrapperRef} height={screenHeight}>
+    <SvgWrapper className={className} ref={wrapperRef} height={screenHeight}>
       <AnimatedSvg
         style={styles}
         viewBox={`0 0 ${mapWidth} ${mapHeight}`}
