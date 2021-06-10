@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { ReactComponent as InfoIcon } from "../../../assets/icons/info.svg";
 import Button from "../../button";
+import { mediaQueries } from "../../../screenSizes";
 
 const LoadingScreenContainer = styled.div`
   position: absolute;
@@ -12,21 +13,35 @@ const LoadingScreenContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px dashed red;
   flex-direction: column;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 1);
+  padding: 20px;
 `;
 
 const InfoText = styled.p`
   font-size: 24px;
   margin-top: 40px;
   margin-bottom: 50px;
-`
+  text-align: center;
+
+  @media ${mediaQueries.xm} {
+    font-size: 14px;
+    margin-top: 20px;
+    margin-bottom: 25px;
+  }
+`;
 
 const Steps = styled.div`
   display: flex;
-  margin-left: -10px;
-  margin-right: -10px;
+
+  @media ${mediaQueries.sm} {
+    margin-left: -10px;
+    margin-right: -10px;
+  }
+
+  @media ${mediaQueries.xm} {
+    flex-direction: column;
+  }
 `;
 
 const StepContainer = styled.div`
@@ -34,11 +49,26 @@ const StepContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 0 10px;
+  @media ${mediaQueries.sm} {
+    margin: 0 10px;
+  }
+
+  @media ${mediaQueries.xm} {
+    flex-direction: row;
+    margin-bottom: 20px;
+    width: 100%;
+  }
 `;
 
 const StepNumber = styled.span`
   font-size: 50px;
+  text-align: center;
+
+  @media ${mediaQueries.xm} {
+    font-size: 24px;
+    margin-right: 10px;
+    width: 50px;
+  }
 `;
 
 const CardContainer = styled.div`
@@ -48,13 +78,21 @@ const CardContainer = styled.div`
   padding: 20px;
   max-width: 340px;
   text-align: center;
-  flex: 1 0 auto;
+  flex: 1 1 auto;
+
+  @media ${mediaQueries.xm} {
+
+    padding: 10px;
+    font-size: 14px;
+  }
 `;
 const LoadingScreen = ({ disabled, onStart }) => {
   return (
     <LoadingScreenContainer>
       <InfoIcon />
-      <InfoText>We’ve all been too far away from our loved ones this year. Let the love bring you closer.</InfoText>
+      <InfoText>
+        We’ve all been too far away from our loved ones this year. Let the love bring you closer.
+      </InfoText>
       <Steps>
         <StepContainer>
           <StepNumber>01</StepNumber>
@@ -79,7 +117,7 @@ const LoadingScreen = ({ disabled, onStart }) => {
       </Steps>
       <Button
         css={`
-          margin-top: 40px;
+          margin-top: 20px;
           width: 200px;
         `}
         disabled={disabled}
