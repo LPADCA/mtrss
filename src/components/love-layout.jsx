@@ -51,6 +51,7 @@ const Hero = styled.div`
   justify-content: center;
   align-items: center;
   padding-bottom: 50px;
+  background: linear-gradient(#000000, #ff363676);
 
   p {
     max-width: 560px;
