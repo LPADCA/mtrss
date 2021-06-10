@@ -5,17 +5,13 @@ import Button from "../../button";
 import { mediaQueries } from "../../../screenSizes";
 
 const LoadingScreenContainer = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   background-color: rgba(0, 0, 0, 1);
   padding: 20px;
+  height: 100%;
 `;
 
 const InfoText = styled.p`
@@ -24,7 +20,7 @@ const InfoText = styled.p`
   margin-bottom: 50px;
   text-align: center;
 
-  @media ${mediaQueries.xm} {
+  @media ${mediaQueries.xs} {
     font-size: 14px;
     margin-top: 20px;
     margin-bottom: 25px;
@@ -39,7 +35,7 @@ const Steps = styled.div`
     margin-right: -10px;
   }
 
-  @media ${mediaQueries.xm} {
+  @media ${mediaQueries.xs} {
     flex-direction: column;
   }
 `;
@@ -49,11 +45,12 @@ const StepContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   @media ${mediaQueries.sm} {
     margin: 0 10px;
   }
 
-  @media ${mediaQueries.xm} {
+  @media ${mediaQueries.xs} {
     flex-direction: row;
     margin-bottom: 20px;
     width: 100%;
@@ -64,7 +61,7 @@ const StepNumber = styled.span`
   font-size: 50px;
   text-align: center;
 
-  @media ${mediaQueries.xm} {
+  @media ${mediaQueries.xs} {
     font-size: 24px;
     margin-right: 10px;
     width: 50px;
@@ -78,10 +75,12 @@ const CardContainer = styled.div`
   padding: 20px;
   max-width: 340px;
   text-align: center;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
   flex: 1 1 auto;
 
-  @media ${mediaQueries.xm} {
-
+  @media ${mediaQueries.xs} {
     padding: 10px;
     font-size: 14px;
   }
@@ -97,21 +96,27 @@ const LoadingScreen = ({ disabled, onStart }) => {
         <StepContainer>
           <StepNumber>01</StepNumber>
           <CardContainer>
-            Join thousands of listeners of <a>#YourLove</a> around the world
+            <span>
+              Join thousands of listeners of <a>#YourLove</a> around the world
+            </span>
           </CardContainer>
         </StepContainer>
         <StepContainer>
           <StepNumber>02</StepNumber>
           <CardContainer>
-            Share your love though a postcard. <a>Click on a country</a> where Your Love is at the moment and
-            select your love note in the form below. Add your names to make it personal.
+            <span>
+              Share your love though a postcard. <a>Click on a country</a> where Your Love is at the moment
+              and select your love note in the form below. Add your names to make it personal.
+            </span>
           </CardContainer>
         </StepContainer>
         <StepContainer>
           <StepNumber>03</StepNumber>
           <CardContainer>
-            Voila. Your custom love note is ready for you to share on social. Don’t forget to mention
-            <a>@mtrss.art @arielfitz.patrick #YourLoveNote</a>
+            <span>
+              Voila. Your custom love note is ready for you to share on social. Don’t forget to mention
+              <a> @mtrss.art @arielfitz.patrick #YourLoveNote</a>
+            </span>
           </CardContainer>
         </StepContainer>
       </Steps>

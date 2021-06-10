@@ -2,42 +2,77 @@ import React, { useState, forwardRef } from "react";
 import styled, { css } from "styled-components";
 import WORLD_TOPO_JSON from "../../assets/geoJsons/world3.topo.json";
 import Button from "../button";
+import arrowUrl from "../../assets/icons/arrow.svg";
+import Carousel from "./carousel.jsx";
+import songBgUrl from "../../assets/images/song-bg@2x.png";
+import { mediaQueries } from "../../screenSizes";
 
 const inputMixin = css`
   flex: 1 0 auto;
-  background: none;
+  background: rgba(255, 255, 255, 0.2);
   border: none;
   font-size: 16px;
-  border-bottom: 2px solid #ff3636;
-  padding: 3px 5px 5px;
+  padding: 10px 20px;
+  border-radius: 20px;
+  vertical-align: middle;
 
   &::placeholder {
     color: #ff3636;
   }
 `;
 
+const FormContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(24px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+
+  @media ${mediaQueries.xs} {
+    padding: 5px;
+  }
+`;
+
 const Form = styled.form`
   margin: 50px auto;
+  padding: 60px;
   width: 100%;
-  max-width: 600px;
-  padding: 0 30px;
+  max-width: 992px;
+  border-radius: 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+
+  @media ${mediaQueries.xs} {
+    padding: 20px;
+  }
 `;
 
 const Line = styled.span`
   display: inline-flex;
   width: 100%;
+
+  @media ${mediaQueries.xs} {
+    input {
+      margin: 0;
+    }
+  }
 `;
 
 const LineColumn = styled.div`
-  @media (max-width: 768px) {
+  @media ${mediaQueries.xs} {
     width: 100%;
   }
   width: 50%;
   display: flex;
+  align-items: center;
   margin-bottom: 20px;
 
   input {
     width: 50%;
+    margin-right: 0;
+    margin-left: 10px;
   }
 `;
 
@@ -49,13 +84,13 @@ const FirstLine = styled(Line)`
 
 const SecondLine = styled(Line)`
   margin: 20px 0;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
 `;
 
 const Input = styled.input`
   ${inputMixin}
-  margin: 0 5px;
+  margin: 0 20px;
   color: white;
 `;
 
@@ -63,6 +98,13 @@ const Select = styled.select`
   ${inputMixin}
   color: white;
   max-width: 100%;
+  appearance: none;
+  position: relative;
+  background-image: url("${arrowUrl}");
+  background-size: 16px;
+  background-repeat: no-repeat;
+  background-position-x: calc(100% - 15px);
+  background-position-y: 50%;
 
   &:invalid,
   & option[value=""] {
@@ -71,11 +113,53 @@ const Select = styled.select`
 `;
 
 const CountrySelect = styled(Select)`
-  margin-left: 5px;
+  margin-left: 20px;
 `;
 
-const SongSelect = styled(Select)`
-  width: 100%;
+const CarouselTitle = styled.p`
+  text-align: center;
+  margin-top: 0;
+`;
+
+const SecondWrapper = styled.div`
+  @media ${mediaQueries.xs} {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  span {
+    margin-bottom: 20px;
+  }
+`;
+
+const Song = styled.div`
+  height: 100%;
+
+  label {
+    height: 100%;
+    border-radius: 30px;
+    border: 1px solid #ffffff;
+    display: flex;
+    background-image: url(${songBgUrl});
+    background-size: cover;
+    background-repeat: no-repeat;
+    backdrop-filter: blur(5px);
+    padding: 20px 30px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  input {
+    position: absolute;
+    visibility: hidden;
+  }
+
+  input:checked + label {
+    border: 1px solid red;
+  }
 `;
 
 const COUNTRIES = [...new Set(WORLD_TOPO_JSON.objects.world.geometries.map(e => e.properties.name))].sort(
@@ -139,43 +223,67 @@ const PostCardForm = forwardRef(({ onSubmit, country, setCountry }, ref) => {
   };
 
   return (
-    <Form ref={ref} onSubmit={handleSubmit}>
-      <FirstLine>
-        <LineColumn>
-          <span>Sending love to </span>
-          <Input required placeholder="your love" value={name} onChange={e => setName(e.target.value)} />
-        </LineColumn>
-        <LineColumn>
-          <span> in </span>
-          <CountrySelect required value={country} onChange={e => setCountry(e.target.value)}>
-            <option value="" disabled hidden>
-              Country
-            </option>
-            {COUNTRIES.map(c => (
-              <option key={c} value={c}>
-                {c}
+    <FormContainer>
+      <Form ref={ref} onSubmit={handleSubmit}>
+        <FirstLine>
+          <LineColumn>
+            <span>Sending love to </span>
+            <Input required placeholder="your love" value={name} onChange={e => setName(e.target.value)} />
+          </LineColumn>
+          <LineColumn>
+            <span> in </span>
+            <CountrySelect required value={country} onChange={e => setCountry(e.target.value)}>
+              <option value="" disabled hidden>
+                Country
               </option>
-            ))}
-          </CountrySelect>
-        </LineColumn>
-      </FirstLine>
-      <SongSelect required value={note} onChange={e => setNote(e.target.value)}>
-        {NOTES.map(note => {
-          return (
-            <option key={note} value={note}>
-              {note}
-            </option>
-          );
-        })}
-      </SongSelect>
-      <SecondLine>
-        <div>
-          <span>Sincerely yours, </span>
-          <Input required placeholder="" value={from} onChange={e => setFrom(e.target.value)} />
-        </div>
-      </SecondLine>
-      <Button>Create Postcard</Button>
-    </Form>
+              {COUNTRIES.map(c => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </CountrySelect>
+          </LineColumn>
+        </FirstLine>
+        <CarouselTitle>Select your love note</CarouselTitle>
+        <Carousel>
+          {NOTES.map((n, i) => {
+            return (
+              <Song key={n}>
+                <input
+                  id={`song-${i}`}
+                  required
+                  name="song"
+                  type="radio"
+                  value={n}
+                  checked={n === note}
+                  onChange={() => setNote(n)}
+                />
+                <label htmlFor={`song-${i}`}>{n}</label>
+              </Song>
+            );
+          })}
+        </Carousel>
+        <SecondLine>
+          <SecondWrapper>
+            <span>Sincerely yours, </span>
+            <Input required placeholder="" value={from} onChange={e => setFrom(e.target.value)} />
+          </SecondWrapper>
+        </SecondLine>
+        <Line
+          css={`
+            justify-content: center;
+          `}
+        >
+          <Button
+            css={`
+              width: 600px;
+            `}
+          >
+            Create Postcard
+          </Button>
+        </Line>
+      </Form>
+    </FormContainer>
   );
 });
 

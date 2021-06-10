@@ -6,20 +6,41 @@ import { createPostcardRequest } from "../api/love-message-api";
 import LoveLayout from "../components/love-layout";
 import styled from "styled-components";
 import LoadingScreen from "../components/your-love-map/screens/loading-screen";
+import { useSpring, animated } from "@react-spring/web";
 
 const MapArea = styled.div`
-  min-height: 100vh;
+  height: 100vh;
+  min-height: 700px;
   margin: 0 -20px;
   position: relative;
 `;
 
-const AbsoluteSvgMap = styled(SvgMap)`
+const ModalContainer = styled(animated.div)`
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
 `;
+
+const Modal = ({ show, children }) => {
+  const style = useSpring({
+    opacity: show ? 1 : 0,
+  });
+
+  return (
+    <ModalContainer
+      style={{
+        opacity: style.opacity,
+        visibility: style.opacity.to(e => (e > 0 ? "visible" : "hidden")),
+      }}
+    >
+      {children}
+    </ModalContainer>
+  );
+};
+
+const AbsoluteSvgMap = styled(SvgMap)``;
 
 const openPostcard = async args => {
   const { url } = await createPostcardRequest(args);
@@ -28,6 +49,7 @@ const openPostcard = async args => {
 
 const LOADING_STATE = "loading";
 const MAP_STATE = "map";
+const FORM_STATE = "form";
 
 const YourLoveMapPage = () => {
   const ref = useRef();
@@ -35,24 +57,35 @@ const YourLoveMapPage = () => {
   const [state, setState] = useState(LOADING_STATE);
   const [isMapLoaded, setMapLoaded] = useState(false);
 
-  const onCountryClick = country => {
-    if (ref.current) ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
+  const handleCountryClick = country => {
     setCountry(country);
+    setState(FORM_STATE);
+  };
+
+  const handleStartClick = () => {
+    if (ref.current) ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    setState(MAP_STATE);
   };
 
   const isLoadingState = state === LOADING_STATE;
+  const isFormState = state === FORM_STATE;
 
   return (
     <LoveLayout>
-      <MapArea>
+      <MapArea ref={ref}>
         <AbsoluteSvgMap
           country={country}
           onMapLoaded={() => setMapLoaded(true)}
-          onCountryClick={onCountryClick}
+          onCountryClick={handleCountryClick}
         />
-        {isLoadingState && <LoadingScreen disabled={!isMapLoaded} onClick={() => setState(MAP_STATE)} />}
+        <Modal show={isLoadingState}>
+          <LoadingScreen show={isLoadingState} disabled={!isMapLoaded} onStart={handleStartClick} />
+        </Modal>
+
+        <Modal show={isFormState}>
+          <PostCardForm ref={ref} country={country} setCountry={setCountry} onSubmit={openPostcard} />
+        </Modal>
       </MapArea>
-      <PostCardForm ref={ref} country={country} setCountry={setCountry} onSubmit={openPostcard} />
     </LoveLayout>
   );
 };
