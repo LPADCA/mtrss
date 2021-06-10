@@ -58,10 +58,6 @@ const HighlightedPath = css`
     stroke: white;
     stroke-width: 1px;
   }
-
-  path:hover {
-    fill: white;
-  }
 `;
 
 const HighlightedCountry = css`

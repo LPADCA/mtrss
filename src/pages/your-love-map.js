@@ -4,8 +4,8 @@ import PostCardForm from "../components/love-message/postcard-form";
 import { navigate } from "gatsby";
 import { createPostcardRequest } from "../api/love-message-api";
 import LoveLayout from "../components/love-layout";
-import styled, { css } from "styled-components";
-import Button from "../components/button";
+import styled from "styled-components";
+import LoadingScreen from "../components/your-love-map/screens/loading-screen";
 
 const MapArea = styled.div`
   min-height: 100vh;
@@ -13,26 +13,12 @@ const MapArea = styled.div`
   position: relative;
 `;
 
-const fullscreenCss = css`
+const AbsoluteSvgMap = styled(SvgMap)`
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-`;
-
-const AbsoluteSvgMap = styled(SvgMap)`
-  ${fullscreenCss}
-`;
-
-const LoadingScreen = styled.div`
-  ${fullscreenCss}
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px dashed red;
-  flex-direction: column;
-  background-color: rgba(0, 0, 0, 0.9);
 `;
 
 const openPostcard = async args => {
@@ -64,14 +50,7 @@ const YourLoveMapPage = () => {
           onMapLoaded={() => setMapLoaded(true)}
           onCountryClick={onCountryClick}
         />
-        {isLoadingState && (
-          <LoadingScreen>
-            {!isMapLoaded && <span>Loading</span>}
-            <Button disabled={!isMapLoaded} onClick={() => setState(MAP_STATE)}>
-              Start map
-            </Button>
-          </LoadingScreen>
-        )}
+        {isLoadingState && <LoadingScreen disabled={!isMapLoaded} onClick={() => setState(MAP_STATE)} />}
       </MapArea>
       <PostCardForm ref={ref} country={country} setCountry={setCountry} onSubmit={openPostcard} />
     </LoveLayout>

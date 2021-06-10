@@ -40,6 +40,10 @@ const GlobalStyle = createGlobalStyle`
     overflow-x: hidden;
   }
 
+  a {
+    color: #ff3636;
+  }
+
 `;
 
 const Gradient = styled.div`
@@ -67,9 +71,6 @@ const Heading = styled.h1`
   color: #ff3636;
 `;
 
-const RedLink = styled.a`
-  color: #ff3636;
-`;
 
 const AlbumArtContainer = styled.div`
   display: flex;
@@ -159,13 +160,13 @@ const LoveLayout = ({ children }) => {
           <p>
             What a beauty! Share your love with your loved one on social. Don’t forget to mention @mtrss.art
             @arielfitz.patrick
-            <RedLink> #YourLoveNote.</RedLink>
+            <a> #YourLoveNote.</a>
           </p>
         </Hero>
         <PageContent>{children}</PageContent>
         <AlbumArtContainer>
           <AlbutArtTitle>
-            Listen to <RedLink>#YourLove</RedLink> song
+            Listen to <a>#YourLove</a> song
           </AlbutArtTitle>
           <AlbumCircle>
             <HeartImg src={heartUrl} width="506" height="506" srcSet={heart2xUrl} />
