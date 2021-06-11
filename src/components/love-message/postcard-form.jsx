@@ -4,8 +4,11 @@ import WORLD_TOPO_JSON from "../../assets/geoJsons/world3.topo.json";
 import Button from "../button";
 import arrowUrl from "../../assets/icons/arrow.svg";
 import Carousel from "./carousel.jsx";
-import songBgUrl from "../../assets/images/song-bg@2x.png";
+import songBgUrl1 from "../../assets/images/song-bg1@2x.jpg";
+import songBgUrl2 from "../../assets/images/song-bg2@2x.jpg";
+import songBgUrl3 from "../../assets/images/song-bg3@2x.jpg";
 import { mediaQueries } from "../../screenSizes";
+import { ReactComponent as ArrowLeft } from "../../assets/icons/arrow-left.svg";
 
 const inputMixin = css`
   flex: 1 0 auto;
@@ -24,7 +27,6 @@ const inputMixin = css`
 const FormContainer = styled.div`
   width: 100%;
   height: 100%;
-  backdrop-filter: blur(24px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -71,8 +73,13 @@ const LineColumn = styled.div`
 
   input {
     width: 50%;
-    margin-right: 0;
-    margin-left: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+
+    @media ${mediaQueries.xs} {
+      margin-left: 10px;
+      margin-right: 0;
+    }
   }
 `;
 
@@ -86,6 +93,25 @@ const SecondLine = styled(Line)`
   margin: 20px 0;
   justify-content: center;
   align-items: center;
+`;
+
+const ThirdLine = styled(Line)`
+  justify-content: center;
+  margin-bottom: 20px;
+  button {
+    width: 600px;
+  }
+`;
+
+const FourthLine = styled(Line)`
+  justify-content: center;
+  button {
+    width: 600px;
+
+    svg {
+      margin-right: 10px;
+    }
+  }
 `;
 
 const Input = styled.input`
@@ -134,18 +160,27 @@ const SecondWrapper = styled.div`
   }
 `;
 
+const getBg = i => {
+  if (i % 3 === 0) return songBgUrl1;
+  if (i % 3 === 1) return songBgUrl2;
+  if (i % 3 === 2) return songBgUrl3;
+};
+
 const Song = styled.div`
   height: 100%;
+  background-image: url(${({ index }) => getBg(index)});
+  border-radius: 30px;
+  overflow: hidden;
+  backdrop-filter: blur(5px);
+  background-size: cover;
+  background-repeat: no-repeat;
 
   label {
-    height: 100%;
     border-radius: 30px;
-    border: 1px solid #ffffff;
+    border: 3px solid #ffffff;
+    height: 100%;
     display: flex;
-    background-image: url(${songBgUrl});
-    background-size: cover;
-    background-repeat: no-repeat;
-    backdrop-filter: blur(5px);
+
     padding: 20px 30px;
     justify-content: center;
     align-items: center;
@@ -158,7 +193,8 @@ const Song = styled.div`
   }
 
   input:checked + label {
-    border: 1px solid red;
+    border: 3px solid red;
+    background-color: rgba(0, 0, 0, 0.6);
   }
 `;
 
@@ -213,12 +249,14 @@ const NOTES = [
  - JP Saxe & Julia Michaels, ‘If the World Was Ending’`,
 ];
 
-const PostCardForm = forwardRef(({ onSubmit, country, setCountry }, ref) => {
+const PostCardForm = forwardRef(({ onSubmit, onBackClick, country, setCountry }, ref) => {
   const [name, setName] = useState("");
   const [note, setNote] = useState(NOTES[0]);
   const [from, setFrom] = useState("");
+  const [loading, setLoading] = useState(false);
   const handleSubmit = e => {
     e.preventDefault();
+    setLoading(true);
     onSubmit({ name, country, note, from });
   };
 
@@ -248,7 +286,7 @@ const PostCardForm = forwardRef(({ onSubmit, country, setCountry }, ref) => {
         <Carousel>
           {NOTES.map((n, i) => {
             return (
-              <Song key={n}>
+              <Song index={i} key={n}>
                 <input
                   id={`song-${i}`}
                   required
@@ -269,19 +307,14 @@ const PostCardForm = forwardRef(({ onSubmit, country, setCountry }, ref) => {
             <Input required placeholder="" value={from} onChange={e => setFrom(e.target.value)} />
           </SecondWrapper>
         </SecondLine>
-        <Line
-          css={`
-            justify-content: center;
-          `}
-        >
-          <Button
-            css={`
-              width: 600px;
-            `}
-          >
-            Create Postcard
+        <ThirdLine>
+          <Button loading={loading}>Create Postcard</Button>
+        </ThirdLine>
+        <FourthLine>
+          <Button type="button" onClick={onBackClick} theme="outline">
+            <ArrowLeft width={10} /> Back to the map
           </Button>
-        </Line>
+        </FourthLine>
       </Form>
     </FormContainer>
   );

@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { ReactComponent as InfoIcon } from "../../../assets/icons/info.svg";
 import Button from "../../button";
 import { mediaQueries } from "../../../screenSizes";
 
@@ -14,7 +13,7 @@ const LoadingScreenContainer = styled.div`
   height: 100%;
 `;
 
-const InfoText = styled.p`
+const InfoText = styled.span`
   font-size: 24px;
   margin-top: 40px;
   margin-bottom: 50px;
@@ -88,9 +87,11 @@ const CardContainer = styled.div`
 const LoadingScreen = ({ disabled, onStart }) => {
   return (
     <LoadingScreenContainer>
-      <InfoIcon />
       <InfoText>
-        We’ve all been too far away from our loved ones this year. Let the love bring you closer.
+        Some of us have been very far from their loved ones this year.
+        <p>
+          <a>Let the love bring you closer.</a>
+        </p>
       </InfoText>
       <Steps>
         <StepContainer>

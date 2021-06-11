@@ -26,6 +26,7 @@ const ModalContainer = styled(animated.div)`
 const Modal = ({ show, children }) => {
   const style = useSpring({
     opacity: show ? 1 : 0,
+    backdropFilter: show ? "blur(24px)" : "blur(0px)",
   });
 
   return (
@@ -33,6 +34,7 @@ const Modal = ({ show, children }) => {
       style={{
         opacity: style.opacity,
         visibility: style.opacity.to(e => (e > 0 ? "visible" : "hidden")),
+        backdropFilter: style.backdropFilter,
       }}
     >
       {children}
@@ -50,6 +52,32 @@ const openPostcard = async args => {
 const LOADING_STATE = "loading";
 const MAP_STATE = "map";
 const FORM_STATE = "form";
+
+const FirstHeading = () => (
+  <>
+    All we need is love. Enjoy <a>#YourLove</a> with thousands of listeners around the world, find where your
+    loved one is on the map and share <a>#YourLoveNote</a> with them.
+  </>
+);
+
+const LastHeading = () => (
+  <>
+    What a beauty! Share your love with your loved one on social. Don’t forget to mention @mtrss.art
+    @arielfitz.patrick
+    <a> #YourLoveNote.</a>
+  </>
+);
+
+const Headline = ({ state }) => {
+  switch (state) {
+    case FORM_STATE:
+      return <LastHeading />;
+    case LOADING_STATE:
+    case MAP_STATE:
+    default:
+      return <FirstHeading />;
+  }
+};
 
 const YourLoveMapPage = () => {
   const ref = useRef();
@@ -71,7 +99,7 @@ const YourLoveMapPage = () => {
   const isFormState = state === FORM_STATE;
 
   return (
-    <LoveLayout>
+    <LoveLayout headline={<Headline state={state} />}>
       <MapArea ref={ref}>
         <AbsoluteSvgMap
           country={country}
@@ -83,7 +111,13 @@ const YourLoveMapPage = () => {
         </Modal>
 
         <Modal show={isFormState}>
-          <PostCardForm ref={ref} country={country} setCountry={setCountry} onSubmit={openPostcard} />
+          <PostCardForm
+            ref={ref}
+            country={country}
+            onBackClick={handleStartClick}
+            setCountry={setCountry}
+            onSubmit={openPostcard}
+          />
         </Modal>
       </MapArea>
     </LoveLayout>

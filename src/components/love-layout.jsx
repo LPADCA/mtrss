@@ -46,8 +46,7 @@ const GlobalStyle = createGlobalStyle`
 
 `;
 
-const Gradient = styled.div`
-`;
+const Gradient = styled.div``;
 
 const Hero = styled.div`
   display: flex;
@@ -71,8 +70,8 @@ const Heading = styled.h1`
   color: #ff3636;
 `;
 
-
 const AlbumArtContainer = styled.div`
+  background: linear-gradient(#ff363676, #000000 40%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -149,7 +148,7 @@ const AlbutArtTitle = styled.h2`
   font-weight: 400;
 `;
 
-const LoveLayout = ({ children }) => {
+const LoveLayout = ({ headline, children }) => {
   return (
     <Layout>
       <GlobalStyle />
@@ -157,11 +156,7 @@ const LoveLayout = ({ children }) => {
         <Hero>
           <LoveFrameSvg />
           <Heading>#YourLove</Heading>
-          <p>
-            What a beauty! Share your love with your loved one on social. Don’t forget to mention @mtrss.art
-            @arielfitz.patrick
-            <a> #YourLoveNote.</a>
-          </p>
+          <p>{headline}</p>
         </Hero>
         <PageContent>{children}</PageContent>
         <AlbumArtContainer>
