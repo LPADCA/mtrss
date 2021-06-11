@@ -308,7 +308,7 @@ const PostCardForm = forwardRef(({ onSubmit, onBackClick, country, setCountry },
           </SecondWrapper>
         </SecondLine>
         <ThirdLine>
-          <Button loading={loading}>Create Postcard</Button>
+          <Button loading={loading}>{loading ? "Generate Postcard" : "Generating your postcard…"}</Button>
         </ThirdLine>
         <FourthLine>
           <Button type="button" onClick={onBackClick} theme="outline">
