@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import styled, { createGlobalStyle, keyframes } from "styled-components";
 import Layout from "./layout";
 import { ReactComponent as LoveFrameSvg } from "../assets/images/love-frames.svg";
@@ -9,6 +9,8 @@ import { mediaQueries } from "../screenSizes";
 import playfairRegularUrl from "../assets/fonts/PlayfairDisplay-Regular.ttf";
 import playfairBoldUrl from "../assets/fonts/PlayfairDisplay-Bold.ttf";
 import trackUrl from "../assets/music/your-love.mp3";
+import { ReactComponent as PlayIcon } from "../assets/icons/play.svg";
+import { ReactComponent as PauseIcon } from "../assets/icons/pause.svg";
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -105,6 +107,15 @@ const heartbeat = keyframes`
   }
 `;
 
+const StyledButton = styled.svg`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  fill: white;
+  transition: all 0.5s;
+`;
+
 const AlbumCircle = styled.button`
   border: none;
   border-radius: 100%;
@@ -115,6 +126,7 @@ const AlbumCircle = styled.button`
   background-color: white;
   transition: all 0.5s;
   flex: 0 0 auto;
+  position: relative;
 
   @media ${mediaQueries.sm} {
     width: 584px;
@@ -125,6 +137,10 @@ const AlbumCircle = styled.button`
     background-color: black;
     box-shadow: 0px 0px 99px #ff0000;
     animation: ${heartbeat} 1s infinite;
+  }
+
+  &:hover ${StyledButton} {
+    fill: black;
   }
 `;
 
@@ -151,9 +167,16 @@ const AlbutArtTitle = styled.h2`
 
 const LoveLayout = ({ headline, children }) => {
   const audioRef = useRef();
+  const [playing, setPlaying] = useState(false);
 
   const togglePlayer = () => {
-    audioRef.current.paused ? audioRef.current.play() : audioRef.current.pause();
+    if (audioRef.current && audioRef.current.paused) {
+      audioRef.current.play();
+      setPlaying(true);
+    } else {
+      setPlaying(false);
+      audioRef.current.pause();
+    }
   };
 
   return (
@@ -171,6 +194,7 @@ const LoveLayout = ({ headline, children }) => {
             Listen to <a>#YourLove</a> song
           </AlbutArtTitle>
           <AlbumCircle onClick={togglePlayer}>
+            {!playing ? <StyledButton as={PlayIcon} /> : <StyledButton as={PauseIcon} />}
             <HeartImg src={heartUrl} width="506" height="506" srcSet={heart2xUrl} />
           </AlbumCircle>
           <audio ref={audioRef} src={trackUrl} />

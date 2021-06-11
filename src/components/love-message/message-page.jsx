@@ -6,10 +6,11 @@ import domtoimage from "dom-to-image";
 import Button from "../button";
 import { ReactComponent as LocationPointer } from "../../assets/images/pointer.svg";
 import { ReactComponent as ShareIcon } from "../../assets/images/share.svg";
+import { ReactComponent as DownloadIcon } from "../../assets/icons/download.svg";
 import svgUrl from "../../assets/images/heart-svg.svg";
 import instagramUrl from "../../assets/icons/instagram.png";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
-import { mediaQueries } from "../../screenSizes";
+import { mediaQueries, MD_SCREEN_SIZE_PX } from "../../screenSizes";
 import {
   FacebookShareButton,
   TelegramShareButton,
@@ -56,6 +57,26 @@ const PageContainer = styled.div`
   min-height: 700px;
 `;
 
+const PostcardLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+
+  @media ${mediaQueries.md} {
+    flex-direction: row;
+  }
+`;
+
+const ActionsContainer = styled.div`
+  @media ${mediaQueries.sm} {
+    margin-left: 60px;
+    margin-right: 20px;
+  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`;
+
 const PostcardContainer = styled.div`
   border: ${({ size }) => size * BORDER_RADTIO}px solid #830000;
   background-color: black;
@@ -66,6 +87,7 @@ const PostcardContainer = styled.div`
   width: ${({ size }) => size}px;
   height: ${({ size }) => size}px;
   max-width: 100%;
+  flex: 0 0 auto;
 `;
 
 const PostmarkCotainer = styled.div`
@@ -167,7 +189,8 @@ const ShareTitle = styled.h3`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 400;
+  font-weight: normal;
+  margin: 34px 0;
 
   svg {
     margin-right: 10px;
@@ -269,6 +292,7 @@ const MessageContent = ({ url, postcardRef, location: { href } }) => {
   const [referenceElement, setReferenceElement] = useState(null);
   const [popperElement, setPopperElement] = useState(null);
   const [arrowElement, setArrowElement] = useState(null);
+  const [loading, setLoading] = useState(false);
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
     modifiers: [
       {
@@ -280,73 +304,75 @@ const MessageContent = ({ url, postcardRef, location: { href } }) => {
     ],
     placement: "bottom-end",
   });
-  const postcardWidth = Math.min(width - 40, height * 0.5);
+  const postcardWidth = width < MD_SCREEN_SIZE_PX ? Math.min(width - 40, height * 0.5) : height * 0.8;
 
   const FULL_URL = href;
 
   useEffect(() => {
+    setLoading(true);
     getPostcardRequest(url)
       .then(setMessage)
+      .then(() => setLoading(false))
       .catch(() => navigate("/your-love-map/"));
   }, []);
 
   if (!message) return <Loader />;
 
   return (
-    <>
+    <PostcardLayout>
       <Postcard message={message} postcardWidth={postcardWidth} />
-      <CardButton onClick={() => showPostcard(true)}>Save image</CardButton>
-      <SharingContainer>
-        <ShareTitle
-          css={`
-            margin-top: 50px;
-          `}
-        >
-          <ShareIcon height="18" fill="white" /> Share on your socials
-        </ShareTitle>
-        <SocialContainer>
-          <FacebookShareButton url={FULL_URL}>
-            <FacebookIcon size={38} />
-          </FacebookShareButton>
-          <TwitterShareButton url={FULL_URL}>
-            <TwitterIcon size={38} />
-          </TwitterShareButton>
-          <WhatsappShareButton url={FULL_URL}>
-            <WhatsappIcon size={38} />
-          </WhatsappShareButton>
-          <InstaButtonWithCopy
-            copyValue={INSTA_MESSAGE}
-            ref={setReferenceElement}
-            onClick={() => showInstaText(!instaText)}
-          >
-            <InstagramIcon src={instagramUrl} />
-          </InstaButtonWithCopy>
-          <TelegramShareButton url={FULL_URL}>
-            <TelegramIcon size={38} />
-          </TelegramShareButton>
-          <ViberShareButton url={FULL_URL}>
-            <ViberIcon size={38} />
-          </ViberShareButton>
-          <TumblrShareButton url={FULL_URL}>
-            <TumblrIcon size={38} />
-          </TumblrShareButton>
-          <VKShareButton url={FULL_URL}>
-            <VKIcon size={38} />
-          </VKShareButton>
-        </SocialContainer>
-        <InstaTooltip
-          isShown={instaText}
-          styles={styles}
-          setShown={showInstaText}
-          attributes={attributes}
-          setPopperElement={setPopperElement}
-          setArrowElement={setArrowElement}
-        />
-      </SharingContainer>
       {isPostcardShow && (
         <ExpandedPostCard message={message} onClose={() => showPostcard(false)}></ExpandedPostCard>
       )}
-    </>
+      <ActionsContainer>
+        <CardButton loading={loading} onClick={() => showPostcard(true)}>
+          <DownloadIcon /> Download now
+        </CardButton>
+        <SharingContainer>
+          <ShareTitle>
+            <ShareIcon height="18" fill="white" /> Share on your socials
+          </ShareTitle>
+          <SocialContainer>
+            <FacebookShareButton url={FULL_URL}>
+              <FacebookIcon size={38} />
+            </FacebookShareButton>
+            <TwitterShareButton url={FULL_URL}>
+              <TwitterIcon size={38} />
+            </TwitterShareButton>
+            <WhatsappShareButton url={FULL_URL}>
+              <WhatsappIcon size={38} />
+            </WhatsappShareButton>
+            <InstaButtonWithCopy
+              copyValue={INSTA_MESSAGE}
+              ref={setReferenceElement}
+              onClick={() => showInstaText(!instaText)}
+            >
+              <InstagramIcon src={instagramUrl} />
+            </InstaButtonWithCopy>
+            <TelegramShareButton url={FULL_URL}>
+              <TelegramIcon size={38} />
+            </TelegramShareButton>
+            <ViberShareButton url={FULL_URL}>
+              <ViberIcon size={38} />
+            </ViberShareButton>
+            <TumblrShareButton url={FULL_URL}>
+              <TumblrIcon size={38} />
+            </TumblrShareButton>
+            <VKShareButton url={FULL_URL}>
+              <VKIcon size={38} />
+            </VKShareButton>
+          </SocialContainer>
+          <InstaTooltip
+            isShown={instaText}
+            styles={styles}
+            setShown={showInstaText}
+            attributes={attributes}
+            setPopperElement={setPopperElement}
+            setArrowElement={setArrowElement}
+          />
+        </SharingContainer>
+      </ActionsContainer>
+    </PostcardLayout>
   );
 };
 

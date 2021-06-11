@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import SvgMap from "../components/your-love-map";
 import PostCardForm from "../components/love-message/postcard-form";
 import { navigate } from "gatsby";
@@ -53,37 +53,34 @@ const LOADING_STATE = "loading";
 const MAP_STATE = "map";
 const FORM_STATE = "form";
 
-const FirstHeading = () => (
+const Heading = () => (
   <>
     All we need is love. Enjoy <a>#YourLove</a> with thousands of listeners around the world, find where your
     loved one is on the map and share <a>#YourLoveNote</a> with them.
   </>
 );
 
-const LastHeading = () => (
-  <>
-    What a beauty! Share your love with your loved one on social. Don’t forget to mention @mtrss.art
-    @arielfitz.patrick
-    <a> #YourLoveNote.</a>
-  </>
-);
-
-const Headline = ({ state }) => {
-  switch (state) {
-    case FORM_STATE:
-      return <LastHeading />;
-    case LOADING_STATE:
-    case MAP_STATE:
-    default:
-      return <FirstHeading />;
-  }
-};
-
 const YourLoveMapPage = () => {
   const ref = useRef();
   const [country, setCountry] = useState("");
   const [state, setState] = useState(LOADING_STATE);
   const [isMapLoaded, setMapLoaded] = useState(false);
+  const [isStarted, setStart] = useState(false);
+
+  const isLoadingState = state === LOADING_STATE;
+  const isFormState = state === FORM_STATE;
+
+  const openMap = () => {
+    if (ref.current) ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    setState(MAP_STATE);
+  };
+
+  useEffect(() => {
+    console.log('isMapLoaded, isStarted', isMapLoaded, isStarted)
+    if (isMapLoaded && isStarted) openMap();
+  }, [isMapLoaded, isStarted]);
+
+  const loading = !isMapLoaded && isStarted;
 
   const handleCountryClick = country => {
     setCountry(country);
@@ -91,15 +88,11 @@ const YourLoveMapPage = () => {
   };
 
   const handleStartClick = () => {
-    if (ref.current) ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
-    setState(MAP_STATE);
+    setStart(true);
   };
 
-  const isLoadingState = state === LOADING_STATE;
-  const isFormState = state === FORM_STATE;
-
   return (
-    <LoveLayout headline={<Headline state={state} />}>
+    <LoveLayout headline={<Heading state={state} />}>
       <MapArea ref={ref}>
         <AbsoluteSvgMap
           country={country}
@@ -107,14 +100,14 @@ const YourLoveMapPage = () => {
           onCountryClick={handleCountryClick}
         />
         <Modal show={isLoadingState}>
-          <LoadingScreen show={isLoadingState} disabled={!isMapLoaded} onStart={handleStartClick} />
+          <LoadingScreen show={isLoadingState} loading={loading} onStart={handleStartClick} />
         </Modal>
 
         <Modal show={isFormState}>
           <PostCardForm
             ref={ref}
             country={country}
-            onBackClick={handleStartClick}
+            onBackClick={openMap}
             setCountry={setCountry}
             onSubmit={openPostcard}
           />

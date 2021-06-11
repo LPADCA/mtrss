@@ -84,7 +84,7 @@ const CardContainer = styled.div`
     font-size: 14px;
   }
 `;
-const LoadingScreen = ({ disabled, onStart }) => {
+const LoadingScreen = ({ loading, onStart }) => {
   return (
     <LoadingScreenContainer>
       <InfoText>
@@ -122,14 +122,14 @@ const LoadingScreen = ({ disabled, onStart }) => {
         </StepContainer>
       </Steps>
       <Button
+        loading={loading}
         css={`
           margin-top: 20px;
           width: 200px;
         `}
-        disabled={disabled}
         onClick={onStart}
       >
-        Let's go
+        Open Map
       </Button>
     </LoadingScreenContainer>
   );
