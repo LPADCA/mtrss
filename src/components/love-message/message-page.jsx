@@ -29,6 +29,7 @@ import {
 import { usePopper } from "react-popper";
 import WithCopy from "../WithCopy";
 import InstaTooltip from "./insta-tooltip";
+import { ReactComponent as Loader } from "../../assets/icons/loader.svg";
 
 const POSTCARD_DEFAULT_SIZE = 636;
 const HEART_WIDTH_RATIO = 300 / POSTCARD_DEFAULT_SIZE;
@@ -51,6 +52,8 @@ const PageContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100vh;
+  min-height: 700px;
 `;
 
 const PostcardContainer = styled.div`
@@ -258,13 +261,11 @@ const InstaButtonWithCopy = WithCopy(InstaButton);
 
 const INSTA_MESSAGE = `Sending love to @ [tag your love]\r\n________\r\n#YourLoveMap @mtrss.art @arielfitz.patrick`;
 
-const MessagePage = ({ url, location: { href } }) => {
-
+const MessageContent = ({ url, postcardRef, location: { href } }) => {
   const [message, setMessage] = useState();
   const [instaText, showInstaText] = useState(false);
   const [isPostcardShow, showPostcard] = useState(false);
-  const postcardRef = useRef();
-  const { width } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
   const [referenceElement, setReferenceElement] = useState(null);
   const [popperElement, setPopperElement] = useState(null);
   const [arrowElement, setArrowElement] = useState(null);
@@ -279,7 +280,7 @@ const MessagePage = ({ url, location: { href } }) => {
     ],
     placement: "bottom-end",
   });
-  const postcardWidth = Math.min(width - 40, 636);
+  const postcardWidth = Math.min(width - 40, height * 0.5);
 
   const FULL_URL = href;
 
@@ -289,10 +290,10 @@ const MessagePage = ({ url, location: { href } }) => {
       .catch(() => navigate("/your-love-map/"));
   }, []);
 
-  if (!message) return <div>loading</div>;
+  if (!message) return <Loader />;
 
   return (
-    <PageContainer ref={postcardRef}>
+    <>
       <Postcard message={message} postcardWidth={postcardWidth} />
       <CardButton onClick={() => showPostcard(true)}>Save image</CardButton>
       <SharingContainer>
@@ -345,6 +346,14 @@ const MessagePage = ({ url, location: { href } }) => {
       {isPostcardShow && (
         <ExpandedPostCard message={message} onClose={() => showPostcard(false)}></ExpandedPostCard>
       )}
+    </>
+  );
+};
+
+const MessagePage = props => {
+  return (
+    <PageContainer>
+      <MessageContent {...props} />
     </PageContainer>
   );
 };

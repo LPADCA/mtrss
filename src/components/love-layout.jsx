@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled, { createGlobalStyle, keyframes } from "styled-components";
 import Layout from "./layout";
 import { ReactComponent as LoveFrameSvg } from "../assets/images/love-frames.svg";
@@ -8,6 +8,7 @@ import Footer from "./footer";
 import { mediaQueries } from "../screenSizes";
 import playfairRegularUrl from "../assets/fonts/PlayfairDisplay-Regular.ttf";
 import playfairBoldUrl from "../assets/fonts/PlayfairDisplay-Bold.ttf";
+import trackUrl from "../assets/music/your-love.mp3";
 
 const GlobalStyle = createGlobalStyle`
   @font-face {
@@ -149,6 +150,12 @@ const AlbutArtTitle = styled.h2`
 `;
 
 const LoveLayout = ({ headline, children }) => {
+  const audioRef = useRef();
+
+  const togglePlayer = () => {
+    audioRef.current.paused ? audioRef.current.play() : audioRef.current.pause();
+  };
+
   return (
     <Layout>
       <GlobalStyle />
@@ -163,9 +170,10 @@ const LoveLayout = ({ headline, children }) => {
           <AlbutArtTitle>
             Listen to <a>#YourLove</a> song
           </AlbutArtTitle>
-          <AlbumCircle>
+          <AlbumCircle onClick={togglePlayer}>
             <HeartImg src={heartUrl} width="506" height="506" srcSet={heart2xUrl} />
           </AlbumCircle>
+          <audio ref={audioRef} src={trackUrl} />
         </AlbumArtContainer>
         <Footer>
           <BottomLogo>
