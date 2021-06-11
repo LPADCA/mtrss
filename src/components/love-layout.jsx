@@ -163,6 +163,7 @@ const AlbutArtTitle = styled.h2`
   margin-top: 150px;
   margin-bottom: 100px;
   font-weight: 400;
+  text-align: center;
 `;
 
 const LoveLayout = ({ headline, children }) => {

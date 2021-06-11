@@ -254,6 +254,7 @@ const PostCardForm = forwardRef(({ onSubmit, onBackClick, country, setCountry },
   const [note, setNote] = useState(NOTES[0]);
   const [from, setFrom] = useState("");
   const [loading, setLoading] = useState(false);
+
   const handleSubmit = e => {
     e.preventDefault();
     setLoading(true);
@@ -266,7 +267,12 @@ const PostCardForm = forwardRef(({ onSubmit, onBackClick, country, setCountry },
         <FirstLine>
           <LineColumn>
             <span>Sending love to </span>
-            <Input required placeholder="your love" value={name} onChange={e => setName(e.target.value)} />
+            <Input
+              required
+              placeholder="your love’s name"
+              value={name}
+              onChange={e => setName(e.target.value)}
+            />
           </LineColumn>
           <LineColumn>
             <span> in </span>
@@ -304,7 +310,7 @@ const PostCardForm = forwardRef(({ onSubmit, onBackClick, country, setCountry },
         <SecondLine>
           <SecondWrapper>
             <span>Sincerely yours, </span>
-            <Input required placeholder="" value={from} onChange={e => setFrom(e.target.value)} />
+            <Input required placeholder="your name" value={from} onChange={e => setFrom(e.target.value)} />
           </SecondWrapper>
         </SecondLine>
         <ThirdLine>

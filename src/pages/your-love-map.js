@@ -76,7 +76,6 @@ const YourLoveMapPage = () => {
   };
 
   useEffect(() => {
-    console.log('isMapLoaded, isStarted', isMapLoaded, isStarted)
     if (isMapLoaded && isStarted) openMap();
   }, [isMapLoaded, isStarted]);
 
