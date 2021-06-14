@@ -1,6 +1,11 @@
 import React, { useState } from "react";
-import { useStaticQuery, graphql } from "gatsby";
+import { useStaticQuery, graphql, Link } from "gatsby";
 import AnchorLink from "react-anchor-link-smooth-scroll";
+import styled from "styled-components";
+
+const StyledLink = styled.a`
+  color: white;
+`;
 
 const Navigation = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
@@ -34,16 +39,29 @@ const Navigation = () => {
           <div className="menu desktop">
             <ul id="menulist" className={isMenuOpen ? `open` : ``}>
               <li>
-                <AnchorLink href="#mtrss-audio">Music</AnchorLink>
+                <StyledLink as={Link} href="/your-love-map">
+                  #YourLoveMap
+                </StyledLink>
               </li>
               <li>
-                <AnchorLink href="#mtrss-video">Videos</AnchorLink>
+                <StyledLink as={AnchorLink} href="#mtrss-audio">
+                  Music
+                </StyledLink>
               </li>
               <li>
-                <AnchorLink href="#mtrss-text">About us</AnchorLink>
+                <StyledLink as={AnchorLink} href="#mtrss-video">
+                  Videos
+                </StyledLink>
               </li>
               <li>
-                <AnchorLink href="#mtrss-contacts">Get in touch</AnchorLink>
+                <StyledLink as={AnchorLink} href="#mtrss-text">
+                  About us
+                </StyledLink>
+              </li>
+              <li>
+                <StyledLink as={AnchorLink} href="#mtrss-contacts">
+                  Get in touch
+                </StyledLink>
               </li>
               {query.contentfulHomepage.merchShopUrl && (
                 <li>

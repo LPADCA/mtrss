@@ -14,14 +14,12 @@ import { mediaQueries, MD_SCREEN_SIZE_PX } from "../../screenSizes";
 import {
   FacebookShareButton,
   TelegramShareButton,
-  TumblrShareButton,
   TwitterShareButton,
   ViberShareButton,
   VKShareButton,
   WhatsappShareButton,
   FacebookIcon,
   TelegramIcon,
-  TumblrIcon,
   TwitterIcon,
   ViberIcon,
   VKIcon,
@@ -284,6 +282,10 @@ const InstaButtonWithCopy = WithCopy(InstaButton);
 
 const INSTA_MESSAGE = `Sending love to @ [tag your love]\r\n________\r\n#YourLoveMap @mtrss.art @arielfitz.patrick`;
 
+const SHARE_TITLE = `Here's your special love note! Can you feel the love? Share it on social and mention @mtrss.art @arielfitz.patrick #YourLoveNote`;
+const SHARE_HASHTAG = `#YourLoveNote`;
+const SHARE_QUOTE = `Here's your special love note! Can you feel the love? Share it on social and mention @mtrss.art @arielfitz.patrick`;
+
 const MessageContent = ({ url, postcardRef, location: { href } }) => {
   const [message, setMessage] = useState();
   const [instaText, showInstaText] = useState(false);
@@ -333,13 +335,13 @@ const MessageContent = ({ url, postcardRef, location: { href } }) => {
             <ShareIcon height="18" fill="white" /> Share on your socials
           </ShareTitle>
           <SocialContainer>
-            <FacebookShareButton url={FULL_URL}>
+            <FacebookShareButton hashtag={SHARE_HASHTAG} quote={SHARE_QUOTE} url={FULL_URL}>
               <FacebookIcon size={38} />
             </FacebookShareButton>
-            <TwitterShareButton url={FULL_URL}>
+            <TwitterShareButton title={SHARE_TITLE} url={FULL_URL}>
               <TwitterIcon size={38} />
             </TwitterShareButton>
-            <WhatsappShareButton url={FULL_URL}>
+            <WhatsappShareButton title={SHARE_TITLE} url={FULL_URL}>
               <WhatsappIcon size={38} />
             </WhatsappShareButton>
             <InstaButtonWithCopy
@@ -349,16 +351,13 @@ const MessageContent = ({ url, postcardRef, location: { href } }) => {
             >
               <InstagramIcon src={instagramUrl} />
             </InstaButtonWithCopy>
-            <TelegramShareButton url={FULL_URL}>
+            <TelegramShareButton title={SHARE_TITLE} url={FULL_URL}>
               <TelegramIcon size={38} />
             </TelegramShareButton>
-            <ViberShareButton url={FULL_URL}>
+            <ViberShareButton title={SHARE_TITLE} url={FULL_URL}>
               <ViberIcon size={38} />
             </ViberShareButton>
-            <TumblrShareButton url={FULL_URL}>
-              <TumblrIcon size={38} />
-            </TumblrShareButton>
-            <VKShareButton url={FULL_URL}>
+            <VKShareButton title={SHARE_TITLE} url={FULL_URL}>
               <VKIcon size={38} />
             </VKShareButton>
           </SocialContainer>
