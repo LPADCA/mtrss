@@ -282,9 +282,8 @@ const InstaButtonWithCopy = WithCopy(InstaButton);
 
 const INSTA_MESSAGE = `Sending love to @ [tag your love]\r\n________\r\n#YourLoveMap @mtrss.art @arielfitz.patrick`;
 
-const SHARE_TITLE = `Here's your special love note! Can you feel the love? Share it on social and mention @mtrss.art @arielfitz.patrick #YourLoveNote`;
+const SHARE_TITLE = `Here's your special love note! Can you feel the love? Share it on social and tag with #YourLoveNote`;
 const SHARE_HASHTAG = `#YourLoveNote`;
-const SHARE_QUOTE = `Here's your special love note! Can you feel the love? Share it on social and mention @mtrss.art @arielfitz.patrick`;
 
 const MessageContent = ({ url, postcardRef, location: { href } }) => {
   const [message, setMessage] = useState();
@@ -335,7 +334,7 @@ const MessageContent = ({ url, postcardRef, location: { href } }) => {
             <ShareIcon height="18" fill="white" /> Share on your socials
           </ShareTitle>
           <SocialContainer>
-            <FacebookShareButton hashtag={SHARE_HASHTAG} quote={SHARE_QUOTE} url={FULL_URL}>
+            <FacebookShareButton hashtag={SHARE_HASHTAG} quote={SHARE_TITLE} url={FULL_URL}>
               <FacebookIcon size={38} />
             </FacebookShareButton>
             <TwitterShareButton title={SHARE_TITLE} url={FULL_URL}>

@@ -85,24 +85,29 @@ const Navigation = () => {
                 <img src="/images/mtrss-logo.svg" alt="MTRSS logo" width="170" />
               </li>
               <li>
-                <AnchorLink href="#mtrss-audio" onClick={triggerMenu}>
+                <StyledLink as={Link} href="/your-love-map">
+                  #YourLoveMap
+                </StyledLink>
+              </li>
+              <li>
+                <StyledLink as={AnchorLink} href="#mtrss-audio" onClick={triggerMenu}>
                   Music
-                </AnchorLink>
+                </StyledLink>
               </li>
               <li>
-                <AnchorLink href="#mtrss-video" onClick={triggerMenu}>
+                <StyledLink as={AnchorLink} href="#mtrss-video" onClick={triggerMenu}>
                   Videos
-                </AnchorLink>
+                </StyledLink>
               </li>
               <li>
-                <AnchorLink href="#mtrss-text" onClick={triggerMenu}>
+                <StyledLink as={AnchorLink} href="#mtrss-text" onClick={triggerMenu}>
                   About us
-                </AnchorLink>
+                </StyledLink>
               </li>
               <li>
-                <AnchorLink href="#mtrss-contacts" onClick={triggerMenu}>
+                <StyledLink as={AnchorLink} href="#mtrss-contacts" onClick={triggerMenu}>
                   Get in touch
-                </AnchorLink>
+                </StyledLink>
               </li>
               {query.contentfulHomepage.merchShopUrl && (
                 <li>
