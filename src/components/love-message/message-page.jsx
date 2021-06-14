@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, forwardRef } from "react";
 import { getPostcardRequest } from "../../api/love-message-api";
-import { navigate } from "gatsby";
+import { navigate, Link } from "gatsby";
 import styled from "styled-components";
 import domtoimage from "dom-to-image";
 import Button from "../button";
@@ -181,7 +181,11 @@ const ExpandedCardContainer = styled.div`
   opacity: 0;
 `;
 
-const SharingContainer = styled.div``;
+const NewButtonContainer = styled.div`
+  margin-top: 30px;
+  max-width: 400px;
+  width: 100%;
+`;
 
 const ShareTitle = styled.h3`
   display: flex;
@@ -329,7 +333,7 @@ const MessageContent = ({ url, postcardRef, location: { href } }) => {
         <CardButton loading={loading} onClick={() => showPostcard(true)}>
           <DownloadIcon /> Download now
         </CardButton>
-        <SharingContainer>
+        <div>
           <ShareTitle>
             <ShareIcon height="18" fill="white" /> Share on your socials
           </ShareTitle>
@@ -368,7 +372,12 @@ const MessageContent = ({ url, postcardRef, location: { href } }) => {
             setPopperElement={setPopperElement}
             setArrowElement={setArrowElement}
           />
-        </SharingContainer>
+        </div>
+        <NewButtonContainer>
+          <Button theme="outline" as={Link} to="/your-love-map">
+            Create new postcard
+          </Button>
+        </NewButtonContainer>
       </ActionsContainer>
     </PostcardLayout>
   );

@@ -12,6 +12,7 @@ const ButtonTemplate = styled.button`
   display: flex;
   align-items: center;
   position: relative;
+  text-decoration: none;
 
   &:disabled,
   &:invalid {
