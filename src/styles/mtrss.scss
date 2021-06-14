@@ -777,6 +777,9 @@ body, html {
         &.slide9 {
             background-image: url('/images/cover9.jpg');
         }
+        &.slide10 {
+            background-image: url('/images/cover10.jpg');
+        }
         .desc {
             display: none;
             position: absolute;
@@ -881,6 +884,9 @@ body, html {
             }
             &.slide9 {
                 background-image: url('/images/cover9-mobile.jpg');
+            }
+            &.slide10 {
+                background-image: url('/images/cover10-mobile.jpg');
             }
         }
     }
