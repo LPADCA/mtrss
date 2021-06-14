@@ -171,9 +171,9 @@ const Song = styled.div`
   background-image: url(${({ index }) => getBg(index)});
   border-radius: 30px;
   overflow: hidden;
-  backdrop-filter: blur(5px);
   background-size: cover;
   background-repeat: no-repeat;
+  margin-right: 3px;
 
   label {
     border-radius: 30px;
@@ -207,6 +207,8 @@ const COUNTRIES = [...new Set(WORLD_TOPO_JSON.objects.world.geometries.map(e => 
 );
 
 const NOTES = [
+  `“Nothing can separate me from your love” 
+ - Ariel Fitz-Patrick, ‘Your Love’`,
   `“When I am with you there’s no place I’d rather be.”
  - Clean Bandit, Rather be`,
   `“How wonderful life is while you’re in the world.”

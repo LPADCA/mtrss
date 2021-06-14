@@ -26,9 +26,7 @@ const Dot = styled.button`
   cursor: pointer;
 `;
 
-const Slide = styled.div`
-  position: static !important;
-`;
+const Slide = styled.div``;
 
 export default function Carousel({ children }) {
   const [currentSlide, setCurrentSlide] = React.useState(0);

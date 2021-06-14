@@ -5,6 +5,7 @@ const TooltipContainer = styled.div`
   margin-top: 20px;
   opacity: ${({ isShown }) => (isShown ? 1 : 0)};
   transition: opacity 0.3s;
+  visibility: ${({ isShown }) => (isShown ? "visible" : "hidden")};
 `;
 
 const PopupArrow = styled.div`
