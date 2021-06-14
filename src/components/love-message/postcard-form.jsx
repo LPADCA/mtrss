@@ -233,7 +233,7 @@ const NOTES = [
  - Clean Bandit, ‘Symphony’`,
   `"I just wanna lay my head on your chest, So I'm close as it gets to your heart"
 - Lil Peep, ‘we think too much’`,
-  `“However far away, I will always loving you”
+  `“However far away, I will always love you”
  - The Cure, ‘Lovesong’`,
   ` “You’re my passport home, without you close I can’t go on”
  - JP Cooper, ‘Passport Home’`,
