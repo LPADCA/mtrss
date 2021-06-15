@@ -171,7 +171,11 @@ const Line = styled.hr`
 const CardButton = styled(Button)`
   max-width: 400px;
   width: 100%;
-  margin-top: 50px;
+  margin-top: 20px;
+
+  @media ${mediaQueries.sm} {
+    margin-top: 50px;
+  }
 `;
 
 const ExpandedCardContainer = styled.div`
@@ -182,7 +186,10 @@ const ExpandedCardContainer = styled.div`
 `;
 
 const NewButtonContainer = styled.div`
-  margin-top: 30px;
+  @media ${mediaQueries.sm} {
+    margin-top: 30px;
+  }
+
   max-width: 400px;
   width: 100%;
 `;
@@ -192,7 +199,10 @@ const ShareTitle = styled.h3`
   align-items: center;
   justify-content: center;
   font-weight: normal;
-  margin: 34px 0;
+
+  @media ${mediaQueries.sm} {
+    margin: 34px 0;
+  }
 
   svg {
     margin-right: 10px;
@@ -286,7 +296,7 @@ const InstaButtonWithCopy = WithCopy(InstaButton);
 
 const INSTA_MESSAGE = `Sending love to @ [tag your love]\r\n________\r\n#YourLoveMap @mtrss.art @arielfitz.patrick`;
 
-const SHARE_TITLE = `Here's your special love note! Can you feel the love? Share it on social and tag with #YourLoveNote`;
+const SHARE_TITLE = `Here's your special love note! Can you feel the love? Share it on socials and tag with #YourLoveNote`;
 const SHARE_HASHTAG = `#YourLoveNote`;
 
 const MessageContent = ({ url, postcardRef, location: { href } }) => {
@@ -306,6 +316,7 @@ const MessageContent = ({ url, postcardRef, location: { href } }) => {
           element: arrowElement,
         },
       },
+      { name: "flip", enabled: false },
     ],
     placement: "bottom-end",
   });

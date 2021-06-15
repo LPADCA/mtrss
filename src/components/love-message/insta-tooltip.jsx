@@ -6,6 +6,7 @@ const TooltipContainer = styled.div`
   opacity: ${({ isShown }) => (isShown ? 1 : 0)};
   transition: opacity 0.3s;
   visibility: ${({ isShown }) => (isShown ? "visible" : "hidden")};
+  z-index: 10;
 `;
 
 const PopupArrow = styled.div`
@@ -29,10 +30,11 @@ const ShareMessageContainer = styled.div`
 `;
 
 const CopyText = styled.div`
-  margin-top: 10px;
+  margin-top: 20px;
   color: #a1d955;
   width: 100%;
   text-align: center;
+  background-color: black;
 `;
 
 const InstaTooltip = ({ isShown, setShown, setPopperElement, styles, attributes, setArrowElement }) => {

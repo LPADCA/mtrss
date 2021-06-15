@@ -115,7 +115,7 @@ const LoadingScreen = ({ loading, onStart }) => {
           <StepNumber>03</StepNumber>
           <CardContainer>
             <span>
-              Voila. Your custom love note is ready for you to share on social. Don’t forget to mention
+              Voila. Your custom love note is ready for you to share on socials. Don’t forget to mention
               <a> @mtrss.art @arielfitz.patrick #YourLoveNote</a>
             </span>
           </CardContainer>

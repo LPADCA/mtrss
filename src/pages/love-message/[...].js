@@ -5,7 +5,7 @@ import LoveLayout from "../../components/love-layout";
 
 const Heading = () => (
   <>
-    What a beauty! Share your love with your loved one on social. Don’t forget to mention{" "}
+    What a beauty! Share your love with your loved one on socials. Don’t forget to mention{" "}
     <a>@mtrss.art @arielfitz.patrick</a>
     <a> #YourLoveNote.</a>
   </>
