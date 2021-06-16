@@ -65,7 +65,7 @@ const PostcardLayout = styled.div`
 `;
 
 const ActionsContainer = styled.div`
-  @media ${mediaQueries.sm} {
+  @media ${mediaQueries.md} {
     margin-left: 60px;
     margin-right: 20px;
   }
@@ -75,114 +75,18 @@ const ActionsContainer = styled.div`
   justify-content: center;
 `;
 
-const PostcardContainer = styled.div`
-  border: ${({ size }) => size * BORDER_RADTIO}px solid #830000;
-  background-color: black;
-  position: relative;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  width: ${({ size }) => size}px;
-  height: ${({ size }) => size}px;
-  max-width: 100%;
-  flex: 0 0 auto;
-`;
-
-const PostmarkCotainer = styled.div`
-  border: ${({ size }) => size * BORDER_RADTIO}px solid #830000;
-  display: inline-flex;
-  width: ${({ size }) => size * POSTMARK_SIZE_RATIO}px;
-  height: ${({ size }) => size * POSTMARK_SIZE_RATIO}px;
-  position: absolute;
-  top: 14px;
-  right: 16px;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  font-size: ${({ size }) => size * POSTMARK_FONT_RATIO}px;
-  text-align: center;
-`;
-
-const StyledLocationPointer = styled(LocationPointer)`
-  width: ${({ size }) => size * POSTMARK_POINT_RATIO}px;
-  height: auto;
-  margin-bottom: 1em;
-`;
-
-const ImageContainer = styled.div`
-  width: 100%;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-display: block;
-`;
-
-const ImageTitle = styled.span`
-  font-family: "Playfair Display", sans-serif;
-  font-size: ${({ size }) => size * YOUR_LOVE_RATIO}px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-transform: uppercase;
-  width: 100%;
-  text-align: center;
-`;
-
-const PostcardContent = styled.div`
-  font-family: "Playfair Display", sans-serif;
-  color: white;
-  font-weight: bold;
-  text-align: center;
-`;
-
-const PostcardName = styled.p`
-  font-family: "Playfair Display", sans-serif;
-  font-size: ${({ size }) => size * POSTCARD_NAME_RATIO}px;
-  margin: 0;
-
-  &:first-child {
-    margin-bottom: 0.5em;
-  }
-
-  &:last-child {
-    margin-bottom: 0.5em;
-  }
-`;
-
-const PostcardNote = styled.p`
-  font-family: "Playfair Display", sans-serif;
-  font-size: ${({ size }) => size * POSTCARD_NOTE_RATIO}px;
-  color: #ff3636;
-  margin: 0;
-  width: ${({ size }) => size * POSTCARD_NOTE_WIDTH_RATIO}px;
-`;
-
-const Line = styled.hr`
-  height: ${({ size }) => size * LINE_HEIGHT_RATIO}px;
-  width: ${({ size }) => size * LINE_WIDTH_RATIO}px;
-  background-color: white;
-  margin-top: ${({ size }) => size * LINE_MARGIN_TOP_RATIO}px;
-  margin-bottom: ${({ size }) => size * LINE_MARGIN_BOTTOM_RATIO}px;
-  border: none;
-`;
-
 const CardButton = styled(Button)`
   max-width: 400px;
   width: 100%;
-  margin-top: 20px;
 
-  @media ${mediaQueries.sm} {
-    margin-top: 50px;
+  @media ${mediaQueries.xs} {
+    margin-top: 20px;
   }
 `;
 
-const ExpandedCardContainer = styled.div`
-  position: fixed;
-  top: 90px;
-  left: 0;
-  opacity: 0;
+const Postcard = styled.img`
+  width: ${({ size }) => size}px;
+  height: ${({ size }) => size}px;
 `;
 
 const NewButtonContainer = styled.div`
@@ -238,60 +142,6 @@ const InstaButton = styled.button`
   padding: 0;
 `;
 
-const saveImage = (domNode, onClose) => {
-  domtoimage
-    .toPng(domNode, {
-      style: {
-        fontFamily: "'Playfair Display', sans-serif",
-      },
-    })
-    .then(function (dataUrl) {
-      var link = document.createElement("a");
-      link.download = "postcard.png";
-      link.href = dataUrl;
-      link.click();
-      onClose();
-    });
-};
-
-const ExpandedPostCard = ({ onClose, message }) => {
-  const postcardRef = useRef();
-  useEffect(() => {
-    saveImage(postcardRef.current, onClose);
-  }, []);
-  return (
-    <ExpandedCardContainer>
-      <Postcard ref={postcardRef} message={message} postcardWidth={1080} />
-    </ExpandedCardContainer>
-  );
-};
-
-const Postcard = forwardRef(({ postcardWidth, message }, ref) => {
-  const HEART_WIDTH = HEART_WIDTH_RATIO * postcardWidth;
-  const HEART_HEIGHT = HEART_WIDTH / HEART_WIDTH_HEIGHT_RATIO;
-  return (
-    <PostcardContainer ref={ref} size={postcardWidth}>
-      <PostmarkCotainer size={postcardWidth}>
-        <StyledLocationPointer size={postcardWidth} />
-        {message.country}
-      </PostmarkCotainer>
-      <ImageContainer>
-        <img width={HEART_WIDTH} height={HEART_HEIGHT} src={svgUrl}></img>
-        <ImageTitle size={postcardWidth}>Your love</ImageTitle>
-      </ImageContainer>
-      <PostcardContent>
-        <PostcardName size={postcardWidth}>To {message.name},</PostcardName>
-        <PostcardNote size={postcardWidth}>{message.note}</PostcardNote>
-        <Line size={postcardWidth}></Line>
-        <PostcardNote size={postcardWidth}>Sincerely yours,</PostcardNote>
-        <PostcardName size={postcardWidth}>{message.from}</PostcardName>
-      </PostcardContent>
-    </PostcardContainer>
-  );
-});
-
-Postcard.displayName = "Postcard";
-
 const InstaButtonWithCopy = WithCopy(InstaButton);
 
 const INSTA_MESSAGE = `Sending love to @ [tag your love]\r\n________\r\n#YourLoveMap @mtrss.art @arielfitz.patrick`;
@@ -299,15 +149,26 @@ const INSTA_MESSAGE = `Sending love to @ [tag your love]\r\n________\r\n#YourLov
 const SHARE_TITLE = `Here's your special love note! Can you feel the love? Share it on socials and tag with #YourLoveNote`;
 const SHARE_HASHTAG = `#YourLoveNote`;
 
-const MessageContent = ({ url, postcardRef, location: { href } }) => {
-  const [message, setMessage] = useState();
+const toDataURL = url =>
+  fetch(url)
+    .then(response => response.blob())
+    .then(
+      blob =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        })
+    );
+
+const MessageContent = ({ url, postcardRef, location: { origin } }) => {
   const [instaText, showInstaText] = useState(false);
-  const [isPostcardShow, showPostcard] = useState(false);
   const { width, height } = useWindowDimensions();
   const [referenceElement, setReferenceElement] = useState(null);
   const [popperElement, setPopperElement] = useState(null);
   const [arrowElement, setArrowElement] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null);
   const { styles, attributes } = usePopper(referenceElement, popperElement, {
     modifiers: [
       {
@@ -320,28 +181,27 @@ const MessageContent = ({ url, postcardRef, location: { href } }) => {
     ],
     placement: "bottom-end",
   });
-  const postcardWidth = width < MD_SCREEN_SIZE_PX ? Math.min(width - 40, height * 0.5) : height * 0.8;
 
-  const FULL_URL = href;
+  const IMAGE_URL = `/api/love-message/${url}`;
 
   useEffect(() => {
-    setLoading(true);
-    getPostcardRequest(url)
-      .then(setMessage)
-      .then(() => setLoading(false))
-      .catch(() => navigate("/your-love-map/"));
+    toDataURL(IMAGE_URL)
+      .then(img => {
+        setImage(img);
+        console.log("image", img);
+      })
+      .catch(console.error);
   }, []);
+  const postcardWidth = width < MD_SCREEN_SIZE_PX ? Math.min(width - 40, height * 0.5) : height * 0.8;
+  const FULL_URL = `${origin}${IMAGE_URL}`;
 
-  if (!message) return <Loader />;
+  if (!image) return <Loader />;
 
   return (
     <PostcardLayout>
-      <Postcard message={message} postcardWidth={postcardWidth} />
-      {isPostcardShow && (
-        <ExpandedPostCard message={message} onClose={() => showPostcard(false)}></ExpandedPostCard>
-      )}
+      <Postcard width={1080} height={1080} size={postcardWidth} src={image} />
       <ActionsContainer>
-        <CardButton loading={loading} onClick={() => showPostcard(true)}>
+        <CardButton as="a" href={image} download="postcard.png">
           <DownloadIcon /> Download now
         </CardButton>
         <div>
