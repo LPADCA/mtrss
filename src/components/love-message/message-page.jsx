@@ -30,22 +30,6 @@ import WithCopy from "../WithCopy";
 import InstaTooltip from "./insta-tooltip";
 import { ReactComponent as Loader } from "../../assets/icons/loader.svg";
 
-const POSTCARD_DEFAULT_SIZE = 636;
-const HEART_WIDTH_RATIO = 300 / POSTCARD_DEFAULT_SIZE;
-const HEART_WIDTH_HEIGHT_RATIO = 902 / 1156;
-const YOUR_LOVE_RATIO = 64 / POSTCARD_DEFAULT_SIZE;
-const POSTMARK_SIZE_RATIO = 110 / POSTCARD_DEFAULT_SIZE;
-const POSTMARK_POINT_RATIO = 35 / POSTCARD_DEFAULT_SIZE;
-const POSTMARK_FONT_RATIO = 14 / POSTCARD_DEFAULT_SIZE;
-const POSTCARD_NAME_RATIO = 40 / POSTCARD_DEFAULT_SIZE;
-const POSTCARD_NOTE_RATIO = 18 / POSTCARD_DEFAULT_SIZE;
-const POSTCARD_NOTE_WIDTH_RATIO = 520 / POSTCARD_DEFAULT_SIZE;
-const BORDER_RADTIO = 1 / POSTCARD_DEFAULT_SIZE;
-const LINE_WIDTH_RATIO = 72 / POSTCARD_DEFAULT_SIZE;
-const LINE_HEIGHT_RATIO = 2 / POSTCARD_DEFAULT_SIZE;
-const LINE_MARGIN_TOP_RATIO = 20 / POSTCARD_DEFAULT_SIZE;
-const LINE_MARGIN_BOTTOM_RATIO = 8 / POSTCARD_DEFAULT_SIZE;
-
 const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -75,7 +59,7 @@ const ActionsContainer = styled.div`
   justify-content: center;
 `;
 
-const CardButton = styled(Button)`
+const CardButtonContainer = styled(Button)`
   max-width: 400px;
   width: 100%;
 
@@ -201,9 +185,11 @@ const MessageContent = ({ url, postcardRef, location: { origin } }) => {
     <PostcardLayout>
       <Postcard width={1080} height={1080} size={postcardWidth} src={image} />
       <ActionsContainer>
-        <CardButton as="a" href={image} download="postcard.png">
-          <DownloadIcon /> Download now
-        </CardButton>
+        <CardButtonContainer>
+          <Button as="a" href={image} download="postcard.png">
+            <DownloadIcon /> Download now
+          </Button>
+        </CardButtonContainer>
         <div>
           <ShareTitle>
             <ShareIcon height="18" fill="white" /> Share on your socials
