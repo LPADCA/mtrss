@@ -1,13 +1,9 @@
-import React, { useEffect, useState, useRef, forwardRef } from "react";
-import { getPostcardRequest } from "../../api/love-message-api";
+import React, { useEffect, useState } from "react";
 import { navigate, Link } from "gatsby";
 import styled from "styled-components";
-import domtoimage from "dom-to-image";
 import Button from "../button";
-import { ReactComponent as LocationPointer } from "../../assets/images/pointer.svg";
 import { ReactComponent as ShareIcon } from "../../assets/images/share.svg";
 import { ReactComponent as DownloadIcon } from "../../assets/icons/download.svg";
-import svgUrl from "../../assets/images/heart-svg.svg";
 import instagramUrl from "../../assets/icons/instagram.png";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 import { mediaQueries, MD_SCREEN_SIZE_PX } from "../../screenSizes";
@@ -29,6 +25,7 @@ import { usePopper } from "react-popper";
 import WithCopy from "../WithCopy";
 import InstaTooltip from "./insta-tooltip";
 import { ReactComponent as Loader } from "../../assets/icons/loader.svg";
+import { toDataURL } from "../../api/love-message-api";
 
 const PageContainer = styled.div`
   display: flex;
@@ -133,20 +130,7 @@ const INSTA_MESSAGE = `Sending love to @ [tag your love]\r\n________\r\n#YourLov
 const SHARE_TITLE = `Here's your special love note! Can you feel the love? Share it on socials and tag with #YourLoveNote`;
 const SHARE_HASHTAG = `#YourLoveNote`;
 
-const toDataURL = url =>
-  fetch(url)
-    .then(response => response.blob())
-    .then(
-      blob =>
-        new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => resolve(reader.result);
-          reader.onerror = reject;
-          reader.readAsDataURL(blob);
-        })
-    );
-
-const MessageContent = ({ url, postcardRef, location: { origin } }) => {
+const MessageContent = ({ url, location: { origin } }) => {
   const [instaText, showInstaText] = useState(false);
   const { width, height } = useWindowDimensions();
   const [referenceElement, setReferenceElement] = useState(null);
@@ -166,15 +150,15 @@ const MessageContent = ({ url, postcardRef, location: { origin } }) => {
     placement: "bottom-end",
   });
 
-  const IMAGE_URL = `/api/love-message/${url}`;
+  const IMAGE_URL = `/api/static/${url}.jpg`;
 
   useEffect(() => {
     toDataURL(IMAGE_URL)
-      .then(img => {
-        setImage(img);
-        console.log("image", img);
-      })
-      .catch(console.error);
+      .then(setImage)
+      .catch(() => {
+        console.log('catch')
+        navigate("/your-love-map")
+      });
   }, []);
   const postcardWidth = width < MD_SCREEN_SIZE_PX ? Math.min(width - 40, height * 0.5) : height * 0.8;
   const FULL_URL = `${origin}${IMAGE_URL}`;
