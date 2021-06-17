@@ -89,7 +89,7 @@ const LoadingScreen = ({ loading, onStart }) => {
   return (
     <LoadingScreenContainer>
       <InfoText>
-        Some of us have been very far from their loved ones this year.
+        Some of us have been very far from our loved ones this year.
         <p>
           <a>Let the love bring you closer.</a>
         </p>
