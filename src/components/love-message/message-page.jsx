@@ -128,7 +128,7 @@ const InstaButtonWithCopy = WithCopy(InstaButton);
 
 const INSTA_MESSAGE = `Sending love to @ [tag your love]\r\n________\r\n#YourLoveMap @mtrss.art @arielfitz.patrick`;
 
-const SHARE_TITLE = (url) => `Here's your special love note! Can you feel the love? Share it on socials and tag with #YourLoveNote
+const SHARE_TITLE = url => `Here's your special love note! Can you feel the love? Share it on socials and tag with #YourLoveNote
 ${url}
 `;
 const SHARE_HASHTAG = `#YourLoveNote`;
@@ -225,9 +225,9 @@ const MessageContent = ({ imageUrl, location: { origin, href } }) => {
 };
 
 const MessagePage = props => {
-  const { url } = props;
-  const IMAGE_URL = `/api/static/${url}.jpg`;
-
+  const { url, location } = props;
+  const IMAGE_URL = `${location.origin}/api/static/${url}.jpg`;
+  console.log('IMAGE_URL', IMAGE_URL)
   return (
     <PageContainer>
       <Helmet>
