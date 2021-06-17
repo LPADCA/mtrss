@@ -160,13 +160,12 @@ const MessageContent = ({ imageUrl, location: { origin, href } }) => {
       });
   }, []);
   const postcardWidth = width < MD_SCREEN_SIZE_PX ? Math.min(width - 40, height * 0.5) : height * 0.8;
-  const FULL_URL = `${origin}${imageUrl}`;
 
   if (!image) return <Loader />;
 
   return (
     <PostcardLayout>
-      <Postcard width={1080} height={1080} size={postcardWidth} src={image} />
+      <Postcard width={1080} height={1080} size={postcardWidth} src={imageUrl} />
       <ActionsContainer>
         <CardButtonContainer>
           <Button as="a" href={image} download="postcard.png">
@@ -225,7 +224,6 @@ const MessageContent = ({ imageUrl, location: { origin, href } }) => {
 
 const MessagePage = props => {
   const { url } = props;
-  console.log('props', props)
   const IMAGE_URL = `/api/static/${url}.jpg`;
 
   return (
