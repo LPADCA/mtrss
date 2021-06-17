@@ -20,13 +20,14 @@ import {
   ViberIcon,
   VKIcon,
   WhatsappIcon,
+  PinterestShareButton,
+  PinterestIcon
 } from "react-share";
 import { usePopper } from "react-popper";
 import WithCopy from "../WithCopy";
 import InstaTooltip from "./insta-tooltip";
 import { ReactComponent as Loader } from "../../assets/icons/loader.svg";
 import { toDataURL } from "../../api/love-message-api";
-import { Helmet } from "react-helmet";
 
 const PageContainer = styled.div`
   display: flex;
@@ -165,7 +166,7 @@ const MessageContent = ({ imageUrl, location: { origin, href } }) => {
       <Postcard width={1080} height={1080} size={postcardWidth} src={imageUrl} />
       <ActionsContainer>
         <CardButtonContainer>
-          <Button as="a" href={image} download="postcard.png">
+          <Button as="a" href={image} download="postcard.jpg">
             <DownloadIcon /> Download now
           </Button>
         </CardButtonContainer>
@@ -199,6 +200,9 @@ const MessageContent = ({ imageUrl, location: { origin, href } }) => {
             <VKShareButton title={SHARE_TITLE} url={imageUrl}>
               <VKIcon size={38} />
             </VKShareButton>
+            <PinterestShareButton description={SHARE_TITLE} url={imageUrl} media={imageUrl}>
+              <PinterestIcon size={38} />
+            </PinterestShareButton>
           </SocialContainer>
           <InstaTooltip
             isShown={instaText}
