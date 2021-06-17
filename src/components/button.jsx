@@ -13,10 +13,12 @@ const ButtonTemplate = styled.button`
   align-items: center;
   position: relative;
   text-decoration: none;
+  transition: all 0.3s;
 
   &:disabled,
   &:invalid {
     color: black;
+    background-color: #696969;
   }
 `;
 
@@ -29,10 +31,18 @@ const StyledLoader = styled(Loader)`
 export const OutlineButton = styled(ButtonTemplate)`
   background: transparent;
   border: 2px solid #ffffff;
+
+  &:hover {
+    background-color: #696969;
+  }
 `;
 
 export const PrimaryButton = styled(ButtonTemplate)`
-  background: ${({ loading }) => (loading ? "#DEAFAF" : "#ff3636")};
+  background-color: ${({ loading }) => (loading ? "#DEAFAF" : "#ff3636")};
+
+  &:hover {
+    background-color: #d00000;
+  }
 `;
 
 export const ButtonContent = styled.span`

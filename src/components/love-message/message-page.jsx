@@ -191,7 +191,7 @@ const MessageContent = ({ imageUrl, location: { origin, href } }) => {
             >
               <InstagramIcon src={instagramUrl} />
             </InstaButtonWithCopy>
-            <TelegramShareButton title={SHARE_TITLE} url={imageUrl}>
+            <TelegramShareButton url={imageUrl}>
               <TelegramIcon size={38} />
             </TelegramShareButton>
             <ViberShareButton title={SHARE_TITLE} url={imageUrl}>
