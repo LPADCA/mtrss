@@ -128,9 +128,7 @@ const InstaButtonWithCopy = WithCopy(InstaButton);
 
 const INSTA_MESSAGE = `Sending love to @ [tag your love]\r\n________\r\n#YourLoveMap @mtrss.art @arielfitz.patrick`;
 
-const SHARE_TITLE = `Here's your special love note! Can you feel the love? Share it on socials and tag with #YourLoveNote
-${url}
-`;
+const SHARE_TITLE = `Here's your special love note! Can you feel the love? Share it on socials and tag with #YourLoveNote`;
 const SHARE_HASHTAG = `#YourLoveNote`;
 
 const MessageContent = ({ imageUrl, location: { origin, href } }) => {
@@ -156,10 +154,7 @@ const MessageContent = ({ imageUrl, location: { origin, href } }) => {
   useEffect(() => {
     toDataURL(imageUrl)
       .then(setImage)
-      .catch(() => {
-        console.log("catch");
-        navigate("/your-love-map");
-      });
+      .catch(() => navigate("/your-love-map"));
   }, []);
   const postcardWidth = width < MD_SCREEN_SIZE_PX ? Math.min(width - 40, height * 0.5) : height * 0.8;
 
@@ -229,12 +224,6 @@ const MessagePage = props => {
   const IMAGE_URL = `${location.origin}/api/static/${url}.jpg`;
   return (
     <PageContainer>
-      <Helmet>
-        <meta property="og:url" content={IMAGE_URL} />
-        <meta property="og:title" content={SHARE_HASHTAG} />
-        <meta property="og:description" content={SHARE_TITLE} />
-        <meta property="og:image" content={IMAGE_URL} />
-      </Helmet>
       <MessageContent {...props} imageUrl={IMAGE_URL} />
     </PageContainer>
   );

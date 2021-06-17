@@ -24,7 +24,6 @@ export default function HTML(props) {
           dangerouslySetInnerHTML={{
             __html: `
                         !function(c,h,i,m,p){m=c.createElement(h),p=c.getElementsByTagName(h)[0],m.async=1,m.src=i,p.parentNode.insertBefore(m,p)}(document,"script","https://chimpstatic.com/mcjs-connected/js/users/9d5322c776a4c4ddb55e87728/139c48b7bebc915cbe0c55ecd.js");
-                        console.log("Ran");
                         `,
           }}
         />

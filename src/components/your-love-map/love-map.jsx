@@ -262,9 +262,6 @@ const SvgMap = ({ className, onMapLoaded, screenWidth, screenHeight, onCountryCl
     const imageLoader = new Image();
     imageLoader.src = earthBG;
 
-    if (svgRef.current) {
-      svgRef.current.addEventListener("transitionend", () => console.log("transitionend"));
-    }
     imageLoader.onload = () => loader.pictureLoaded();
   }, []);
 
