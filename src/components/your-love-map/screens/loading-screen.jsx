@@ -10,7 +10,8 @@ const LoadingScreenContainer = styled.div`
   flex-direction: column;
   background-color: rgba(0, 0, 0, 1);
   padding: 20px;
-  height: 100%;
+  height: calc(100% + 2px);
+  margin-top: -1px;
 `;
 
 const InfoText = styled.span`
