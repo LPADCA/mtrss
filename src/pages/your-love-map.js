@@ -35,6 +35,7 @@ const Modal = ({ show, children }) => {
         opacity: style.opacity,
         visibility: style.opacity.to(e => (e > 0 ? "visible" : "hidden")),
         backdropFilter: style.backdropFilter,
+        WebkitBackdropFilter: style.backdropFilter,
       }}
     >
       {children}
