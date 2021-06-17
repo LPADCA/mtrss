@@ -42,13 +42,13 @@ const PostcardLayout = styled.div`
   display: flex;
   flex-direction: column;
 
-  @media ${mediaQueries.md} {
+  @media ${mediaQueries.sm} {
     flex-direction: row;
   }
 `;
 
 const ActionsContainer = styled.div`
-  @media ${mediaQueries.md} {
+  @media ${mediaQueries.sm} {
     margin-left: 60px;
     margin-right: 20px;
   }

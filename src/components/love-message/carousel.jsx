@@ -28,6 +28,44 @@ const Dot = styled.button`
 
 const Slide = styled.div``;
 
+const ArrowSvg = styled.svg`
+  width: 60px;
+  padding: 0 15px;
+  height: 246px;
+  position: absolute;
+  top: 0;
+  fill: #fff;
+  cursor: pointer;
+
+  &:hover {
+    fill: #ff3636;
+  }
+`;
+
+const LeftArrowSvg = styled(ArrowSvg)`
+  left: -60px;
+`;
+
+const RightArrowSvg = styled(ArrowSvg)`
+  right: -60px;
+`;
+
+const ArrowLeft = props => {
+  return (
+    <LeftArrowSvg onClick={props.onClick} xmlns="http://www.w3.org/2000/ArrowSvg" viewBox="0 0 24 24">
+      <path d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z" />
+    </LeftArrowSvg>
+  );
+};
+
+const ArrowRight = props => {
+  return (
+    <RightArrowSvg onClick={props.onClick} xmlns="http://www.w3.org/2000/ArrowSvg" viewBox="0 0 24 24">
+      <path d="M5 3l3.057-3 11.943 12-11.943 12-3.057-3 9-9z" />
+    </RightArrowSvg>
+  );
+};
+
 export default function Carousel({ children }) {
   const [currentSlide, setCurrentSlide] = React.useState(0);
   const [sliderRef, slider] = useKeenSlider({
@@ -68,6 +106,11 @@ export default function Carousel({ children }) {
               />
             );
           })}
+          <ArrowLeft onClick={e => e.stopPropagation() || slider.prev()} disabled={currentSlide === 0} />
+          <ArrowRight
+            onClick={e => e.stopPropagation() || slider.next()}
+            disabled={currentSlide === slider.details().size - 1}
+          />
         </Dots>
       )}
     </NavigationWrapper>
