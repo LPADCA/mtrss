@@ -26,6 +26,7 @@ import WithCopy from "../WithCopy";
 import InstaTooltip from "./insta-tooltip";
 import { ReactComponent as Loader } from "../../assets/icons/loader.svg";
 import { toDataURL } from "../../api/love-message-api";
+import { Helmet } from "react-helmet";
 
 const PageContainer = styled.div`
   display: flex;
@@ -130,7 +131,7 @@ const INSTA_MESSAGE = `Sending love to @ [tag your love]\r\n________\r\n#YourLov
 const SHARE_TITLE = `Here's your special love note! Can you feel the love? Share it on socials and tag with #YourLoveNote`;
 const SHARE_HASHTAG = `#YourLoveNote`;
 
-const MessageContent = ({ url, location: { origin } }) => {
+const MessageContent = ({ imageUrl, location: { origin, href } }) => {
   const [instaText, showInstaText] = useState(false);
   const { width, height } = useWindowDimensions();
   const [referenceElement, setReferenceElement] = useState(null);
@@ -150,18 +151,16 @@ const MessageContent = ({ url, location: { origin } }) => {
     placement: "bottom-end",
   });
 
-  const IMAGE_URL = `/api/static/${url}.jpg`;
-
   useEffect(() => {
-    toDataURL(IMAGE_URL)
+    toDataURL(imageUrl)
       .then(setImage)
       .catch(() => {
-        console.log('catch')
-        navigate("/your-love-map")
+        console.log("catch");
+        navigate("/your-love-map");
       });
   }, []);
   const postcardWidth = width < MD_SCREEN_SIZE_PX ? Math.min(width - 40, height * 0.5) : height * 0.8;
-  const FULL_URL = `${origin}${IMAGE_URL}`;
+  const FULL_URL = `${origin}${imageUrl}`;
 
   if (!image) return <Loader />;
 
@@ -179,13 +178,13 @@ const MessageContent = ({ url, location: { origin } }) => {
             <ShareIcon height="18" fill="white" /> Share on your socials
           </ShareTitle>
           <SocialContainer>
-            <FacebookShareButton hashtag={SHARE_HASHTAG} quote={SHARE_TITLE} url={FULL_URL}>
+            <FacebookShareButton hashtag={SHARE_HASHTAG} quote={SHARE_TITLE} url={href}>
               <FacebookIcon size={38} />
             </FacebookShareButton>
-            <TwitterShareButton title={SHARE_TITLE} url={FULL_URL}>
+            <TwitterShareButton title={SHARE_TITLE} url={href}>
               <TwitterIcon size={38} />
             </TwitterShareButton>
-            <WhatsappShareButton title={SHARE_TITLE} url={FULL_URL}>
+            <WhatsappShareButton title={SHARE_TITLE} url={href}>
               <WhatsappIcon size={38} />
             </WhatsappShareButton>
             <InstaButtonWithCopy
@@ -195,13 +194,13 @@ const MessageContent = ({ url, location: { origin } }) => {
             >
               <InstagramIcon src={instagramUrl} />
             </InstaButtonWithCopy>
-            <TelegramShareButton title={SHARE_TITLE} url={FULL_URL}>
+            <TelegramShareButton title={SHARE_TITLE} url={href}>
               <TelegramIcon size={38} />
             </TelegramShareButton>
-            <ViberShareButton title={SHARE_TITLE} url={FULL_URL}>
+            <ViberShareButton title={SHARE_TITLE} url={href}>
               <ViberIcon size={38} />
             </ViberShareButton>
-            <VKShareButton title={SHARE_TITLE} url={FULL_URL}>
+            <VKShareButton title={SHARE_TITLE} url={href}>
               <VKIcon size={38} />
             </VKShareButton>
           </SocialContainer>
@@ -225,9 +224,19 @@ const MessageContent = ({ url, location: { origin } }) => {
 };
 
 const MessagePage = props => {
+  const { url } = props;
+  console.log('props', props)
+  const IMAGE_URL = `/api/static/${url}.jpg`;
+
   return (
     <PageContainer>
-      <MessageContent {...props} />
+      <Helmet>
+        <meta property="og:url" content={IMAGE_URL} />
+        <meta property="og:title" content={SHARE_HASHTAG} />
+        <meta property="og:description" content={SHARE_TITLE} />
+        <meta property="og:image" content={IMAGE_URL} />
+      </Helmet>
+      <MessageContent {...props} imageUrl={IMAGE_URL} />
     </PageContainer>
   );
 };
