@@ -128,7 +128,9 @@ const InstaButtonWithCopy = WithCopy(InstaButton);
 
 const INSTA_MESSAGE = `Sending love to @ [tag your love]\r\n________\r\n#YourLoveMap @mtrss.art @arielfitz.patrick`;
 
-const SHARE_TITLE = `Here's your special love note! Can you feel the love? Share it on socials and tag with #YourLoveNote`;
+const SHARE_TITLE = (url) => `Here's your special love note! Can you feel the love? Share it on socials and tag with #YourLoveNote
+${url}
+`;
 const SHARE_HASHTAG = `#YourLoveNote`;
 
 const MessageContent = ({ imageUrl, location: { origin, href } }) => {
@@ -177,13 +179,13 @@ const MessageContent = ({ imageUrl, location: { origin, href } }) => {
             <ShareIcon height="18" fill="white" /> Share on your socials
           </ShareTitle>
           <SocialContainer>
-            <FacebookShareButton hashtag={SHARE_HASHTAG} quote={SHARE_TITLE} url={href}>
+            <FacebookShareButton hashtag={SHARE_HASHTAG} quote={SHARE_TITLE(href)} url={imageUrl}>
               <FacebookIcon size={38} />
             </FacebookShareButton>
-            <TwitterShareButton title={SHARE_TITLE} url={href}>
+            <TwitterShareButton title={SHARE_TITLE(href)} url={imageUrl}>
               <TwitterIcon size={38} />
             </TwitterShareButton>
-            <WhatsappShareButton title={SHARE_TITLE} url={href}>
+            <WhatsappShareButton title={SHARE_TITLE(href)} url={imageUrl}>
               <WhatsappIcon size={38} />
             </WhatsappShareButton>
             <InstaButtonWithCopy
@@ -193,13 +195,13 @@ const MessageContent = ({ imageUrl, location: { origin, href } }) => {
             >
               <InstagramIcon src={instagramUrl} />
             </InstaButtonWithCopy>
-            <TelegramShareButton title={SHARE_TITLE} url={href}>
+            <TelegramShareButton title={SHARE_TITLE(href)} url={imageUrl}>
               <TelegramIcon size={38} />
             </TelegramShareButton>
-            <ViberShareButton title={SHARE_TITLE} url={href}>
+            <ViberShareButton title={SHARE_TITLE(href)} url={imageUrl}>
               <ViberIcon size={38} />
             </ViberShareButton>
-            <VKShareButton title={SHARE_TITLE} url={href}>
+            <VKShareButton title={SHARE_TITLE(href)} url={imageUrl}>
               <VKIcon size={38} />
             </VKShareButton>
           </SocialContainer>
