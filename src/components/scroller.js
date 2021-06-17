@@ -1,45 +1,41 @@
-import React from 'react'
-import ReactPlayer from 'react-player';
-import Carousel from 'react-multi-carousel';
-import 'react-multi-carousel/lib/styles.css';
+import React from "react";
+import ReactPlayer from "react-player";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 
 const responsive = {
   superLargeDesktop: {
     // the naming can be any, depends on you.
     breakpoint: { max: 4000, min: 3000 },
-    items: 5
+    items: 5,
   },
   desktop: {
     breakpoint: { max: 3000, min: 1024 },
-    items: 3
+    items: 3,
   },
   tablet: {
     breakpoint: { max: 1024, min: 464 },
-    items: 1
+    items: 1,
   },
-  mobile: { 
+  mobile: {
     breakpoint: { max: 500, min: 0 },
-    items: 1
-  }
+    items: 1,
+  },
 };
 
-
 const Scroller = () => {
-
-
-  const YoutubeSlide = ({ url, isSelected }) => (
-    <ReactPlayer width="100%" url={url} playing={isSelected} />
-  );
-
-
+  const YoutubeSlide = ({ url, isSelected }) => <ReactPlayer width="100%" url={url} playing={isSelected} />;
   return (
     <>
-      <h3 
+      <h3
         style={{
-          textAlign: 'center',
+          textAlign: "center",
           marginBottom: 0,
-          marginTop: '50px'
-        }}>Videos</h3>
+          marginTop: "50px",
+        }}
+      >
+        Videos
+      </h3>
       <Carousel
         draggable={true}
         showDots={false}
@@ -57,8 +53,7 @@ const Scroller = () => {
         <YoutubeSlide key="youtube-4" url="https://www.youtube.com/embed/-hxCYIFnCYU" />
       </Carousel>
     </>
-  )
-}
+  );
+};
 
-export default Scroller
-
+export default Scroller;

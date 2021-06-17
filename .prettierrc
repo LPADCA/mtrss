@@ -1,0 +1,6 @@
+{
+  "arrowParens": "avoid",
+  "endOfLine":"auto",
+  "semi": true,
+  "printWidth": 110
+}

@@ -1,3 +1,5 @@
+/* eslint-disable node/no-path-concat */
+
 require("dotenv").config({
   path: `.env.production`,
 });
@@ -18,11 +20,8 @@ if (process.env.CONTENTFUL_HOST) {
 
 const { spaceId, accessToken } = contentfulConfig;
 
-
 if (!spaceId || !accessToken) {
-  throw new Error(
-    "Contentful spaceId and the access token need to be provided."
-  );
+  throw new Error("Contentful spaceId and the access token need to be provided.");
 }
 
 module.exports = {
@@ -30,6 +29,10 @@ module.exports = {
     title: "MTRSS",
   },
   pathPrefix: "/gatsby-contentful-starter",
+  proxy: {
+    prefix: "/api",
+    url: "http://localhost:8080",
+  },
   plugins: [
     {
       resolve: `gatsby-plugin-manifest`,
@@ -44,19 +47,42 @@ module.exports = {
       },
     },
     "gatsby-transformer-remark",
-    "gatsby-transformer-sharp",
+    {
+      resolve: `gatsby-plugin-sharp`,
+      options: {
+        defaults: {
+          formats: [`auto`, `webp`],
+          placeholder: `none`,
+          quality: 90,
+          backgroundColor: `transparent`,
+        },
+      },
+    },
     "gatsby-plugin-react-helmet",
+    "gatsby-plugin-image",
     "gatsby-plugin-sharp",
+    "gatsby-plugin-styled-components",
     {
       resolve: `gatsby-plugin-sass`,
       options: {
-       cssLoaderOptions: {
-         esModule: false,
-         modules: {
-           namedExport: false,
-         },
-       },
-     },
+        cssLoaderOptions: {
+          esModule: false,
+          modules: {
+            namedExport: false,
+          },
+        },
+      },
+    },
+    {
+      resolve: "gatsby-plugin-svgr",
+      options: {
+        svgo: true,
+        svgoConfig: {
+          plugins: [
+            { removeViewBox: false }, // remove viewBox when possible (default)
+          ],
+        },
+      },
     },
     {
       resolve: "gatsby-source-contentful",
