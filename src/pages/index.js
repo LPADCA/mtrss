@@ -1,14 +1,15 @@
 import React from "react";
 import { graphql } from "gatsby";
-import get from "lodash/get";
 import { Helmet } from "react-helmet";
 import Scroller from "../components/scroller";
-// import Hero from '../components/hero'
 import Layout from "../components/layout";
-import Collapse from "@kunukn/react-collapse";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { Carousel } from "../components/3rdparty/Carousel";
 import Footer from "../components/footer";
+import { GatsbyImage } from "gatsby-plugin-image";
+import styled from "styled-components";
+import shopBgRetina from "../assets/images/shop-bg@2x.png";
+import buttonBg from "../assets/icons/button.svg";
 
 const ARBUM_DATA = [
   { link: "https://ffm.to/yvqm2de" },
@@ -22,6 +23,62 @@ const ARBUM_DATA = [
   { link: "https://dashgo.co/mvamlrm" },
   { link: "https://sym.ffm.to/mtrss-your-love" },
 ];
+
+const ShopBackground = styled.div`
+  background-image: url(${shopBgRetina});
+  background-size: cover;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const ShopStorefromContainer = styled.div`
+  display: flex;
+`;
+
+const ShopTitle = styled.h3`
+  text-align: center;
+  margin: 0;
+  padding-top: 44px;
+  padding-bottom: 12px;
+  font-weight: 500;
+  font-size: 24px;
+
+  ::after {
+    position: relative;
+    left: calc(50% - 30px);
+    content: " ";
+    display: block;
+    background: linear-gradient(274deg, #bc0012, #1350e0);
+    width: 60px;
+    height: 4px;
+    margin-top: 12px;
+  }
+`;
+
+const ShopButton = styled.a`
+  background-image: url(${buttonBg});
+  width: 170px;
+  height: 45px;
+  display: block;
+  margin-top: 40px;
+  margin-bottom: 20px;
+`;
+
+const MerchItem = ({ item, children }) => {
+  return <GatsbyImage image={item.featuredImage.gatsbyImageData} alt={item.featuredImage.altText} />;
+};
+
+const MerchStorefront = ({ edges }) => {
+  return (
+    <ShopStorefromContainer>
+      {edges.map(({ node }) => (
+        <MerchItem key={node.shopifyId} item={node} />
+      ))}
+    </ShopStorefromContainer>
+  );
+};
 
 const RichText = ({ jsonRichText }) => {
   return <>{documentToReactComponents(jsonRichText)}</>;
@@ -95,13 +152,11 @@ class RootIndex extends React.Component {
           autoplay={false}
           interval={1000}
         />
-        {/* <div id="mtrss-video-hero" className="video-hero">
-            <div className="video-wrapper">
-              <div className="iframe-wrapper">
-                <iframe id="ytplayer" width="100%" height="100%" src="https://www.youtube.com/embed/ZLSMMfBei18" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-              </div>
-            </div>
-          </div> */}
+        <ShopBackground>
+          <ShopTitle>Shop #YourLove collection</ShopTitle>
+          <MerchStorefront edges={this.props.data.allShopifyProduct.edges} />
+          <ShopButton href="https://shop.mtrss.art/"></ShopButton>
+        </ShopBackground>
 
         <div id="mtrss-audio" className="audio">
           <img src="/images/audio.png" alt="MTRSS:Listen" />
@@ -203,6 +258,24 @@ export default RootIndex;
 
 export const pageQuery = graphql`
   query HomeQuery {
+    allShopifyProduct(sort: { fields: [title] }, filter: { tags: { eq: "Shopfront" } }) {
+      edges {
+        node {
+          title
+          images {
+            originalSrc
+          }
+          shopifyId
+          description
+          tags
+          featuredImage {
+            id
+            altText
+            gatsbyImageData(width: 910, height: 910)
+          }
+        }
+      }
+    }
     contentfulHomepage {
       buttonText
       buttonUrl
