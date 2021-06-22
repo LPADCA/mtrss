@@ -30,7 +30,7 @@ const ShopBackground = styled.div`
   flex-direction: column;
   align-items: center;
   background-image: url(${shopBgRetina});
-  background-size: 100%;
+  background-size: cover;
   background-position: center;
 `;
 
@@ -75,7 +75,7 @@ const ShopButton = styled(animated.a)`
   height: 45px;
   display: block;
   margin-top: 40px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
   position: relative;
   display: flex;
   justify-content: center;
