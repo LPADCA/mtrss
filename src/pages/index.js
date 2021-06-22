@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { graphql } from "gatsby";
 import { Helmet } from "react-helmet";
 import Scroller from "../components/scroller";
@@ -8,8 +8,8 @@ import { Carousel } from "../components/3rdparty/Carousel";
 import Footer from "../components/footer";
 import { GatsbyImage } from "gatsby-plugin-image";
 import styled from "styled-components";
-import shopBgRetina from "../assets/images/shop-bg@2x.png";
-import buttonBg from "../assets/icons/button.svg";
+import shopBgRetina from "../assets/images/shop-bg.jpg";
+import { useSpring, animated } from "@react-spring/web";
 
 const ARBUM_DATA = [
   { link: "https://ffm.to/yvqm2de" },
@@ -25,16 +25,19 @@ const ARBUM_DATA = [
 ];
 
 const ShopBackground = styled.div`
-  background-image: url(${shopBgRetina});
-  background-size: cover;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-image: url(${shopBgRetina});
+  background-size: 100%;
+  background-position: center;
 `;
 
 const ShopStorefromContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 `;
 
 const ShopTitle = styled.h3`
@@ -57,17 +60,38 @@ const ShopTitle = styled.h3`
   }
 `;
 
-const ShopButton = styled.a`
-  background-image: url(${buttonBg});
+const ShopItemContainer = styled.div`
+  min-width: 240px;
+  max-width: 400px;
+  flex: 1 1;
+`;
+
+const ShopButton = styled(animated.a)`
+  border-style: solid;
+  border-image-slice: 1;
+  border-width: 5px;
+  border-image-source: linear-gradient(256deg, #1350e0, #90000e);
   width: 170px;
   height: 45px;
   display: block;
   margin-top: 40px;
   margin-bottom: 20px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  font-size: 18px;
 `;
 
-const MerchItem = ({ item, children }) => {
-  return <GatsbyImage image={item.featuredImage.gatsbyImageData} alt={item.featuredImage.altText} />;
+const MerchItem = ({ item }) => {
+  return (
+    <ShopItemContainer>
+      <GatsbyImage image={item.featuredImage.gatsbyImageData} alt={item.featuredImage.altText} />
+    </ShopItemContainer>
+  );
 };
 
 const MerchStorefront = ({ edges }) => {
@@ -77,6 +101,29 @@ const MerchStorefront = ({ edges }) => {
         <MerchItem key={node.shopifyId} item={node} />
       ))}
     </ShopStorefromContainer>
+  );
+};
+
+const ShopSection = ({ allShopifyProduct }) => {
+  const [toggle, setToggle] = useState(false);
+  const styles = useSpring({
+    background: toggle
+      ? "linear-gradient(256deg, #1350e0, #90000e)"
+      : "linear-gradient(256deg, transparent, transparent)",
+  });
+  return (
+    <ShopBackground>
+      <ShopTitle>Shop #YourLove collection</ShopTitle>
+      <MerchStorefront edges={allShopifyProduct.edges} />
+      <ShopButton
+        style={styles}
+        onMouseOver={() => setToggle(true)}
+        onMouseLeave={() => setToggle(false)}
+        href="https://shop.mtrss.art/"
+      >
+        Shop now
+      </ShopButton>
+    </ShopBackground>
   );
 };
 
@@ -152,12 +199,7 @@ class RootIndex extends React.Component {
           autoplay={false}
           interval={1000}
         />
-        <ShopBackground>
-          <ShopTitle>Shop #YourLove collection</ShopTitle>
-          <MerchStorefront edges={this.props.data.allShopifyProduct.edges} />
-          <ShopButton href="https://shop.mtrss.art/"></ShopButton>
-        </ShopBackground>
-
+        <ShopSection allShopifyProduct={this.props.data.allShopifyProduct} />
         <div id="mtrss-audio" className="audio">
           <img src="/images/audio.png" alt="MTRSS:Listen" />
           <br />
