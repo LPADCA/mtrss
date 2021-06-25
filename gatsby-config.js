@@ -1,7 +1,7 @@
 /* eslint-disable node/no-path-concat */
 
 require("dotenv").config({
-  path: `.env.production`,
+  path: `.env`,
 });
 
 const contentfulConfig = {
@@ -93,6 +93,14 @@ module.exports = {
       options: {
         name: `pages`,
         path: `${__dirname}/src/pages/`,
+      },
+    },
+    {
+      resolve: "gatsby-source-shopify",
+      options: {
+        apiKey: process.env.SHOPIFY_ADMIN_API_KEY,
+        password: process.env.SHOPIFY_ADMIN_PASSWORD,
+        storeUrl: process.env.SHOPIFY_STORE_URL,
       },
     },
   ],

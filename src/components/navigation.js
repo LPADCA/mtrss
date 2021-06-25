@@ -44,6 +44,9 @@ const Navigation = () => {
                 </StyledLink>
               </li>
               <li>
+                <StyledLink href="https://shop.mtrss.art">Shop</StyledLink>
+              </li>
+              <li>
                 <StyledLink as={AnchorLink} href="#mtrss-audio">
                   Music
                 </StyledLink>
@@ -63,13 +66,6 @@ const Navigation = () => {
                   Get in touch
                 </StyledLink>
               </li>
-              {query.contentfulHomepage.merchShopUrl && (
-                <li>
-                  <a href={query.contentfulHomepage.merchShopUrl} target="_blank">
-                    Merch
-                  </a>
-                </li>
-              )}
             </ul>
             <div id="sandwich" onClick={toggleMenu} className={isMenuOpen ? `open` : ``}>
               <span></span>
@@ -88,6 +84,9 @@ const Navigation = () => {
                 <StyledLink as={Link} to="/your-love-map">
                   #YourLoveMap
                 </StyledLink>
+              </li>
+              <li>
+                <StyledLink href="https://shop.mtrss.art">Shop</StyledLink>
               </li>
               <li>
                 <StyledLink as={AnchorLink} href="#mtrss-audio" onClick={triggerMenu}>
@@ -109,13 +108,6 @@ const Navigation = () => {
                   Get in touch
                 </StyledLink>
               </li>
-              {query.contentfulHomepage.merchShopUrl && (
-                <li>
-                  <a href={query.contentfulHomepage.merchShopUrl} target="_blank">
-                    Merch
-                  </a>
-                </li>
-              )}
             </ul>
             <div id="sandwich-m" onClick={toggleMenu} className={isMenuOpen ? `open` : ``}>
               <span></span>
