@@ -22,6 +22,7 @@ const ARBUM_DATA = [
   { link: "https://ffm.to/dearmbp" },
   { link: "https://dashgo.co/mvamlrm" },
   { link: "https://sym.ffm.to/mtrss-your-love" },
+  { link: "https://sym.ffm.to/mtrss-your-love-remix-capyac" },
 ];
 
 const ShopBackground = styled.div`
