@@ -3,7 +3,7 @@ import { graphql } from "gatsby";
 import { Helmet } from "react-helmet";
 import Scroller from "../components/scroller";
 import Layout from "../components/layout";
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { documentToHtmlString } from "@contentful/rich-text-html-renderer";
 import { Carousel } from "../components/3rdparty/Carousel";
 import Footer from "../components/footer";
 import { GatsbyImage } from "gatsby-plugin-image";
@@ -129,7 +129,7 @@ const ShopSection = ({ allShopifyProduct }) => {
 };
 
 const RichText = ({ jsonRichText }) => {
-  return <>{documentToReactComponents(jsonRichText)}</>;
+  return <div dangerouslySetInnerHTML={{ __html: documentToHtmlString(jsonRichText) }} />;
 };
 
 const AlbumArt = ({ link, index }) => {
@@ -176,7 +176,10 @@ class RootIndex extends React.Component {
 
   render() {
     const audioTrack = this.props.data.contentfulHomepage.audioTrack;
-
+    console.log(
+      "this.props.data.contentfulHomepage.aboutTextPreview.json",
+      this.props.data.contentfulHomepage.aboutTextPreview.json
+    );
     return (
       <Layout location={this.props.location} data={this.props.data}>
         <Helmet>
