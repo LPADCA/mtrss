@@ -11,20 +11,6 @@ import shopBgRetina from "../assets/images/shop-bg.jpg";
 import { useSpring, animated } from "@react-spring/web";
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
 
-const ARBUM_DATA = [
-  { link: "https://ffm.to/yvqm2de" },
-  { link: "https://ffm.to/yeqvjb1" },
-  { link: "https://ffm.to/qmyoqj7" },
-  { link: "https://ffm.to/9webja4" },
-  { link: "https://ffm.to/kdwjob8" },
-  { link: "https://ffm.to/l19dpoe" },
-  { link: "https://ffm.to/g7dyodo" },
-  { link: "https://ffm.to/dearmbp" },
-  { link: "https://dashgo.co/mvamlrm" },
-  { link: "https://sym.ffm.to/mtrss-your-love" },
-  { link: "https://sym.ffm.to/mtrss-your-love-remix-capyac" },
-];
-
 const ShopBackground = styled.div`
   box-sizing: border-box;
   display: flex;
@@ -137,7 +123,7 @@ const AlbumArt = ({ link, image }) => {
     <div className="AlbumSlide">
       <div className="PlayButton">
         <a target="_blank" href={link} className="button"></a>
-        <GatsbyImage className="album-image" image={getImage(image)} />
+        <GatsbyImage className="album-image" imgClassName="album-image-img" image={getImage(image)} />
         <div className="overlay">
           <i className="fas fa-play fa-2x"></i>
           Listen Now

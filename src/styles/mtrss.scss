@@ -753,6 +753,11 @@ body, html {
 
         .album-image {
           z-index: -1;
+          height: 100%;
+        }
+
+        .album-image-img {
+          object-fit: cover;
         }
         .desc {
             display: none;
