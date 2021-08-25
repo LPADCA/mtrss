@@ -6,10 +6,10 @@ import Layout from "../components/layout";
 import { documentToHtmlString } from "@contentful/rich-text-html-renderer";
 import { Carousel } from "../components/3rdparty/Carousel";
 import Footer from "../components/footer";
-import { GatsbyImage } from "gatsby-plugin-image";
 import styled from "styled-components";
 import shopBgRetina from "../assets/images/shop-bg.jpg";
 import { useSpring, animated } from "@react-spring/web";
+import { GatsbyImage, getImage } from "gatsby-plugin-image"
 
 const ARBUM_DATA = [
   { link: "https://ffm.to/yvqm2de" },
@@ -129,14 +129,15 @@ const ShopSection = ({ allShopifyProduct }) => {
 };
 
 const RichText = ({ jsonRichText }) => {
-  return <div dangerouslySetInnerHTML={{ __html: documentToHtmlString(jsonRichText) }} />;
+  return <div dangerouslySetInnerHTML={{ __html: documentToHtmlString(JSON.parse(jsonRichText)) }} />;
 };
 
-const AlbumArt = ({ link, index }) => {
+const AlbumArt = ({ link, image }) => {
   return (
-    <div className={`AlbumSlide slide${index}`}>
+    <div className="AlbumSlide">
       <div className="PlayButton">
         <a target="_blank" href={link} className="button"></a>
+        <GatsbyImage className="album-image" image={getImage(image)} />
         <div className="overlay">
           <i className="fas fa-play fa-2x"></i>
           Listen Now
@@ -176,10 +177,7 @@ class RootIndex extends React.Component {
 
   render() {
     const audioTrack = this.props.data.contentfulHomepage.audioTrack;
-    console.log(
-      "this.props.data.contentfulHomepage.aboutTextPreview.json",
-      this.props.data.contentfulHomepage.aboutTextPreview.json
-    );
+    const covers = this.props.data.allContentfulCover.nodes;
     return (
       <Layout location={this.props.location} data={this.props.data}>
         <Helmet>
@@ -197,8 +195,8 @@ class RootIndex extends React.Component {
           />
         </Helmet>
         <Carousel
-          slides={ARBUM_DATA.map((props, i) => (
-            <AlbumArt key={props.link} index={i + 1} {...props} />
+          slides={covers.map((props, i) => (
+            <AlbumArt key={props.link} image={props.cover} {...props} />
           )).reverse()}
           autoplay={false}
           interval={1000}
@@ -233,8 +231,8 @@ class RootIndex extends React.Component {
           </div> */}
         <div id="mtrss-text" className="context">
           <div className="content">
-            <RichText jsonRichText={this.props.data.contentfulHomepage.aboutTextPreview.json} />
-            <RichText jsonRichText={this.props.data.contentfulHomepage.aboutTextExtra.json} />
+            <RichText jsonRichText={this.props.data.contentfulHomepage.aboutTextPreview.raw} />
+            <RichText jsonRichText={this.props.data.contentfulHomepage.aboutTextExtra.raw} />
           </div>
         </div>
 
@@ -322,6 +320,14 @@ export const pageQuery = graphql`
         }
       }
     }
+    allContentfulCover(sort: {order: ASC, fields: createdAt}) {
+      nodes {
+        link
+        cover {
+          gatsbyImageData(width: 1000)
+        }
+      }
+    }
     contentfulHomepage {
       buttonText
       buttonUrl
@@ -333,10 +339,10 @@ export const pageQuery = graphql`
       merchShopUrl
       youtubeVideoUrl
       aboutTextExtra {
-        json
+        raw
       }
       aboutTextPreview {
-        json
+        raw
       }
       pageTitle
     }

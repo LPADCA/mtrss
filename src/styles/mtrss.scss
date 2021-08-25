@@ -750,38 +750,9 @@ body, html {
         background-position: center center;
         display: block;
         position: relative;
-        &.slide1 {
-            background-image: url('/images/cover1.jpg');
-        }
-        &.slide2 {
-            background-image: url('/images/cover2.jpg');
-        }
-        &.slide3 {
-            background-image: url('/images/cover3.jpg');
-        }
-        &.slide4 {
-            background-image: url('/images/cover4.jpg');
-        }
-        &.slide5 {
-            background-image: url('/images/cover5-mobile.jpg');
-        }
-        &.slide6 {
-            background-image: url('/images/cover6.jpg');
-        }
-        &.slide7 {
-            background-image: url('/images/cover7.jpg');
-        }
-        &.slide8 {
-            background-image: url('/images/cover8.jpg');
-        }
-        &.slide9 {
-            background-image: url('/images/cover9.jpg');
-        }
-        &.slide10 {
-            background-image: url('/images/cover10.jpg');
-        }
-        &.slide11 {
-            background-image: url('/images/cover11.jpg');
+
+        .album-image {
+          z-index: -1;
         }
         .desc {
             display: none;
@@ -860,39 +831,6 @@ body, html {
             height: 500px;
             .desc {
                 display: block;
-            }
-            &.slide1 {
-                background-image: url('/images/cover1-mobile.jpg');
-            }
-            &.slide2 {
-                background-image: url('/images/cover2-mobile.jpg');
-            }
-            &.slide3 {
-                background-image: url('/images/cover3-mobile.jpg');
-            }
-            &.slide4 {
-                background-image: url('/images/cover4-mobile.jpg');
-            }
-            &.slide5 {
-                background-image: url('/images/cover5-mobile.jpg');
-            }
-            &.slide6 {
-                background-image: url('/images/cover6-mobile.jpg');
-            }
-            &.slide7 {
-                background-image: url('/images/cover7-mobile.jpg');
-            }
-            &.slide8 {
-                background-image: url('/images/cover8-mobile.jpg');
-            }
-            &.slide9 {
-                background-image: url('/images/cover9-mobile.jpg');
-            }
-            &.slide10 {
-                background-image: url('/images/cover10-mobile.jpg');
-            }
-            &.slide11 {
-                background-image: url('/images/cover11-mobile.jpg');
             }
         }
     }
