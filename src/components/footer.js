@@ -14,7 +14,7 @@ const Footer = ({ children }) => (
       <a className="contact-icon bandcamp" target="_blank" href="https://mtrss.bandcamp.com/"></a>
       <a className="contact-icon email" target="_blank" href="mailto:mtrss.art@gmail.com"></a>
     </div>
-    <p>&copy; 2021 MTRSS Arts. All Rights Reserved</p>
+    <p>&copy; 2022 MTRSS Arts. All Rights Reserved</p>
   </div>
 );
 

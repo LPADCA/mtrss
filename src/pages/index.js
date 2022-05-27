@@ -11,6 +11,8 @@ import shopBgRetina from "../assets/images/shop-bg.jpg";
 import { useSpring, animated } from "@react-spring/web";
 import { GatsbyImage, getImage } from "gatsby-plugin-image"
 
+
+
 const ShopBackground = styled.div`
   box-sizing: border-box;
   display: flex;
@@ -180,6 +182,14 @@ class RootIndex extends React.Component {
             rel="stylesheet"
           />
         </Helmet>
+        {/* <div id="mtrss-video" className="video">
+          <div className="video-wrapper">
+            <div className="iframe-wrapper">
+              <iframe id="ytplayer" type="text/html" width="100%" height="100%" src={`https://www.youtube.com/embed/`+ '85QGMGPbDow'} frameBorder="0" allowFullScreen></iframe>
+            </div>
+          </div>
+        </div> */}
+
         <Carousel
           slides={covers.map((props, i) => (
             <AlbumArt key={props.link} image={props.cover} {...props} />
@@ -187,6 +197,7 @@ class RootIndex extends React.Component {
           autoplay={false}
           interval={1000}
         />
+
         <ShopSection allShopifyProduct={this.props.data.allShopifyProduct} />
         <div id="mtrss-audio" className="audio">
           <img src="/images/audio.png" alt="MTRSS:Listen" />
@@ -206,15 +217,9 @@ class RootIndex extends React.Component {
             </>
           )}
         </div>
+
         <Scroller />
-        {/*
-          <div id="mtrss-video" className="video">
-            <div className="video-wrapper">
-              <div className="iframe-wrapper">
-                <iframe id="ytplayer" type="text/html" width="100%" height="100%" src={`https://www.youtube.com/embed/`+youtubeUrl} frameBorder="0" allowFullScreen></iframe>
-              </div>
-            </div>
-          </div> */}
+
         <div id="mtrss-text" className="context">
           <div className="content">
             <RichText jsonRichText={this.props.data.contentfulHomepage.aboutTextPreview.raw} />
@@ -278,6 +283,7 @@ class RootIndex extends React.Component {
             </div>
           </div>
         </div>
+
         <Footer />
       </Layout>
     );

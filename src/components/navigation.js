@@ -39,6 +39,11 @@ const Navigation = () => {
           <div className="menu desktop">
             <ul id="menulist" className={isMenuOpen ? `open` : ``}>
               <li>
+                <StyledLink as={Link} to="/antarctica">
+                  Antarctica
+                </StyledLink>
+              </li>
+              <li>
                 <StyledLink as={Link} to="/your-love-map">
                   #YourLoveMap
                 </StyledLink>
@@ -79,6 +84,11 @@ const Navigation = () => {
             <ul id="menulist-m" className={isMenuOpen ? `open` : ``}>
               <li>
                 <img src="/images/mtrss-logo.svg" alt="MTRSS logo" width="170" />
+              </li>
+              <li>
+                <StyledLink as={Link} to="/antarctica">
+                  Antarctica
+                </StyledLink>
               </li>
               <li>
                 <StyledLink as={Link} to="/your-love-map">

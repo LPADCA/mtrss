@@ -3,7 +3,7 @@
   "description": "MTRSS Website",
   "private": true,
   "version": "1.0.0",
-  "author": "Contentful <opensource@contentful.com>",
+  "author": "Brandon McKenzie <dr.bmckenzie93@gmail.com>",
   "bugs": {
     "url": "https://github.com/contentful/starter-gatsby-blog/issues"
   },

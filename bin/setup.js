@@ -65,7 +65,7 @@ inquirer
 
     console.log("Writing config file...");
     const configFiles = [`.env.development`, `.env.production`].map((file) =>
-      path.join(__dirname, "..", file)
+      syjoin(__dirname, "..", file)
     );
 
     const fileContents =
