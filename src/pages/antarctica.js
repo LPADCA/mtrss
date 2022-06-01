@@ -18,7 +18,6 @@ const VideoContainer = styled.div`
   box-sizing: border-box;
   position: relative;
   max-width: 2200px;
-  max-height: 100vh;
   width: 100%;
   background: #000;
   &:hover {
