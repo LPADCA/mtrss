@@ -110,7 +110,7 @@ const InfoSection = styled.div`
   background: #000;
   box-sizing: border-box;
   text-align: center;
-  line-height: 48px;
+  line-height: 32px;
   position: relative;
   box-sizing: border-box;
 
@@ -178,8 +178,10 @@ const AntarcticaPage = () => {
           <StyledCover src={cover} />
           <StyledCopy>
             <h2>SUITE FOR ANTARCTICA</h2>
-            <p>A large supportive act in the form of a beautiful instrumental LP designed to highlight the problem of designating Marine Protected Areas around Antarctica. Also, to protect Antarctica and secure the largest act of ocean protection in history by supporting #CallOnCCAMLR and encouraging listeners to sign the petition.</p>
-            <a className="gray-btn" target="_blank" href="https://pacificsv-antarctica.netlify.app/#form">Sign this petition</a>
+            <p>
+              A large supportive act in the form of a beautiful instrumental LP designed to highlight the problem of designating Marine Protected Areas around Antarctica. Also, to protect vital Antarctic ecosystems and deliver the largest act of ocean protection in history.
+            </p>
+            <a className="gray-btn" target="_blank" href="https://only.one/act/antarctica">Sign this petition</a>
           </StyledCopy>
         </Section>
       </Container>
@@ -187,7 +189,7 @@ const AntarcticaPage = () => {
       <InfoSection>
         <MountainImage src={mountain} />
         <p>
-          MTRSS – is a global conglomeration of artists, a collaborative enterprise that spans the globe, exploring what happens when artists have a fair amount of time on their hands and access to video and audio processing software. The project was created by Ilya Lagutenko, the legendary front-man of the multiplatinum-selling Russian rock band Mumiy Troll. Ilya is also well known for conservation activities on various environmental matters, like wildlife, ocean life, protecting Amur tigers and leopards, Antarctica and waters of The Southern Ocean.
+        MTRSS – is a global conglomeration of artists, a collaborative enterprise that spans the globe, exploring what happens when artists have a fair amount of time on their hands and access to video and audio processing software. The project was created by Ilya Lagutenko, the legendary front-man of the multicultural and multi-genre band Mumiy Troll. Ilya is also well known for conservation activities on various environmental matters, like wildlife, ocean life, protecting Amur tigers and leopards, Antarctica and waters of The Southern Ocean.
         </p>
       </InfoSection>
 
