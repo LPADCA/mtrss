@@ -32,8 +32,10 @@ box-sizing: border-box;
   background: transparent linear-gradient(180deg, #4D4B49 0%, #7F7D7C 100%) 0% 0% no-repeat padding-box;
   position: absolute;
   z-index: 99;
-  bottom: 42px;
-  right: 91px;
+  bottom: 50%;
+  right: 50%;
+  transform: translate(50%, 50%);
+  display: ${ props => props.isPlaying };
   &:hover {
     cursor: pointer;
   }
@@ -163,7 +165,7 @@ const AntarcticaPage = () => {
             <source src={video} type="video/mp4" />
             Sorry, your browser does not support the HTML video tag.
           </video>
-          <PlayButton>
+          <PlayButton isPlaying={ !videoPlaying ? 'none' : 'block' }>
             <PlayButtonTriangle />
           </PlayButton>
         </VideoContainer>
@@ -179,7 +181,7 @@ const AntarcticaPage = () => {
           <StyledCopy>
             <h2>SUITE FOR ANTARCTICA</h2>
             <p>
-              A large supportive act in the form of a beautiful instrumental LP designed to highlight the problem of designating Marine Protected Areas around Antarctica. Also, to protect vital Antarctic ecosystems and deliver the largest act of ocean protection in history.
+              A large supportive act in the form of 2 beautiful instrumental singles designed to highlight the problem of designating Marine Protected Areas around Antarctica. Also, to protect vital Antarctic ecosystems and deliver the largest act of ocean protection in history by encouraging listeners to sign the petition.
             </p>
             <a className="gray-btn" target="_blank" href="https://only.one/act/antarctica">Sign this petition</a>
           </StyledCopy>
@@ -189,7 +191,7 @@ const AntarcticaPage = () => {
       <InfoSection>
         <MountainImage src={mountain} />
         <p>
-        MTRSS – is a global conglomeration of artists, a collaborative enterprise that spans the globe, exploring what happens when artists have a fair amount of time on their hands and access to video and audio processing software. The project was created by Ilya Lagutenko, the legendary front-man of the multicultural and multi-genre band Mumiy Troll. Ilya is also well known for conservation activities on various environmental matters, like wildlife, ocean life, protecting Amur tigers and leopards, Antarctica and waters of The Southern Ocean.
+          MTRSS – is a global conglomeration of artists, a collaborative enterprise that spans the globe, exploring what happens when artists have a fair amount of time on their hands and access to video and audio processing software. The project was created by Ilya Lagutenko, the legendary front-man of the multicultural and multi-genre band Mumiy Troll. Ilya is also well known for conservation activities on various environmental matters, like wildlife, ocean life, protecting Amur tigers and leopards, Antarctica and waters of The Southern Ocean.
         </p>
       </InfoSection>
 
