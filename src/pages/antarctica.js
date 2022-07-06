@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Layout from "../components/layout";
 import styled from "styled-components";
 import video from "../assets/videos/suite-for-antarctica.mp4"
-import cover from "../assets/images/antarctica-cover.png"
+import cover from "../assets/images/antarctica-cover.jpg"
 import mountain from "../assets/images/mountain.png"
 import Footer from "../components/footer";
 
