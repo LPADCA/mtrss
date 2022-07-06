@@ -191,7 +191,11 @@ const AntarcticaPage = () => {
       <InfoSection>
         <MountainImage src={mountain} />
         <p>
-          MTRSS – is a global conglomeration of artists, a collaborative enterprise that spans the globe, exploring what happens when artists have a fair amount of time on their hands and access to video and audio processing software. The project was created by Ilya Lagutenko, the legendary front-man of the multicultural and multi-genre band Mumiy Troll. Ilya is also well known for conservation activities on various environmental matters, like wildlife, ocean life, protecting Amur tigers and leopards, Antarctica and waters of The Southern Ocean.
+        MTRSS – is a global conglomeration of like-minded creatives, who are sharing the same goals and vision. It’s an artists collective intent on creating harmony in modern music and art. 
+<br></br><br></br>
+        The project was founded by Ilya Lagutenko, the legendary front-man of the multicultural and multi-genre band Mumiy Troll.
+<br></br><br></br>
+        Ilya is also well known for conservation activities on various environmental matters, like wildlife, ocean life, protecting Amur tigers and leopards, Antarctica and waters of The Southern Ocean.
         </p>
       </InfoSection>
 
