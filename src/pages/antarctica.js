@@ -172,7 +172,7 @@ const AntarcticaPage = () => {
       </VideoSection>
 
       <ClickListenSection>
-        <a className="gray-btn" target='_blank' href="https://dashgo.co/njmykmp">Click here to listen</a> 
+        <a className="gray-btn" target='_blank' href="https://lnk.dmsmusic.co/mtrss_suiteforantarcticaoceanspart1-1">Click here to listen</a> 
       </ClickListenSection>
 
       <Container>
